@@ -2,6 +2,7 @@
   // general meta information
   'name': 'GoFish!',
   'version': '0.0.1',
+  'currency': 'money',
 
   // information about a single game round
   'game_round': {
@@ -29,7 +30,7 @@
   'items': {
     'fish_item': {
       'list': ['shoe', 'bass', 'brime', 'pike', 'catfish'],
-      'converts_to': ['money'],
+      'converts_to': 'money',
     },
   },
 
