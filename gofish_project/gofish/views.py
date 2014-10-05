@@ -16,6 +16,26 @@ def index(request):
     # Note that the first parameter is the template we wish to use.
     return render_to_response('gofish/index.html', context_dict, context)
 
+def levelselect(request):
+    context = RequestContext(request)
+    context_dict = {}
+    return render_to_response('gofish/levelselect.html', context_dict, context)
+
+def shop(request):
+    context = RequestContext(request)
+    context_dict = {}
+    return render_to_response('gofish/shop.html', context_dict, context)
+
+def level(request):
+    context = RequestContext(request)
+    context_dict = {}
+    return render_to_response('gofish/level.html', context_dict, context)
+
+def results(request):
+    context = RequestContext(request)
+    context_dict = {}
+    return render_to_response('gofish/results.html', context_dict, context)
+
 def start(request, level):
     response = {'level': level}
     return HttpResponse(json.dumps(response), content_type="application/json")

@@ -3,6 +3,11 @@ from gofish import views
 
 urlpatterns = patterns('',
         url(r'^$', views.index, name='index'),
+        url(r'^levelselect/', views.levelselect, name='levelselect'),
+        url(r'^shop/', views.shop, name='shop'),
+        # TODO: update in order to select a specific level
+        url(r'^level/', views.level, name='level'),
+        url(r'^results/', views.results, name='results'),
         # start a new game round
         url(r'^api/start/(?P<level>\w+)/$', views.start, name='start'),
         # end the current game round preemptively

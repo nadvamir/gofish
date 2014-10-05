@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-{% load static %}
+{% extends 'gofish/base.html' %}
 
-<html>
+{% block title %}Home{% endblock %}
 
-    <head>
-        <title>GoFish</title>
-    </head>
+{% block body_block %}
+    <h1>Home Page</h1>
 
-    <body style="background-image: url({% static 'bruce.jpg' %})">
-        <h1>Game Home</h1>
-    </body>
-
-</html>
+    <a href='/gofish/levelselect/'><h2>Play</h2></a>
+{% endblock %}
