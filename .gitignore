@@ -2,6 +2,9 @@
 *.swp
 *.swo
 
+# Mac shizz
+*.DS_STORE
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
