@@ -1,5 +1,5 @@
 from django.contrib import admin
-from rango.models import Category, Page
+from gofish.models import *
 
 admin.site.register(Player)
 admin.site.register(Game)

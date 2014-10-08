@@ -16,6 +16,11 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
+AUTHENTICATION_BACKENDS = (
+  'django.contrib.auth.backends.ModelBackend',
+  'lazysignup.backends.LazySignupBackend',
+)
+
 MANAGERS = ADMINS
 
 DATABASES = {
@@ -131,6 +136,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'gofish',
+    'lazysignup', # for not authenticating users
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
