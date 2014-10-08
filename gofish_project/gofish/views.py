@@ -3,6 +3,9 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 import json
 
+#################################################################
+# WEBSITE
+#################################################################
 def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
@@ -36,6 +39,9 @@ def results(request):
     context_dict = {}
     return render_to_response('gofish/results.html', context_dict, context)
 
+#################################################################
+# API
+#################################################################
 def start(request, level):
     response = {'level': level}
     return HttpResponse(json.dumps(response), content_type="application/json")
@@ -61,5 +67,13 @@ def buy(request, modifier):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 def getgame(request):
+    response = {}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def getmodifiers(request):
+    response = {}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+def getupdates(request):
     response = {}
     return HttpResponse(json.dumps(response), content_type="application/json")

@@ -20,6 +20,10 @@ urlpatterns = patterns('',
         url(r'^api/choose/(?P<modifier>\w+)/$', views.choose, name='choose'),
         # buy modifier
         url(r'^api/buy/(?P<modifier>\w+)/$', views.buy, name='buy'),
-        # get game info (available levels, etc)
+        # get all game info (available levels, etc)
         url(r'^api/getgame/$', views.getgame, name='getgame'),
+        # get all game modifiers
+        url(r'^api/getmodifiers/$', views.getmodifiers, name='getmodifiers'),
+        # get all updates in the game
+        url(r'^api/getupdates/$', views.getupdates, name='getupdates'),
         )
