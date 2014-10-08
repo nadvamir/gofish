@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from lazysignup.decorators import allow_lazy_user
 import json
+import models
 
 #################################################################
 # WEBSITE
@@ -80,7 +81,9 @@ def buy(request, modifier):
 
 @allow_lazy_user
 def getgame(request):
-    response = {'user': request.user.username}
+    player = models.Player.initialise(request.user)
+    response = {'user': player.__unicode__(),
+                'money': player.money}
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user
