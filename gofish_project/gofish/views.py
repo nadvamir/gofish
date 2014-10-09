@@ -98,6 +98,8 @@ def action(request, action, par):
         resp = game.fish(int(par))
     elif action == 'catch':
         resp = game.catch(par.split(','))
+    elif action == 'catchall':
+        resp = game.catchAll(par.split(','))
     if None != resp:
         response = resp
 

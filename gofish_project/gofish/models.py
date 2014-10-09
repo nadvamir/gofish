@@ -214,6 +214,44 @@ class Game(models.Model):
             'time': time
         }
 
+    # a method to actually catch the next N fish or nothings
+    def catchAll(self, fishList):
+        pos = self.level['position']
+        if None == self.level['yields'][pos]:
+            gamedef.setYieldFor(self, pos)
+            self.saveGame()
+
+        spotYield = self.level['yields'][pos]
+        spotTime = self.level['timeInLoc'][pos]
+        time = self.level['time']
+        totalTime = self.level['totalTime']
+        stepCost = totalTime / len(spotYield)
+
+        caught = []
+        response = []
+        for succeeded in fishList:
+            if time > totalTime or spotTime == len(spotYield):
+                break
+
+            if '1' == succeeded and None != spotYield[spotTime]:
+                caught.append(spotYield[spotTime])
+                response.append(spotYield[spotTime])
+            else:
+                response.append(None)
+
+            time += stepCost
+            spotTime += 1
+
+        self.caught += caught
+        self.level['time'] = time
+        self.level['timeInLoc'][pos] = spotTime
+        self.saveGame()
+
+        return {
+            'fishList': response,
+            'time': time
+        }
+
     # a method to marshal fields
     def marshal(self):
         if not isinstance(self.level, basestring):
