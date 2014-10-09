@@ -14,15 +14,18 @@ STEP_SIZE = 5 # 12 fish per hour max
 #################################################################
 # a function that gives a specific instance of a fish
 def catch(fish):
-    caught = {name: fish.name}
-    caught.weight = gauss(fish.weight, fish.weight * 0.25)
-    caught.size = gauss(fish.size, fish.size * 0.25)
-    caught.value = caught.weight / fish.weight * fish.value
+    # let's say that 1 SD is 25 percent of median
+    caught = {
+        'name': fish['name'],
+        'weight': gauss(fish['weight'], fish['weight'] * 0.25),
+        'length': gauss(fish['length'], fish['length'] * 0.25),
+    }
+    caught['value'] = caught['weight'] / fish['weight'] * fish['value']
     return caught
 
-# a function to catch a fish only when you are luck enough
+# a function to catch a fish only when you are lucky enough
 def catchIfYouCan(fish):
-    if random() <= fish.probability:
+    if random() <= fish['probability']:
         return catch(fish)
     return None
 
@@ -32,11 +35,11 @@ def catchIfYouCan(fish):
 def chooseFish(fishList):
     total = 0
     for fish in fishList:
-        total += fish.probability
+        total += fish['probability']
 
     rnd = random()
     for fish in fishList:
-        if rnd <= fish.probability / total:
+        if rnd <= fish['probability'] / total:
             return fish
 
     return fishList[len(fishList) - 1]
@@ -50,10 +53,10 @@ def getConstantYield(totalTime, fish):
     caught = []
     for i in range(maxFish):
         caught.append({
-            name   : fish.name,
-            weight : fish.weight,
-            size   : fish.size,
-            value  : fish.value,
+            name   : fish['name'],
+            weight : fish['weight'],
+            length : fish['length'],
+            value  : fish['value'],
         })
     return caught
 
@@ -70,7 +73,7 @@ def getTargetYield(totalTime, target, fishList):
         fish = catchIfYouCan(chooseFish(fishList))
         caught.append(fish)
         if None != fish:
-            value += fish.value
+            value += fish['value']
 
     for i in range(len(caught), maxFish):
         caught.append(None)
