@@ -3,7 +3,12 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from lazysignup.decorators import allow_lazy_user
 import json
+import sys
+
 import models
+import maps
+import yields
+import gamedef
 
 #################################################################
 # WEBSITE
@@ -51,12 +56,22 @@ def results(request):
 #################################################################
 @allow_lazy_user
 def start(request, level):
-    response = {'level': level}
+    player = models.Player.initialise(request.user)
+    game = models.Game.initialise(player,
+                                  gamedef.getLevel(int(level)))
+    response = {'error': 'Could not instantiate game'}
+    if None != game:
+        response = {'level': game.level, 'caught': game.caught}
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user
 def end(request):
-    response = {}
+    player = models.Player.initialise(request.user)
+    game = models.Game.initialise(player)
+    response = {'error': 'Could not instantiate game'}
+    if None != game:
+        earned = game.deleteGame()
+        response = {'earned': earned}
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user
@@ -83,7 +98,11 @@ def buy(request, modifier):
 def getgame(request):
     player = models.Player.initialise(request.user)
     response = {'user': player.__unicode__(),
-                'money': player.money}
+                'money': player.money,
+                'map': maps.generate(10, 20),
+                'fish': gamedef.getFishForLevel(0),
+                'yield': yields.getTargetYield(100, 50,
+                    gamedef.getFishForLevel(1))}
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user

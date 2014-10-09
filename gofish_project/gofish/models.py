@@ -50,6 +50,7 @@ class Player(models.Model):
     def savePlayer(self):
         self.marshal()
         self.save()
+        self.unmarshal()
 
     def __unicode__(self):
         return self.user.username + ' player'
@@ -62,6 +63,50 @@ class Game(models.Model):
     level  = models.TextField(default='{}')
     # a json representation of the fish caught
     caught = models.TextField(default='[]')
+    
+    # a method to get initialised game object
+    @staticmethod
+    def initialise(player, level=None):
+        game = None
+
+        # try to find existing game
+        try:
+            game = Game.objects.get(player=player)
+        # if there is none, create a new one
+        except Game.DoesNotExist:
+            # if we did not specify level, this means
+            # that we don't want to create a game
+            if None == level:
+                return None
+            # if there is not enough money, return None
+            if player.money < level['cost']:
+                return None
+            # remove the price of the level from player
+            player.money -= level['cost']
+            player.savePlayer()
+
+            game = Game(player=player, level=json.dumps(level))
+            game.save()
+
+        # unmarshal json fields
+        game.unmarshal()
+        if level and game.level['index'] != level['index']:
+            # or, maybe end the previous game and start a new one
+            return None
+
+        return game
+
+    # a special delete method, that calculates the value
+    # of the fish caught, and rewards the player
+    def deleteGame(self):
+        earned = 0
+        for fish in self.caught:
+            earned += fish['value']
+        self.player.money += earned
+        self.player.savePlayer()
+
+        self.delete()
+        return earned
 
     # a method to marshal fields
     def marshal(self):
@@ -82,6 +127,7 @@ class Game(models.Model):
     def saveGame(self):
         self.marshal()
         self.save()
+        self.unmarshal()
     
     def __unicode__(self):
         return self.player.user.username + ' game'

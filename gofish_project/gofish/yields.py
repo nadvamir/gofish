@@ -20,7 +20,7 @@ def catch(fish):
         'weight': gauss(fish['weight'], fish['weight'] * 0.25),
         'length': gauss(fish['length'], fish['length'] * 0.25),
     }
-    caught['value'] = caught['weight'] / fish['weight'] * fish['value']
+    caught['value'] = round(caught['weight'] / fish['weight'] * fish['value'])
     return caught
 
 # a function to catch a fish only when you are lucky enough
