@@ -37,6 +37,47 @@ GAME = {
         },
     },
 
+    'updates': {
+        'lines': [{
+            'name': 'Strong Line',
+            'probability': 1.1,
+        }, {
+            'name': 'Braided Line',
+            'probability': 1.2,
+        }],
+        'boats': [{
+            'name': 'Row Boat',
+            'time': -5,
+        }, {
+            'name': 'Motor Boat',
+            'time': -10,
+        }, {
+            'name': 'Speed Boat',
+            'time': -15,
+        }],
+    },
+
+    'modifiers': {
+        'bait': {
+            'worm': {
+                'bass': 1.2,
+                'brime': 1.5,
+                'price': 200,
+            },
+            'spinner': {
+                'pike': 1.3,
+                'brime': 0.8,
+                'price': 200,
+            },
+            'vobbler': {
+                'brime': 0.5,
+                'pike': 1.4,
+                'catfish': 1.2,
+                'price': 2000,
+            }
+        },
+    },
+
     'levels': [{
         'name': 'Local pond',
         'fish': {
@@ -80,6 +121,7 @@ def getLevel(level):
     lvl = dict(GAME['levels'][level])
     lvl['index'] = level
     lvl['time'] = 0
+    lvl['totalTime'] = TOTAL_TIME
     lvl['map'] = maps.generate(maxDepth=10, width=20)
     lvl['position'] = 0
 
@@ -94,9 +136,11 @@ def getLevel(level):
 # compute a new yield function for the specified location
 def setYieldFor(game, pos):
     target = 40
+    level = game.level['index']
     if level == 1:
         target = 300
     elif level > 1:
         target = 1300
 
-    game.level['yields'][pos] = yields.getTargetYield(TOTAL_TIME, target, getFishForLevel(game.level.index))
+    game.level['yields'][pos] = yields.getTargetYield( TOTAL_TIME, target, getFishForLevel(game.level['index']))
+

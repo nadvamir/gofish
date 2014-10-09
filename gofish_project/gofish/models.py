@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import json
+import gamedef
 
 # a player of the game
 class Player(models.Model):
@@ -31,6 +32,14 @@ class Player(models.Model):
 
         return player
 
+    # returns movement cost of this player
+    def getMoveCost(self):
+        cost = 30
+        for key in self.updates:
+            if 'time' in self.updates[key]:
+                cost += self.updates[key]['time']
+        return cost
+
     # a method to marshal fields
     def marshal(self):
         if not isinstance(self.updates, basestring):
@@ -51,6 +60,13 @@ class Player(models.Model):
         self.marshal()
         self.save()
         self.unmarshal()
+
+    def toDict(self):
+        return {
+            'money': self.money,
+            'updates': self.updates,
+            'modifiers': self.modifiers,
+        }
 
     def __unicode__(self):
         return self.user.username + ' player'
@@ -107,6 +123,96 @@ class Game(models.Model):
 
         self.delete()
         return earned
+
+    # a method to move player on the map
+    def move(self, direction):
+        size = len(self.level['map'][0])
+        position = self.level['position']
+        self.player.unmarshal()
+        cost = self.player.getMoveCost()
+
+        step = -1
+        if direction == 'right':
+            step = 1
+
+        position += step
+        if position < 0 or position >= size:
+            return None
+
+        if self.level['time'] + cost > self.level['totalTime']:
+            return None
+
+        self.level['position'] = position
+        self.level['time'] += cost
+        self.saveGame()
+        return {
+            'position': position,
+            'time': self.level['time'],
+        }
+
+    # a method to fish
+    # it only really returns what you can catch in N steps
+    # from the current point, you need to call catch action
+    # to actually advance timer
+    def fish(self, steps):
+        pos = self.level['position']
+        if None == self.level['yields'][pos]:
+            gamedef.setYieldFor(self, pos)
+            self.saveGame()
+
+        spotYield = self.level['yields'][pos]
+        spotTime = self.level['timeInLoc'][pos]
+        maxSteps = len(spotYield) - spotTime
+        if steps > maxSteps:
+            steps = maxSteps
+        print steps
+
+        stepCost = self.level['totalTime'] / len(spotYield)
+        expectedEndTime = steps * stepCost + self.level['time'] 
+        if expectedEndTime > self.level['totalTime']:
+            return None
+
+        return {
+            'fishList': spotYield[spotTime:spotTime + steps]
+        }
+
+    # a method to actually catch the next N fish
+    def catch(self, fishList):
+        pos = self.level['position']
+        if None == self.level['yields'][pos]:
+            return None
+
+        spotYield = self.level['yields'][pos]
+        spotTime = self.level['timeInLoc'][pos]
+        time = self.level['time']
+        totalTime = self.level['totalTime']
+        stepCost = totalTime / len(spotYield)
+
+        caught = []
+        for succeeded in fishList:
+            while (spotTime < len(spotYield)
+                and spotYield[spotTime] == None):
+                    time += stepCost
+                    spotTime += 1
+
+            if time > totalTime or spotTime == len(spotYield):
+                break
+
+            if '1' == succeeded:
+                caught.append(spotYield[spotTime])
+
+            time += stepCost
+            spotTime += 1
+
+        self.caught += caught
+        self.level['time'] = time
+        self.level['timeInLoc'][pos] = spotTime
+        self.saveGame()
+
+        return {
+            'fishList': caught,
+            'time': time
+        }
 
     # a method to marshal fields
     def marshal(self):
