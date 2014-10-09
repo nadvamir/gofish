@@ -119,6 +119,8 @@ class Game(models.Model):
         for fish in self.caught:
             earned += fish['value']
         self.player.money += earned
+        if self.player.money < 10:
+            self.player.money = 10
         self.player.savePlayer()
 
         self.delete()

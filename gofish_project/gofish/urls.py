@@ -8,6 +8,10 @@ urlpatterns = patterns('',
         # TODO: update in order to select a specific level
         url(r'^level/', views.level, name='level'),
         url(r'^results/', views.results, name='results'),
+
+        # ascii fishing game
+        url(r'^ascii/', views.ascii, name='ascii'),
+
         # start a new game round
         url(r'^api/start/(?P<level>\w+)/$', views.start, name='start'),
         # end the current game round preemptively

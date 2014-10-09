@@ -52,6 +52,15 @@ def results(request):
     return render_to_response('gofish/results.html', context_dict, context)
 
 #################################################################
+# ASCII
+#################################################################
+@allow_lazy_user
+def ascii(request):
+    context = RequestContext(request)
+    context_dict = {}
+    return render_to_response('gofish/ascii.html', context_dict, context)
+
+#################################################################
 # API
 #################################################################
 @allow_lazy_user
