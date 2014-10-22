@@ -2,6 +2,10 @@
 *.swp
 *.swo
 
+# Phonegap
+*.metadata/
+phonegap/gofish/platforms/*
+
 # Mac shizz
 *.DS_STORE
 
