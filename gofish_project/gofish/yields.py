@@ -41,6 +41,8 @@ def chooseFish(fishList):
     for fish in fishList:
         if rnd <= fish['probability'] / total:
             return fish
+        else
+            rnd -= fish['probability'] / total
 
     return fishList[len(fishList) - 1]
 
