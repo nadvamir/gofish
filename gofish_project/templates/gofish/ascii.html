@@ -88,12 +88,13 @@ function drawLevel() {
     for (var i = 0; i < LEVEL.level.position; i++) {
         map += ' ';
     }
-    map += "*\n";
+    map += "<b>*</b>\n";
     
     var maxDepth = 10;
     for (var i = 0; i < maxDepth; i++) {
         for (var j = 0; j < LEVEL.level.map[0].length; j++) {
-            map += (i > LEVEL.level.map[0][j]) ? ' ' : '#';
+            var d = (j == LEVEL.level.position) ? '<b>X</b>' : '#';
+            map += (i > LEVEL.level.map[0][j]) ? ' ' : d;
         }
         map += "\n";
     }
