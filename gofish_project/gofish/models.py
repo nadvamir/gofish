@@ -44,10 +44,33 @@ class Player(models.Model):
                     cost += v['time']
         return cost
 
+    # return a bait that the player has selected
+    def getSelectedBait(self):
+        for bait in self.modifiers.iterkeys():
+            if self.modifiers[bait]:
+                return gamedef.GAME['modifiers'][bait]
+        return None
+
     # returns if there is enough money to buy something
     # a minimum has to remain, otherwise fishing is impossible
     def hasEnoughFor(self, amount):
         return self.money - MIN_MONEY >= amount
+
+    # augment probability to catch a fiven fish
+    def augmentProb(self, fish, probability):
+        # fist of all, special items
+        upds = gamedef.GAME['updates']
+        for key in self.updates:
+            for v in upds[key]:
+                if self.updates[key] == v['name'] and 'probability' in v:
+                    probability += v['probability'] - 1
+
+        # then check if the bait has any effect
+        bait = self.getSelectedBait()
+        if bait and fish in bait:
+            probability *= bait[fish]
+
+        return probability
 
     # tries to update a given target
     def update(self, target):
@@ -326,8 +349,9 @@ class Game(models.Model):
 
     # recalculate all the yields for this game
     def recalcYields(self):
-        self.player.unmarshal()
-        #TODO
+        for pos in range(len(self.level['yields'])):
+            if self.level['yields'][pos]:
+                gamedef.setYieldFor(self, pos)
 
     # a method to marshal fields
     def marshal(self):

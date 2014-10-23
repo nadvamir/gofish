@@ -1,5 +1,5 @@
 import maps
-import yields
+from yieldmerger import YieldMerger
 
 # here we have a GAME definition object, already priced
 TOTAL_TIME = 480
@@ -10,30 +10,35 @@ GAME = {
             'value': 1,
             'weight': 0.3,
             'length': 30,
+            'habitat': 1,
         },
         'bass': {
             'name': 'Bass',
             'value': 3,
             'weight': 0.2,
             'length': 15,
+            'habitat': 4,
         },
         'brime': {
             'name': 'Brime',
             'value': 7,
             'weight': 1.0,
             'length': 40,
+            'habitat': 6,
         },
         'pike': {
             'name': 'Pike',
             'value': 17,
             'weight': 1.5,
             'length': 50,
+            'habitat': 3,
         },
         'catfish': {
             'name': 'Catfish',
             'value': 41,
             'weight': 10.0,
             'length': 100,
+            'habitat': 9,
         },
     },
 
@@ -84,40 +89,107 @@ GAME = {
     'levels': [{
         'name': 'Local pond',
         'fish': {
-            'shoe': 0.7,
-            'bass': 0.3,
+            'shoe': {
+                'probability': 0.7,
+                'distribution': {
+                    'type': 'uniform-declining',
+                    'options': {
+                        'zero-at': 20,
+                    },
+                },
+            },
+            'bass': {
+                'probability': 0.3,
+                'distribution': {
+                    'type': 'uniform-declining',
+                    'options': {
+                        'zero-at': 10,
+                    },
+                },
+            },
         },
         'cost': 10,
-        'distribution': 'uniform-declining',
       }, {
         'name': 'Lake',
         'fish': {
-            'bass': 0.6,
-            'brime': 0.4,
-            'pike': 0.3,
+            'bass': {
+                'probability': 0.6,
+                'distribution': {
+                    'type': 'uniform-declining',
+                    'options': {
+                        'zero-at': 15,
+                    },
+                },
+            },
+            'brime': {
+                'probability': 0.4,
+                'distribution': {
+                    'type': 'uniform-declining',
+                    'options': {
+                        'zero-at': 10,
+                    },
+                },
+            },
+            'pike': {
+                'probability': 0.3,
+                'distribution': {
+                    'type': 'nth-declining',
+                    'options': {
+                        'n': 3,
+                        'zero-at-n': 10,
+                    },
+                },
+            },
         },
         'cost': 100,
-        'distribution': 'natural-declining',
       }, {
         'name': 'River',
         'fish': {
-            'bass': 0.7,
+            'bass': {
+                'probability': 0.7,
+                'distribution': {
+                    'type': 'uniform-declining',
+                    'options': {
+                        'zero-at': 15,
+                    },
+                },
+            },
             'pike': 0.3,
+            'pike': {
+                'probability': 0.3,
+                'distribution': {
+                    'type': 'nth-declining',
+                    'options': {
+                        'n': 3,
+                        'zero-at-n': 10,
+                    },
+                },
+            },
             'catfish': 0.1,
+            'pike': {
+                'probability': 0.3,
+                'distribution': {
+                    'type': 'nth-constant',
+                    'options': {
+                        'n': 7,
+                        'val': 1.0,
+                    },
+                },
+            },
         },
         'cost': 1000,
-        'distribution': 'natural-declining-endspike',
     }],
 }
 
 # a function to get the fish for this level
 def getFishForLevel(level):
-    fishList = []
-    for fish, prob in GAME['levels'][level]['fish'].iteritems():
-        newFish = (GAME['fish'][fish])
-        newFish['probability'] = prob
-        fishList.append(newFish)
-    return fishList
+    f = {}
+    for fish, locF in GAME['levels'][level]['fish'].iteritems():
+        newFish = dict(GAME['fish'][fish])
+        newFish['probability'] = locF['probability']
+        newFish['distribution'] = locF['distribution']
+        f[fish] = newFish
+    return f
 
 # a function to get the level dict
 def getLevel(level):
@@ -138,12 +210,16 @@ def getLevel(level):
 
 # compute a new yield function for the specified location
 def setYieldFor(game, pos):
-    target = 40
-    level = game.level['index']
-    if level == 1:
-        target = 300
-    elif level > 1:
-        target = 1300
+    # setup some variables
+    player = game.player; player.unmarshal()
+    fish = getFishForLevel(game.level['index'])
+    yieldMerger = YieldMerger(480/5)
+    depth = game.level['map'][0][pos]
 
-    game.level['yields'][pos] = yields.getTargetYield( TOTAL_TIME, target, getFishForLevel(game.level['index']))
+    # add yields for every fish
+    for fishId, f in fish.iteritems():
+        yieldMerger.addYield(fishId, f, depth, player)
+
+    # get the combined yield
+    game.level['yields'][pos] = yieldMerger.merge()
 
