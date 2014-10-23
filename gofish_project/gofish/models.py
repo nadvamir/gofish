@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 import json
 import gamedef
 
+MIN_MONEY = 10
+
 # a player of the game
 class Player(models.Model):
     user      = models.OneToOneField(User)
@@ -35,10 +37,78 @@ class Player(models.Model):
     # returns movement cost of this player
     def getMoveCost(self):
         cost = 30
+        upds = gamedef.GAME['updates']
         for key in self.updates:
-            if 'time' in self.updates[key]:
-                cost += self.updates[key]['time']
+            for v in upds[key]:
+                if self.updates[key] == v['name'] and 'time' in v:
+                    cost += v['time']
         return cost
+
+    # returns if there is enough money to buy something
+    # a minimum has to remain, otherwise fishing is impossible
+    def hasEnoughFor(self, amount):
+        return self.money - MIN_MONEY >= amount
+
+    # tries to update a given target
+    def update(self, target):
+        if target in gamedef.GAME['updates']:
+            # find the next update
+            upds = gamedef.GAME['updates'][target]
+            update = upds[0]
+            if target in self.updates:
+                for i in range(len(upds)):
+                    if upds[i]['name'] == self.updates[target]:
+                        if i < len(upds) - 1:
+                            update = upds[i+1]
+                            break
+                        else:
+                            return False
+            # buy it
+            if self.hasEnoughFor(update['price']):
+                self.money -= update['price']
+                self.updates[target] = update['name']
+                self.savePlayer()
+                return True
+        return False
+
+    # tries to select a given bait
+    def choose(self, bait):
+        # bait doesn't exist
+        if bait not in self.modifiers:
+            return False
+
+        # unselect all baits
+        for k in self.modifiers.iterkeys():
+            self.modifiers[k] = False
+
+        # select bait
+        self.modifiers[bait] = True
+        self.savePlayer()
+
+        # recalculate yields if there are any
+        game = Game.initialise(self)
+        if None != game:
+            game.recalcYields()
+        return True
+
+    # tries to buy a given bait
+    def buy(self, bait):
+        # bait doesn't exist
+        if bait not in gamedef.GAME['modifiers']:
+            return False
+        # bait is already bought
+        if bait in self.modifiers:
+            return False
+
+        baitObj = gamedef.GAME['modifiers'][bait]
+        # not enough money
+        if not self.hasEnoughFor(baitObj['price']):
+            return False
+
+        self.money -= baitObj['price']
+        self.modifiers[bait] = False # not selected by default
+        self.savePlayer()
+        return True
 
     # a method to marshal fields
     def marshal(self):
@@ -119,8 +189,8 @@ class Game(models.Model):
         for fish in self.caught:
             earned += fish['value']
         self.player.money += earned
-        if self.player.money < 10:
-            self.player.money = 10
+        if self.player.money < MIN_MONEY:
+            self.player.money = MIN_MONEY
         self.player.savePlayer()
 
         self.delete()
@@ -253,6 +323,11 @@ class Game(models.Model):
             'fishList': response,
             'time': time
         }
+
+    # recalculate all the yields for this game
+    def recalcYields(self):
+        self.player.unmarshal()
+        #TODO
 
     # a method to marshal fields
     def marshal(self):

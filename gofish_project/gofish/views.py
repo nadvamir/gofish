@@ -92,8 +92,6 @@ def end(request):
 
 @allow_lazy_user
 def action(request, action, par):
-    response = {'action': action, 'par': par}
-
     player = models.Player.initialise(request.user)
     game = models.Game.initialise(player)
     response = {'error': 'Could not perform the action'}
@@ -116,17 +114,32 @@ def action(request, action, par):
 
 @allow_lazy_user
 def update(request, target):
-    response = {'target': target}
+    player = models.Player.initialise(request.user)
+
+    response = {'error': 'Could not update the thing'}
+    if player.update(target):
+        response = {'player': player.toDict()}
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user
 def choose(request, modifier):
-    response = {'modifier': modifier}
+    player = models.Player.initialise(request.user)
+
+    response = {'error': 'Could not buy the bait'}
+    if player.choose(modifier):
+        response = {'player': player.toDict()}
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user
 def buy(request, modifier):
-    response = {'modifier': modifier}
+    player = models.Player.initialise(request.user)
+
+    response = {'error': 'Could not buy the bait'}
+    if player.buy(modifier):
+        response = {'player': player.toDict()}
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user

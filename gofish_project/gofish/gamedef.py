@@ -41,41 +41,44 @@ GAME = {
         'lines': [{
             'name': 'Strong Line',
             'probability': 1.1,
+            'price': 500,
         }, {
             'name': 'Braided Line',
             'probability': 1.2,
+            'price': 1000,
         }],
         'boats': [{
             'name': 'Row Boat',
             'time': -5,
+            'price': 1000,
         }, {
             'name': 'Motor Boat',
             'time': -10,
+            'price': 3000,
         }, {
             'name': 'Speed Boat',
             'time': -15,
+            'price': 7000,
         }],
     },
 
     'modifiers': {
-        'bait': {
-            'worm': {
-                'bass': 1.2,
-                'brime': 1.5,
-                'price': 200,
-            },
-            'spinner': {
-                'pike': 1.3,
-                'brime': 0.8,
-                'price': 200,
-            },
-            'vobbler': {
-                'brime': 0.5,
-                'pike': 1.4,
-                'catfish': 1.2,
-                'price': 2000,
-            }
+        'worm': {
+            'bass': 1.2,
+            'brime': 1.5,
+            'price': 200,
         },
+        'spinner': {
+            'pike': 1.3,
+            'brime': 0.8,
+            'price': 200,
+        },
+        'vobbler': {
+            'brime': 0.5,
+            'pike': 1.4,
+            'catfish': 1.2,
+            'price': 2000,
+        }
     },
 
     'levels': [{
