@@ -14,9 +14,15 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Levels</a></li>
-        <li><a href="#">Shop</a></li>
+        <li ng-class="{active: menusCtrl.tab === 0}"><a href="#" ng-click="menusCtrl.setTab(0)">Levels</a></li>
+        <li ng-class="{active: menusCtrl.tab === 1}"><a href="#" ng-click="menusCtrl.setTab(1)">Shop</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->          
 </nav>
+
+<level-select class="container level-select-screen" ng-show="menusCtrl.tab === 0">
+</level-select>
+
+<shop ng-show="menusCtrl.tab === 1">
+</shop>
