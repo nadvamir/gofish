@@ -1,4 +1,4 @@
-goFish.directive("levelSelect", [function(tabService){
+goFish.directive("levelSelect", [function(){
 
 	return {
 		restrict: "E",
