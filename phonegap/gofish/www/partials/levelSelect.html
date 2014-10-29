@@ -1,9 +1,11 @@
+<div class="container level-select-screen">
+
 <h1>Level Select</h1>
 
 <ul class="level-list" ng-repeat="level in lsCtrl.game.levels">
     <li>
-        {{level.name}}
-        <br />
-        Cost: {{level.cost}}
+    	<level level-data="level"></level>
     </li>
 </ul>
+
+</div>

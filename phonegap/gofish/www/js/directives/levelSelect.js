@@ -5,6 +5,9 @@ goFish.directive("levelSelect", [function(){
 		templateUrl: "./partials/levelSelect.html",
 		scope: {},
 		controller: function($http) {
+			
+			this.game = {};
+			var controller = this;
 
 			this.updateGame = function() {
 				$http.get("http://nadvamir.pythonanywhere.com/gofish/api/getgame/").
@@ -21,8 +24,6 @@ goFish.directive("levelSelect", [function(){
 					})
 			};
 
-			this.game = {};
-			var controller = this;
 			this.updateGame();
 
 		},
