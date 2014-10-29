@@ -13,7 +13,7 @@ goFish.directive("level", [function(){
 					alert("You don't have enough money to fish in "+$scope.levelData.name);
 				}
 				else {
-					alert("You have chosen to fish in "+$scope.levelData.name);
+					GameService.startLevel($scope.levelData["index"]);
 					GameService.updateGame();
 				}
 			};

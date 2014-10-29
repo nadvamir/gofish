@@ -5,12 +5,19 @@ goFish.directive("levelSelect", [function(){
 		templateUrl: "./partials/levelSelect.html",
 		scope: {},
 		controller: function($http, $scope, GameService) {
+			$scope.updateGame = function() {
+				$scope.game = GameService.getGame();
+				if ($scope.game.levels) {
+					angular.forEach($scope.game.levels, function(level, index) {
+						level["index"] = index;
+					});
+				}
+			};
+
 			$scope.game = {};
 
-			GameService.updateGame();
-
 			$scope.$on("gameUpdated", function() {
-				$scope.game = GameService.getGame();
+				$scope.updateGame();
 			});
 		},
 		controllerAs: "lsCtrl"

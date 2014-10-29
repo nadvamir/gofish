@@ -1,9 +1,11 @@
 goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope) {
 
+	var API_URL = "http://nadvamir.pythonanywhere.com/gofish/api/";
 	var game = {};
+	var currentLevel = {};
 
 	var getJSON = function(urlExtension) {
-		$http.get("http://nadvamir.pythonanywhere.com/gofish/api/"+urlExtension).
+		$http.get(API_URL+urlExtension).
 			success(function(data) {
 				if(data.error) {
 					alert(data.error);
@@ -24,7 +26,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 			return getJSON(urlExtension);
 		},
 		updateGame: function() {
-			$http.get("http://nadvamir.pythonanywhere.com/gofish/api/getgame/").
+			$http.get(API_URL+"getgame/").
 				success(function(data) {
 					if(data.error) {
 						alert(data.error);
@@ -42,6 +44,26 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 		},
 		getGame: function() {
 			return game;
+		},
+		startLevel: function(levelIndex) {
+			$http.get(API_URL+"start/"+levelIndex+"/").
+				success(function(data) {
+					if(data.error) {
+						alert(data.error);
+						return {};
+					}
+					else {
+						currentLevel = data;
+						$rootScope.$broadcast("levelStarted");
+					};
+				}).
+				error(function() {
+					alert("Error getting response from server.");
+					return {};
+				})
+		},
+		getCurrentLevel: function() {
+			return currentLevel;
 		}
 	}
 

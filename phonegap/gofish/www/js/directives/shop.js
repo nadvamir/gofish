@@ -6,11 +6,12 @@ goFish.directive("shop", [function(){
 		scope: {},
 		controller: function($http, $scope, GameService) {
 			$scope.game = {};
-
-			GameService.updateGame();
+			$scope.updateGame = function() {
+				$scope.game = GameService.getGame();
+			};
 
 			$scope.$on("gameUpdated", function() {
-				$scope.game = GameService.getGame();
+				$scope.updateGame();
 			});
 		},
 		controllerAs: "shopCtrl"
