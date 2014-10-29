@@ -4,30 +4,14 @@ goFish.directive("shop", [function(){
 		restrict: "E",
 		templateUrl: "./partials/shop.html",
 		scope: {},
-		controller: function($http) {
-			
-			//TODO: use gameService to get data
+		controller: function($http, $scope, GameService) {
+			$scope.game = {};
 
-			this.game = {};
-			var controller = this;
+			GameService.updateGame();
 
-			this.updateGame = function() {
-				$http.get("http://nadvamir.pythonanywhere.com/gofish/api/getgame/").
-					success(function(data, scope) {
-						if(data.error) {
-							alert(data.error);
-						}
-						else {
-							controller.game = data;
-						};
-					}).
-					error(function() {
-						alert("Error getting game.");
-					})
-			};
-
-			this.updateGame();
-
+			$scope.$on("gameUpdated", function() {
+				$scope.game = GameService.getGame();
+			});
 		},
 		controllerAs: "shopCtrl"
 	};
