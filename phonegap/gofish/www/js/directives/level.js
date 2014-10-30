@@ -6,9 +6,16 @@ goFish.directive("level", [function(){
 		scope: {
 			levelData: "="
 		},
-		controller: function($scope) {
+		controller: function($scope, GameService) {
 			this.selectLevel = function() {
-				alert("You have chosen to fish in "+$scope.levelData.name);
+				var playerMoney = GameService.getGame().player.money;
+				if (playerMoney < $scope.levelData.cost) {
+					alert("You don't have enough money to fish in "+$scope.levelData.name);
+				}
+				else {
+					GameService.startLevel($scope.levelData["index"]);
+					GameService.updateGame();
+				}
 			};
 		},
 		controllerAs: "levelCtrl"

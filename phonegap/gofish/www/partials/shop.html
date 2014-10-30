@@ -2,10 +2,9 @@
 
 	<h1>Shop</h1>
 
-	<div ng-repeat="(category, items) in shopCtrl.game.updates">
+	<div ng-repeat="(category, items) in game.updates">
 		<shop-item-category category="category"
-							items="items"
-							player-data="shopCtrl.game.player">
+							items="items">
 		</shop-item-category>
 	</div>
 

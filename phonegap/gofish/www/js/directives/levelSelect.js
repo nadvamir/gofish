@@ -4,28 +4,21 @@ goFish.directive("levelSelect", [function(){
 		restrict: "E",
 		templateUrl: "./partials/levelSelect.html",
 		scope: {},
-		controller: function($http) {
-			
-			this.game = {};
-			var controller = this;
-
-			this.updateGame = function() {
-				$http.get("http://nadvamir.pythonanywhere.com/gofish/api/getgame/").
-					success(function(data, scope) {
-						if(data.error) {
-							alert(data.error);
-						}
-						else {
-							controller.game = data;
-						};
-					}).
-					error(function() {
-						alert("Error getting game.");
-					})
+		controller: function($http, $scope, GameService) {
+			$scope.updateGame = function() {
+				$scope.game = GameService.getGame();
+				if ($scope.game.levels) {
+					angular.forEach($scope.game.levels, function(level, index) {
+						level["index"] = index;
+					});
+				}
 			};
 
-			this.updateGame();
+			$scope.game = {};
 
+			$scope.$on("gameUpdated", function() {
+				$scope.updateGame();
+			});
 		},
 		controllerAs: "lsCtrl"
 	};

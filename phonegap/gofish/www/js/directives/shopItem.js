@@ -4,13 +4,13 @@ goFish.directive("shopItem", [function(){
 		restrict: "E",
 		templateUrl: "./partials/shopItem.html",
 		scope: {
-			shopItemData: "=",
-			playerData: "="
+			shopItemData: "="
 		},
-		controller: function($scope) {
+		controller: function($scope, GameService) {
+			// TODO handle possible error where .player.money not found
 			this.buy = function() {
-				console.dir($scope.playerData);
-				if ($scope.playerData.money < $scope.shopItemData.price) {
+				var playerMoney = GameService.getGame().player.money;
+				if (playerMoney < $scope.shopItemData.price) {
 					alert("You cannot afford this item.");
 				}
 				else {

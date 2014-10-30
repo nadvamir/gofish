@@ -5,8 +5,7 @@ goFish.directive("shopItemCategory", [function(){
 		templateUrl: "./partials/shopItemCategory.html",
 		scope: {
 			category: "=",
-			items: "=",
-			playerData: "="
+			items: "="
 		},
 		controller: function($scope) {
 
