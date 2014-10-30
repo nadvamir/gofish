@@ -1,0 +1,2 @@
+django==1.5.4
+django-lazysignup==0.12.2
