@@ -5,7 +5,6 @@ import gamedef
 from yields import *
 
 class YieldMerger:
-    yields = []
     generators = {
         'uniform-declining': makeUniformDecliningYield,
         'uniform-constant': makeUniformConstantYield,
@@ -17,6 +16,7 @@ class YieldMerger:
     # constructor, that tells length of the yields
     def __init__(self, n):
         self.n = n
+        self.yields = []
 
     # a method to add a new yield
     def addYield(self, fishId, fish, depth, player):

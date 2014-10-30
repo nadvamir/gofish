@@ -65,6 +65,27 @@ GAME = {
             'time': -15,
             'price': 7000,
         }],
+        'cues': [{
+            'name': 'A Map',
+            'cueDetail': 1,
+            'price': 50,
+        }, {
+            'name': 'Underwater Camera',
+            'cueDetail': 2,
+            'price': 200,
+        }, {
+            'name': 'Old Sonar',
+            'cueDetail': 3,
+            'price': 4000,
+        }, {
+            'name': 'Modern Sonar',
+            'cueDetail': 4,
+            'price': 10000,
+        }, {
+            'name': 'A Mermaid',
+            'cueDetail': 5,
+            'price': 30000,
+        }],
     },
 
     'modifiers': {
@@ -154,7 +175,6 @@ GAME = {
                     },
                 },
             },
-            'pike': 0.3,
             'pike': {
                 'probability': 0.3,
                 'distribution': {
@@ -165,9 +185,8 @@ GAME = {
                     },
                 },
             },
-            'catfish': 0.1,
-            'pike': {
-                'probability': 0.3,
+            'catfish': {
+                'probability': 0.2,
                 'distribution': {
                     'type': 'nth-constant',
                     'options': {
@@ -183,12 +202,15 @@ GAME = {
 
 # a function to get the fish for this level
 def getFishForLevel(level):
+    print level
+    print GAME['levels'][level]['fish']
     f = {}
     for fish, locF in GAME['levels'][level]['fish'].iteritems():
         newFish = dict(GAME['fish'][fish])
         newFish['probability'] = locF['probability']
         newFish['distribution'] = locF['distribution']
         f[fish] = newFish
+    print f
     return f
 
 # a function to get the level dict
@@ -211,7 +233,7 @@ def getLevel(level):
 # compute a new yield function for the specified location
 def setYieldFor(game, pos):
     # setup some variables
-    player = game.player; player.unmarshal()
+    player = game.player
     fish = getFishForLevel(game.level['index'])
     yieldMerger = YieldMerger(480/5)
     depth = game.level['map'][0][pos]

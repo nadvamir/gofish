@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import json
 import gamedef
+import cues
 
 MIN_MONEY = 10
 
@@ -43,6 +44,16 @@ class Player(models.Model):
                 if self.updates[key] == v['name'] and 'time' in v:
                     cost += v['time']
         return cost
+
+    # returns the level of detail of cues
+    def getCueDetail(self):
+        if 'cues' not in self.updates:
+            return 0
+
+        upds = gamedef.GAME['updates']
+        for v in upds['cues']:
+            if self.updates['cues'] == v['name']:
+                return v['cueDetail']
 
     # return a bait that the player has selected
     def getSelectedBait(self):
@@ -219,11 +230,21 @@ class Game(models.Model):
         self.delete()
         return earned
 
+    # returns cues for the current fishing position
+    def getCues(self):
+        pos = self.level['position']
+        # create yields if they are not present
+        if None == self.level['yields'][pos]:
+            gamedef.setYieldFor(self, pos)
+            self.saveGame()
+
+        # now delegate to the cue class
+        return cues.generate(self, pos)
+
     # a method to move player on the map
     def move(self, direction):
         size = len(self.level['map'][0])
         position = self.level['position']
-        self.player.unmarshal()
         cost = self.player.getMoveCost()
 
         step = -1
@@ -242,6 +263,7 @@ class Game(models.Model):
         self.saveGame()
         return {
             'position': position,
+            'cues': self.getCues(),
             'time': self.level['time'],
         }
 
@@ -306,6 +328,7 @@ class Game(models.Model):
 
         return {
             'fishList': caught,
+            'cues': self.getCues(),
             'time': time
         }
 
@@ -344,6 +367,7 @@ class Game(models.Model):
 
         return {
             'fishList': response,
+            'cues': self.getCues(),
             'time': time
         }
 
@@ -359,6 +383,7 @@ class Game(models.Model):
             self.level = json.dumps(self.level)
         if not isinstance(self.caught, basestring):
             self.caught = json.dumps(self.caught)
+        # no need to marshal the player here
 
     # a method to unmarshal fields
     def unmarshal(self):
@@ -366,6 +391,8 @@ class Game(models.Model):
             self.level = json.loads(self.level)
         if isinstance(self.caught, basestring):
             self.caught = json.loads(self.caught)
+        # unmarshal player as well, to make life easy
+        self.player.unmarshal()
 
     # a special save method, to ensure, that we
     # serialise our fields

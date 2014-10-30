@@ -72,6 +72,7 @@ def start(request, level):
     if None != game:
         response = {
             'level': game.level,
+            'cues': game.getCues(),
             'caught': game.caught,
             'money': player.money
         }

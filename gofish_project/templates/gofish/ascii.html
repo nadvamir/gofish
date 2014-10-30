@@ -30,8 +30,8 @@ String.prototype.capitalize = function() {
     </script>
     <script type='text/javascript'>
 
-var GAME = {}
-var LEVEL = {}
+var GAME = {};
+var LEVEL = {};
 
 function url(specifics) {
     return '/gofish/api/' + specifics;
@@ -80,8 +80,14 @@ function genNextUpdate(list, curr) {
 function getPerksLine(update) {
     if (update.time) {
         return 'travel time ' + update.time + ' min';
-    } else {
+    } else if (update.probability) {
         return 'success +' + Math.round(update.probability * 100 - 100) + '%';
+    } else if (update.cueDetail) {
+        if (update.cueDetail == 1) {
+            return 'tells the depth';
+        } else {
+            return 'detects fish, better visibility and accuracy';
+        }
     }
 }
 
@@ -111,7 +117,8 @@ function getPlayerModifiers(modifiers, playerModifiers) {
     var html = '<div>';
     for (var bait in playerModifiers) {
         html += bait.capitalize();
-        html += (playerModifiers[bait]) ? ' selected ' : ' <a href="#" onclick="choose(\'' + bait + '\')">select</a>';
+        html += (playerModifiers[bait]) ? ' selected ' : ' <a href="#" onclick="choose(\'' + bait + '\')">select</a> ';
+        html += '<br/ >';
     }
     html += '</div>';
     return html;
@@ -180,13 +187,41 @@ function drawLevel() {
     }
     map += "<b>*</b>\n";
     
-    var maxDepth = 10;
+    /*var maxDepth = 10;
     for (var i = 0; i < maxDepth; i++) {
         for (var j = 0; j < LEVEL.level.map[0].length; j++) {
             var d = (j == LEVEL.level.position) ? '<b>X</b>' : '#';
             map += (i > LEVEL.level.map[0][j]) ? ' ' : d;
         }
         map += "\n";
+    }*/
+    // no cues that we know:
+    if (!GAME.player.updates.cues) {
+        for (var j = 0; j < LEVEL.level.map[0].length; j++) {
+            map += "#";
+        }
+        map += "\n";
+    // otherwise, we always know at least the depth
+    } else {
+        var maxDepth = 10;
+        for (var i = 0; i < maxDepth; i++) {
+            for (var j = 0; j < LEVEL.level.map[0].length; j++) {
+                if (i >= LEVEL.level.map[0][j]) {
+                    map += ' ';
+                } else if (j == LEVEL.level.position) {
+                    if (LEVEL.cues[i][0] == -1) {
+                        map += '#';
+                    } else if (LEVEL.cues[i][0] == 0) {
+                        map += '.';
+                    } else {
+                        map += (LEVEL.cues[i][0] > 9) ? 9 : LEVEL.cues[i][0];
+                    }
+                } else {
+                    map += '#';
+                }
+            }
+            map += "\n";
+        }
     }
     
     map += '</pre>';
@@ -226,6 +261,7 @@ function move(side) {
         if (!data.error) {
             LEVEL.level.position = data.position;
             LEVEL.level.time = data.time;
+            LEVEL.cues = data.cues;
             drawLevel();
         }
     });
@@ -235,6 +271,7 @@ function fish(side) {
     $.getJSON(url('action/catchall/1'), function(data) {
         if (!data.error) {
             LEVEL.level.time = data.time;
+            LEVEL.cues = data.cues;
             var fish = data.fishList[0];
             if (fish) {
                 LEVEL.caught.push(fish);
