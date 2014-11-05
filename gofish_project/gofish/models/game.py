@@ -96,7 +96,7 @@ class Game(models.Model):
         return self.player.user.username + ' game'
 
     ##############################################################
-    # helpers
+    # external helpers
     ##############################################################
     # returns cues for the current fishing position
     def getCues(self):
@@ -108,6 +108,21 @@ class Game(models.Model):
 
         # now delegate to the cue class
         return cues.generate(self, pos)
+
+    # a function that returns the list of fishes in the yield
+    def getFishInYield(self, pos):
+        fish = {}
+        # initial list
+        yields = self.level['yields'][pos]
+        for i in range(self.level['timeInLoc'][pos], len(yields)):
+            if None != yields[i]:
+                addFishToDict(fish, yields[i])
+
+        # add prefered depth
+        for k, v in fish.iteritems():
+            v['depth'] = getPreferedDepth(k)
+
+        return fish
 
     # recalculate all the yields for this game
     def recalcYields(self):
@@ -255,4 +270,21 @@ class Game(models.Model):
     # that this model belongs to the app
     class Meta:
         app_label = 'gofish'
+
+##############################################################
+# internal helper functions
+##############################################################
+# adds fish to a given fish dict, for cues
+def addFishToDict(fishDict, fish):
+    if fish['name'] not in fishDict:
+        fishDict[fish['name']] = {'weight': 0.0, 'count': 0}
+    fishDict[fish['name']]['weight'] += fish['weight']
+    fishDict[fish['name']]['count'] += 1
+
+# a function that gets the preferred depth of a fish
+def getPreferedDepth(fishName):
+    for k, v in gamedef.GAME['fish'].iteritems():
+        if fishName == v['name']:
+            return v['habitat']
+    return -1
 

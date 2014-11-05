@@ -36,42 +36,13 @@ def createNoCue():
 # return format: a list of lists for every depth unit
 #   in a format [number of fish, the size indication]]
 def createCue(game, pos, visibility, accuracy):
-    fish = getFish(game, pos)
+    fish = game.getFish(pos)
     maxDepth = game.level['map'][0][pos]
     cues = []
     for i in range(0, maxDepth):
         cues.append(aggregateFish(fish, i, visibility,
                                   accuracy, maxDepth - 1))
     return cues
-
-# a function that returns the list of fishes in the yield
-def getFish(game, pos):
-    fish = {}
-    # initial list
-    yields = game.level['yields'][pos]
-    for i in range(game.level['timeInLoc'][pos], len(yields)):
-        if None != yields[i]:
-            addFish(fish, yields[i])
-
-    # add prefered depth
-    for k, v in fish.iteritems():
-        v['depth'] = getDepth(k)
-
-    return fish
-
-# adds fish to a fish list
-def addFish(fishList, fish):
-    if fish['name'] not in fishList:
-        fishList[fish['name']] = {'weight': 0.0, 'count': 0}
-    fishList[fish['name']]['weight'] += fish['weight']
-    fishList[fish['name']]['count'] += 1
-
-# a function that gets the preferred depth of a fish
-def getDepth(fishName):
-    for k, v in gamedef.GAME['fish'].iteritems():
-        if fishName == v['name']:
-            return v['habitat']
-    return -1
 
 # a function that aggregates all the fish on that depth
 def aggregateFish(fish, depth, visibility, accuracy, mdepth):
