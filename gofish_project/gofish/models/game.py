@@ -1,10 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
-
 import json
 
 from player import Player
-
+from gofish.yieldmerger import YieldMerger
 import gofish.gamedef as gamedef
 import gofish.cues as cues
 
@@ -103,7 +102,7 @@ class Game(models.Model):
         pos = self.level['position']
         # create yields if they are not present
         if None == self.level['yields'][pos]:
-            gamedef.setYieldFor(self, pos)
+            self.setYieldFor(pos)
             self.saveGame()
 
         # now delegate to the cue class
@@ -132,7 +131,22 @@ class Game(models.Model):
     def recalcYields(self):
         for pos in range(len(self.level['yields'])):
             if self.level['yields'][pos]:
-                gamedef.setYieldFor(self, pos)
+                self.setYieldFor(pos)
+
+    # compute a new yield function for the specified location
+    def setYieldFor(self, pos):
+        # setup some variables
+        player = self.player
+        fish = gamedef.getFishForLevel(self.level['index'])
+        yieldMerger = YieldMerger(480/5)
+        depth = self.level['map'][0][pos]
+
+        # add yields for every fish
+        for fishId, f in fish.iteritems():
+            yieldMerger.addYield(fishId, f, depth, player)
+
+        # get the combined yield
+        self.level['yields'][pos] = yieldMerger.merge()
 
     ##############################################################
     # actions
@@ -170,7 +184,7 @@ class Game(models.Model):
     def fish(self, steps):
         pos = self.level['position']
         if None == self.level['yields'][pos]:
-            gamedef.setYieldFor(self, pos)
+            self.setYieldFor(pos)
             self.saveGame()
 
         spotYield = self.level['yields'][pos]
@@ -231,7 +245,7 @@ class Game(models.Model):
     def catchAll(self, fishList):
         pos = self.level['position']
         if None == self.level['yields'][pos]:
-            gamedef.setYieldFor(self, pos)
+            self.setYieldFor(pos)
             self.saveGame()
 
         spotYield = self.level['yields'][pos]

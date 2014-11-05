@@ -1,5 +1,4 @@
 import maps
-from yieldmerger import YieldMerger
 
 # here we have a GAME definition object, already priced
 TOTAL_TIME = 480
@@ -226,19 +225,4 @@ def getLevel(level):
     lvl['yields'] = [None for i in range(20)]
 
     return lvl
-
-# compute a new yield function for the specified location
-def setYieldFor(game, pos):
-    # setup some variables
-    player = game.player
-    fish = getFishForLevel(game.level['index'])
-    yieldMerger = YieldMerger(480/5)
-    depth = game.level['map'][0][pos]
-
-    # add yields for every fish
-    for fishId, f in fish.iteritems():
-        yieldMerger.addYield(fishId, f, depth, player)
-
-    # get the combined yield
-    game.level['yields'][pos] = yieldMerger.merge()
 
