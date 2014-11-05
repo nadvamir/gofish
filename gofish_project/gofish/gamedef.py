@@ -202,15 +202,12 @@ GAME = {
 
 # a function to get the fish for this level
 def getFishForLevel(level):
-    print level
-    print GAME['levels'][level]['fish']
     f = {}
     for fish, locF in GAME['levels'][level]['fish'].iteritems():
         newFish = dict(GAME['fish'][fish])
         newFish['probability'] = locF['probability']
         newFish['distribution'] = locF['distribution']
         f[fish] = newFish
-    print f
     return f
 
 # a function to get the level dict

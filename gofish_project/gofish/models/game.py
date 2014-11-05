@@ -108,6 +108,10 @@ class Game(models.Model):
 
         # now delegate to the cue class
         return cues.generate(self, pos)
+    
+    # returns the depth of a spot on the map
+    def getDephFor(self, position):
+        return self.level['map'][0][position]
 
     # a function that returns the list of fishes in the yield
     def getFishInYield(self, pos):
@@ -174,7 +178,6 @@ class Game(models.Model):
         maxSteps = len(spotYield) - spotTime
         if steps > maxSteps:
             steps = maxSteps
-        print steps
 
         stepCost = self.level['totalTime'] / len(spotYield)
         expectedEndTime = steps * stepCost + self.level['time'] 

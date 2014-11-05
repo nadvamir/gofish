@@ -4,12 +4,12 @@ from random import randint
 import gamedef
 
 generators = [
-    lambda g, p: createNoCue(),             # no cues
-    lambda g, p: createCue(g, p, -1, 0.1),  # map
-    lambda g, p: createCue(g, p, 5, 0.5),   # camera
-    lambda g, p: createCue(g, p, 8, 0.7),   # old sonar
-    lambda g, p: createCue(g, p, 10, 0.85), # modern sonar
-    lambda g, p: createCue(g, p, 10, 1.0)   # mermaid
+    lambda g, p: BaseCue().get(),                     # no cues
+    lambda g, p: DepthCue(g, p).get(),                # map
+    lambda g, p: UniformNoiseCue(g, p, 4, 0.5).get(), # camera
+    lambda g, p: UniformNoiseCue(g, p, 7, 0.7).get(), # old sonar
+    lambda g, p: UniformNoiseCue(g, p, 10, 0.85).get(), # sonar
+    lambda g, p: FishCue(g, p, 10).get()              # mermaid
 ]
 
 sizeIndicators = [
@@ -27,55 +27,97 @@ def generate(game, position):
     return generators[detail](game, position)
 
 #################################################################
-# INTERNALS
+# Cue classes
 #################################################################
-# creates a cue that does not show anything
-def createNoCue():
-    return [[-1, 0]]
+# the base case, no cues are given
+class BaseCue(object):
+    def get(self):
+        return [[-1, 0]]
 
-# creates a cue with some information
-# all of the cues here know at least te depth
-# visibility: how many metres down can it see
-# accuracy: how accurate are the predictions
-# return format: a list of lists for every depth unit
-#   in a format [number of fish, the size indication]]
-def createCue(game, pos, visibility, accuracy):
-    fish = game.getFish(pos)
-    maxDepth = game.level['map'][0][pos]
-    cues = []
-    for i in range(0, maxDepth):
-        cues.append(aggregateFish(fish, i, visibility,
-                                  accuracy, maxDepth - 1))
-    return cues
+# the more complicated case, the depth is revealed
+class DepthCue(BaseCue):
+    def __init__(self, game, position):
+        self.game = game
+        self.fish = game.getFishInYield(position)
+        self.depth = game.getDephFor(position)
 
-# a function that aggregates all the fish on that depth
-def aggregateFish(fish, depth, visibility, accuracy, mdepth):
-    # if it is deeper than we see, we have no info:
-    if depth > visibility:
+    def get(self):
+        cues = []
+        for i in range(0, self.depth):
+            cues.append(self.aggregateFish(i))
+        return cues
+
+    def aggregateFish(self, aggrDepth):
         return [-1, 0]
 
-    # calculate average weight and total count of fish here
-    weight = 0.0
-    count = 0.0
-    for k, v in fish.iteritems():
-        if v['depth'] == depth or depth == mdepth and v['depth'] > depth:
-            weight += v['weight']
-            count += v['count']
-    if count > 0:
-        weight /= count
+# in an even more complicated case, the fish information is given
+class FishCue(DepthCue):
+    def __init__(self, game, position, visibility):
+        super(FishCue, self).__init__(game, position)
+        self.visibility = visibility
 
-    # introducing error with respect to accuracy
-    count = round(uniform(count * accuracy, count / accuracy))
-    weight = uniform(weight * accuracy, weight / accuracy)
-    # ghost sygnals
-    if random() > accuracy:
-        count += randint(0, 2)
-        weight += random()
+    def aggregateFish(self, aggrDepth):
+        # if it is deeper than we see, we have no info:
+        if aggrDepth > self.visibility:
+            return [-1, 0]
+
+        # calculate average weight and total count of fish here
+        # all the fish that is in too shallow places
+        # is aggregated at the very bottom
+        weight = 0.0
+        count = 0.0
+        for k, v in self.fish.iteritems():
+            if v['depth'] == aggrDepth \
+                    or aggrDepth == self.depth - 1 \
+                    and v['depth'] > aggrDepth:
+                weight += v['weight']
+                count += v['count']
+        if count > 0:
+            weight /= count
+
+        # introducing error with respect to accuracy
+        count = self.introduceNoiseToCount(count)
+        weight = self.introduceNoiseToWeight(weight)
+
+        # final answer
+        return [count, self.getSizeIndicator(weight)]
+
+    def introduceNoiseToCount(self, count):
+        # no noise for now
+        return count
+
+    def introduceNoiseToWeight(self, weight):
+        # no noise for now
+        return weight
 
     # calculating size indicator
-    i = 0
-    while weight < sizeIndicators[i] and i < len(sizeIndicators):
-        i += 1
-    indicator = i
+    def getSizeIndicator(self, weight):
+        i = 0
+        while i < len(sizeIndicators) \
+                and weight < sizeIndicators[i]:
+            i += 1
+        return i
 
-    return [count, indicator]
+# finally, we have noisy output
+class UniformNoiseCue(FishCue):
+    def __init__(self, game, pos, visibility, accuracy):
+        super(UniformNoiseCue, self).__init__(game, pos,
+                                              visibility)
+        self.accuracy = accuracy
+
+    def introduceNoiseToCount(self, count):
+        count = round(uniform(count * self.accuracy,
+                              count / self.accuracy))
+        # ghost sygnals
+        if random() > self.accuracy:
+            count += randint(0, 2)
+        return count
+
+    def introduceNoiseToWeight(self, weight):
+        weight = uniform(weight * self.accuracy,
+                         weight / self.accuracy)
+        # ghost sygnals
+        if random() > self.accuracy:
+            weight += random()
+        return weight
+
