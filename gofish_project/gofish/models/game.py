@@ -135,7 +135,7 @@ class Game(models.Model):
         return fish
 
     # create yields if they are not present
-    def ensureYieldsExist(self):
+    def ensureYieldsExist(self, pos):
         if None == self.level['yields'][pos]:
             self.setYieldFor(pos)
             self.saveGame()
