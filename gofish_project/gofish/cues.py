@@ -12,6 +12,10 @@ generators = [
     lambda g, p: createCue(g, p, 10, 1.0)   # mermaid
 ]
 
+sizeIndicators = [
+    0.5, 1.0, 3.0, 10.0
+]
+
 #################################################################
 # INTERFACE
 #################################################################
@@ -69,14 +73,9 @@ def aggregateFish(fish, depth, visibility, accuracy, mdepth):
         weight += random()
 
     # calculating size indicator
-    indicator = 0
-    if weight > 0.5 and weight <= 1.0:
-        indicator = 1
-    elif weight > 1.0 and weight <= 3.0:
-        indicator = 2
-    elif weight > 3.0 and weight <= 10.0:
-        indicator = 3
-    else:
-        indicator = 4
+    i = 0
+    while weight < sizeIndicators[i] and i < len(sizeIndicators):
+        i += 1
+    indicator = i
 
     return [count, indicator]
