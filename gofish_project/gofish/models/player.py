@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import json
-import gofish.gamedef as gamedef
+import gofish.engine.gamedef as gamedef
 
 MIN_MONEY = 10
 

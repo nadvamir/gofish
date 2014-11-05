@@ -5,7 +5,7 @@ from lazysignup.decorators import allow_lazy_user
 import json
 
 import gofish.models as models
-import gofish.gamedef as gamedef
+import gofish.engine.gamedef as gamedef
 
 #################################################################
 # API

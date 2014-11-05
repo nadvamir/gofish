@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 import json
 
 from player import Player
-from gofish.yieldmerger import YieldMerger
-from gofish.cues import *
-import gofish.gamedef as gamedef
+from gofish.engine.yieldmerger import YieldMerger
+from gofish.engine.cues import *
+import gofish.engine.gamedef as gamedef
 
 MIN_MONEY = 10
 
