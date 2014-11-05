@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import json
-import gofish.gamedef
+import gofish.gamedef as gamedef
 
 MIN_MONEY = 10
 
@@ -16,6 +16,9 @@ class Player(models.Model):
     # what modifiers does it has (JSON)
     modifiers = models.TextField(default='{}')
 
+    ##############################################################
+    # access
+    ##############################################################
     # a method to get initialised player object
     @staticmethod
     def initialise(user):
@@ -34,6 +37,40 @@ class Player(models.Model):
 
         return player
 
+    # a method to marshal fields
+    def marshal(self):
+        if not isinstance(self.updates, basestring):
+            self.updates = json.dumps(self.updates)
+        if not isinstance(self.modifiers, basestring):
+            self.modifiers = json.dumps(self.modifiers)
+
+    # a method to unmarshal fields
+    def unmarshal(self):
+        if isinstance(self.updates, basestring):
+            self.updates = json.loads(self.updates)
+        if isinstance(self.modifiers, basestring):
+            self.modifiers = json.loads(self.modifiers)
+
+    # a special save method, to ensure, that we
+    # serialise our fields
+    def savePlayer(self):
+        self.marshal()
+        self.save()
+        self.unmarshal()
+
+    def toDict(self):
+        return {
+            'money': self.money,
+            'updates': self.updates,
+            'modifiers': self.modifiers,
+        }
+
+    def __unicode__(self):
+        return self.user.username + ' player'
+
+    ##############################################################
+    # helpers
+    ##############################################################
     # returns movement cost of this player
     def getMoveCost(self):
         cost = 30
@@ -82,6 +119,9 @@ class Player(models.Model):
 
         return probability
 
+    ##############################################################
+    # actions
+    ##############################################################
     # tries to update a given target
     def update(self, target):
         if target in gamedef.GAME['updates']:
@@ -143,37 +183,9 @@ class Player(models.Model):
         self.savePlayer()
         return True
 
-    # a method to marshal fields
-    def marshal(self):
-        if not isinstance(self.updates, basestring):
-            self.updates = json.dumps(self.updates)
-        if not isinstance(self.modifiers, basestring):
-            self.modifiers = json.dumps(self.modifiers)
-
-    # a method to unmarshal fields
-    def unmarshal(self):
-        if isinstance(self.updates, basestring):
-            self.updates = json.loads(self.updates)
-        if isinstance(self.modifiers, basestring):
-            self.modifiers = json.loads(self.modifiers)
-
-    # a special save method, to ensure, that we
-    # serialise our fields
-    def savePlayer(self):
-        self.marshal()
-        self.save()
-        self.unmarshal()
-
-    def toDict(self):
-        return {
-            'money': self.money,
-            'updates': self.updates,
-            'modifiers': self.modifiers,
-        }
-
-    def __unicode__(self):
-        return self.user.username + ' player'
-
+    ##############################################################
+    # Django boilerplate
+    ##############################################################
     # this has to be included to make Django realise
     # that this model belongs to the app
     class Meta:

@@ -5,8 +5,8 @@ import json
 
 from player import Player
 
-import gofish.gamedef
-import gofish.cues
+import gofish.gamedef as gamedef
+import gofish.cues as cues
 
 MIN_MONEY = 10
 
@@ -19,6 +19,9 @@ class Game(models.Model):
     # a json representation of the fish caught
     caught = models.TextField(default='[]')
     
+    ##############################################################
+    # access
+    ##############################################################
     # a method to get initialised game object
     @staticmethod
     def initialise(player, level=None):
@@ -65,6 +68,36 @@ class Game(models.Model):
         self.delete()
         return earned
 
+    # a method to marshal fields
+    def marshal(self):
+        if not isinstance(self.level, basestring):
+            self.level = json.dumps(self.level)
+        if not isinstance(self.caught, basestring):
+            self.caught = json.dumps(self.caught)
+        # no need to marshal the player here
+
+    # a method to unmarshal fields
+    def unmarshal(self):
+        if isinstance(self.level, basestring):
+            self.level = json.loads(self.level)
+        if isinstance(self.caught, basestring):
+            self.caught = json.loads(self.caught)
+        # unmarshal player as well, to make life easy
+        self.player.unmarshal()
+
+    # a special save method, to ensure, that we
+    # serialise our fields
+    def saveGame(self):
+        self.marshal()
+        self.save()
+        self.unmarshal()
+    
+    def __unicode__(self):
+        return self.player.user.username + ' game'
+
+    ##############################################################
+    # helpers
+    ##############################################################
     # returns cues for the current fishing position
     def getCues(self):
         pos = self.level['position']
@@ -76,6 +109,15 @@ class Game(models.Model):
         # now delegate to the cue class
         return cues.generate(self, pos)
 
+    # recalculate all the yields for this game
+    def recalcYields(self):
+        for pos in range(len(self.level['yields'])):
+            if self.level['yields'][pos]:
+                gamedef.setYieldFor(self, pos)
+
+    ##############################################################
+    # actions
+    ##############################################################
     # a method to move player on the map
     def move(self, direction):
         size = len(self.level['map'][0])
@@ -206,39 +248,9 @@ class Game(models.Model):
             'time': time
         }
 
-    # recalculate all the yields for this game
-    def recalcYields(self):
-        for pos in range(len(self.level['yields'])):
-            if self.level['yields'][pos]:
-                gamedef.setYieldFor(self, pos)
-
-    # a method to marshal fields
-    def marshal(self):
-        if not isinstance(self.level, basestring):
-            self.level = json.dumps(self.level)
-        if not isinstance(self.caught, basestring):
-            self.caught = json.dumps(self.caught)
-        # no need to marshal the player here
-
-    # a method to unmarshal fields
-    def unmarshal(self):
-        if isinstance(self.level, basestring):
-            self.level = json.loads(self.level)
-        if isinstance(self.caught, basestring):
-            self.caught = json.loads(self.caught)
-        # unmarshal player as well, to make life easy
-        self.player.unmarshal()
-
-    # a special save method, to ensure, that we
-    # serialise our fields
-    def saveGame(self):
-        self.marshal()
-        self.save()
-        self.unmarshal()
-    
-    def __unicode__(self):
-        return self.player.user.username + ' game'
-
+    ##############################################################
+    # Django boilerplate
+    ##############################################################
     # this has to be included to make Django realise
     # that this model belongs to the app
     class Meta:
