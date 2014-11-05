@@ -1,39 +1,22 @@
 from random import uniform
 from random import random
 from random import randint
-import gamedef
-
-generators = [
-    lambda g, p: BaseCue().get(),                     # no cues
-    lambda g, p: DepthCue(g, p).get(),                # map
-    lambda g, p: UniformNoiseCue(g, p, 4, 0.5).get(), # camera
-    lambda g, p: UniformNoiseCue(g, p, 7, 0.7).get(), # old sonar
-    lambda g, p: UniformNoiseCue(g, p, 10, 0.85).get(), # sonar
-    lambda g, p: FishCue(g, p, 10).get()              # mermaid
-]
 
 sizeIndicators = [
     0.5, 1.0, 3.0, 10.0
 ]
 
 #################################################################
-# INTERFACE
-#################################################################
-# function to generate the cues
-def generate(game, position):
-    # get the level of detail
-    detail = game.player.getCueDetail()
-    # create a specific cue for that level of detail
-    return generators[detail](game, position)
-
-#################################################################
-# Cue classes
+# BaseCue
 #################################################################
 # the base case, no cues are given
 class BaseCue(object):
     def get(self):
         return [[-1, 0]]
 
+#################################################################
+# DepthCue
+#################################################################
 # the more complicated case, the depth is revealed
 class DepthCue(BaseCue):
     def __init__(self, game, position):
@@ -50,6 +33,9 @@ class DepthCue(BaseCue):
     def aggregateFish(self, aggrDepth):
         return [-1, 0]
 
+#################################################################
+# FishCue
+#################################################################
 # in an even more complicated case, the fish information is given
 class FishCue(DepthCue):
     def __init__(self, game, position, visibility):
@@ -98,6 +84,9 @@ class FishCue(DepthCue):
             i += 1
         return i
 
+#################################################################
+# UniformNoiseCue
+#################################################################
 # finally, we have noisy output
 class UniformNoiseCue(FishCue):
     def __init__(self, game, pos, visibility, accuracy):

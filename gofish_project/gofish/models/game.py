@@ -4,10 +4,19 @@ import json
 
 from player import Player
 from gofish.yieldmerger import YieldMerger
+from gofish.cues import *
 import gofish.gamedef as gamedef
-import gofish.cues as cues
 
 MIN_MONEY = 10
+
+generators = [
+    lambda g, p: BaseCue().get(),                     # no cues
+    lambda g, p: DepthCue(g, p).get(),                # map
+    lambda g, p: UniformNoiseCue(g, p, 4, 0.5).get(), # camera
+    lambda g, p: UniformNoiseCue(g, p, 7, 0.7).get(), # old sonar
+    lambda g, p: UniformNoiseCue(g, p, 10, 0.85).get(), # sonar
+    lambda g, p: FishCue(g, p, 10).get()              # mermaid
+]
 
 # a game class, representing the current level and everything
 # that happens in it
@@ -104,9 +113,10 @@ class Game(models.Model):
         if None == self.level['yields'][pos]:
             self.setYieldFor(pos)
             self.saveGame()
-
-        # now delegate to the cue class
-        return cues.generate(self, pos)
+        # get the level of detail
+        detail = self.player.getCueDetail()
+        # create a specific cue for that level of detail
+        return generators[detail](self, pos)
     
     # returns the depth of a spot on the map
     def getDephFor(self, position):
