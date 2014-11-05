@@ -2,6 +2,9 @@
 *.swp
 *.swo
 
+# the database
+*.db
+
 # Phonegap
 *.metadata/
 phonegap/gofish/platforms/*
