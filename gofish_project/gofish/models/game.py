@@ -109,10 +109,7 @@ class Game(models.Model):
     # returns cues for the current fishing position
     def getCues(self):
         pos = self.level['position']
-        # create yields if they are not present
-        if None == self.level['yields'][pos]:
-            self.setYieldFor(pos)
-            self.saveGame()
+        self.ensureYieldsExist(pos)
         # get the level of detail
         detail = self.player.getCueDetail()
         # create a specific cue for that level of detail
@@ -136,6 +133,12 @@ class Game(models.Model):
             v['depth'] = getPreferedDepth(k)
 
         return fish
+
+    # create yields if they are not present
+    def ensureYieldsExist(self):
+        if None == self.level['yields'][pos]:
+            self.setYieldFor(pos)
+            self.saveGame()
 
     # recalculate all the yields for this game
     def recalcYields(self):
@@ -193,9 +196,7 @@ class Game(models.Model):
     # to actually advance timer
     def fish(self, steps):
         pos = self.level['position']
-        if None == self.level['yields'][pos]:
-            self.setYieldFor(pos)
-            self.saveGame()
+        self.ensureYieldsExist(pos)
 
         spotYield = self.level['yields'][pos]
         spotTime = self.level['timeInLoc'][pos]
@@ -215,8 +216,7 @@ class Game(models.Model):
     # a method to actually catch the next N fish
     def catch(self, fishList):
         pos = self.level['position']
-        if None == self.level['yields'][pos]:
-            return None
+        self.ensureYieldsExist(pos)
 
         spotYield = self.level['yields'][pos]
         spotTime = self.level['timeInLoc'][pos]
@@ -254,9 +254,7 @@ class Game(models.Model):
     # a method to actually catch the next N fish or nothings
     def catchAll(self, fishList):
         pos = self.level['position']
-        if None == self.level['yields'][pos]:
-            self.setYieldFor(pos)
-            self.saveGame()
+        self.ensureYieldsExist(pos)
 
         spotYield = self.level['yields'][pos]
         spotTime = self.level['timeInLoc'][pos]
