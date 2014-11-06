@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import json
+import logging
 
 from player import Player
 from gofish.engine.yieldmerger import YieldMerger
@@ -101,7 +102,7 @@ class Game(models.Model):
         self.unmarshal()
     
     def __unicode__(self):
-        return self.player.user.username + ' game'
+        return str(self.player) + ' ' + str(self.level['index'])
 
     ##############################################################
     # external helpers
@@ -161,9 +162,43 @@ class Game(models.Model):
         # get the combined yield
         self.level['yields'][pos] = yieldMerger.merge()
 
-    ##############################################################
+    # returns optimal time to spend in the given location
+    def getOptimalTime(self, pos):
+        self.ensureYieldsExist(pos)
+
+        maxVal = 0.0
+        bestTime = 0
+        val = 0.0
+        time = 1
+        fishingCost = 5
+        travelCost = self.player.getMoveCost() if pos > 0 else 0
+
+        for fish in self.level['yields'][pos]:
+            if None != fish:
+                val += fish['value']
+            if val / (time * fishingCost + travelCost) > maxVal:
+                maxVal = val / (time * fishingCost + travelCost)
+                bestTime = time
+            time += 1
+
+        return bestTime
+
+
+    # a method to log users performance
+    def logPerformance(self):
+        logger = logging.getLogger('gofish')
+
+        pos = self.level['position']
+        timeSpent = self.level['timeInLoc'][pos]
+        optimalTime = self.getOptimalTime(pos)
+
+        msg = str(self) + ' ' + str(timeSpent) + ' ' \
+                + str(optimalTime)
+        logger.info(msg)
+
+    #############################################################
     # actions
-    ##############################################################
+    #############################################################
     # a method to move player on the map
     def move(self, direction):
         size = len(self.level['map'][0])
@@ -180,6 +215,9 @@ class Game(models.Model):
 
         if self.level['time'] + cost > self.level['totalTime']:
             return None
+
+        # log the players performance for the research
+        self.logPerformance()
 
         self.level['position'] = position
         self.level['time'] += cost

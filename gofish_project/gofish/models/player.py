@@ -16,9 +16,9 @@ class Player(models.Model):
     # what modifiers does it has (JSON)
     modifiers = models.TextField(default='{}')
 
-    ##############################################################
+    #############################################################
     # access
-    ##############################################################
+    #############################################################
     # a method to get initialised player object
     @staticmethod
     def initialise(user):
@@ -66,11 +66,11 @@ class Player(models.Model):
         }
 
     def __unicode__(self):
-        return self.user.username + ' player'
+        return self.user.username + ' ' + str(self.getCueDetail())
 
-    ##############################################################
+    #############################################################
     # helpers
-    ##############################################################
+    #############################################################
     # returns movement cost of this player
     def getMoveCost(self):
         cost = 30
@@ -119,9 +119,9 @@ class Player(models.Model):
 
         return probability
 
-    ##############################################################
+    #############################################################
     # actions
-    ##############################################################
+    #############################################################
     # tries to update a given target
     def update(self, target):
         if target in gamedef.GAME['updates']:
@@ -183,9 +183,9 @@ class Player(models.Model):
         self.savePlayer()
         return True
 
-    ##############################################################
+    #############################################################
     # Django boilerplate
-    ##############################################################
+    #############################################################
     # this has to be included to make Django realise
     # that this model belongs to the app
     class Meta:

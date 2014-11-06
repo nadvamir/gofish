@@ -159,13 +159,24 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'applogfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_PATH, 'gofish.log'),
+            'maxBytes': 1024*1024*150, # 150MB
+            'backupCount': 10,
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        'gofish': {
+            'handlers': ['applogfile',],
+            'level': 'DEBUG',
         },
     }
 }
