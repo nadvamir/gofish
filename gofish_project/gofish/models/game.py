@@ -66,6 +66,10 @@ class Game(models.Model):
     # a special delete method, that calculates the value
     # of the fish caught, and rewards the player
     def deleteGame(self):
+        # log the players performance for the research
+        # (counting end game in the same fashion, as move)
+        self.logPerformance()
+
         earned = 0
         for fish in self.caught:
             earned += fish['value']
