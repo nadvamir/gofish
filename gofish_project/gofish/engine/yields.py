@@ -1,9 +1,14 @@
+from random import uniform
+
 #################################################################
 # HELPERS
 #################################################################
+# positive(val) returns val if it is positive
+# 0 otherwise. 
 def positive(val):
     return val if val > 0 else 0.0
 
+# nth returns a reduced value for every n times, 0 otherwise
 def nth(i, n, val, red):
     return positive(val - i/n*red) if (i + 1) % n == 0 else 0.0
 
