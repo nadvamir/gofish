@@ -28,7 +28,6 @@ goFish.controller("hubController", ["$scope", "GameService", function($scope, Ga
 	});
 
 	// Initialisation
-	$scope.updatePlaying();
-	GameService.updateGame();
+	$scope.updateState();
 
 } ]);

@@ -1,9 +1,15 @@
 goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope) {
 
 	var API_URL = "http://nadvamir.pythonanywhere.com/gofish/api/";
+	var thisService = this;
 	var game = {};
 	var currentLevel = {};
 	var results = {};
+
+	var errorMessage = function() {
+		alert("Error getting response from server.");
+		return {};
+	};
 
 	var getJSON = function(urlExtension) {
 		$http.get(API_URL+urlExtension).
@@ -18,8 +24,24 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				};
 			}).
 			error(function() {
-				alert("Error getting response from server.");
-				return {};
+				return errorMessage();
+			})
+	};
+
+	updateGame = function() {
+		$http.get(API_URL+"getgame/").
+			success(function(data) {
+				if(data.error) {
+					alert(data.error);
+					return {};
+				}
+				else {
+					game = data;
+					$rootScope.$broadcast("gameUpdated");
+				};
+			}).
+			error(function() {
+				return errorMessage();
 			})
 	};
 
@@ -28,21 +50,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 			return getJSON(urlExtension);
 		},
 		updateGame: function() {
-			$http.get(API_URL+"getgame/").
-				success(function(data) {
-					if(data.error) {
-						alert(data.error);
-						return {};
-					}
-					else {
-						game = data;
-						$rootScope.$broadcast("gameUpdated");
-					};
-				}).
-				error(function() {
-					alert("Error getting response from server.");
-					return {};
-				})
+			return updateGame();
 		},
 		getGame: function() {
 			return game;
@@ -60,9 +68,11 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 					};
 				}).
 				error(function() {
-					alert("Error getting response from server.");
-					return {};
+					return errorMessage();
 				})
+		},
+		getCurrentLevel: function() {
+			return currentLevel;
 		},
 		move: function(direction) {
 			$http.get(API_URL+"action/move/"+direction+"/").
@@ -79,8 +89,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 					};
 				}).
 				error(function() {
-					alert("Error getting response from server.");
-					return {};
+					return errorMessage();
 				})
 		},
 		fish: function() {
@@ -102,8 +111,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 					};
 				}).
 				error(function() {
-					alert("Error getting response from server.");
-					return {};
+					return errorMessage();
 				})
 		},
 		endLevel: function() {
@@ -122,15 +130,26 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 					};
 				}).
 				error(function() {
-					alert("Error getting response from server.");
-					return {};
+					return errorMessage();
 				})
-		},
-		getCurrentLevel: function() {
-			return currentLevel;
 		},
 		getResults: function() {
 			return results;
+		},
+		buyUpgrade: function(category) {
+			$http.get(API_URL+"update/"+category+"/").
+				success(function(data) {
+					if(data.error) {
+						alert(data.error);
+						return {};
+					}
+					else {
+						updateGame();
+					};
+				}).
+				error(function() {
+					return errorMessage();
+				})
 		}
 	}
 
