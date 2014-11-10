@@ -45,10 +45,15 @@ goFish.directive("shopUpgrade", [function(){
 				}
 			};
 
-			var updatePlayer = function() {
+			var update = function() {
 				if (GameService.getGame().player) {
 					$scope.player = GameService.getGame().player;
 				}
+				if (GameService.getGame().updates[$scope.category]) {
+					$scope.all = GameService.getGame().updates[$scope.category];
+				}
+				getCurrentUpgrade();
+				getNextUpgrade();
 			}
 
 			$scope.buy = function() {
@@ -60,22 +65,15 @@ goFish.directive("shopUpgrade", [function(){
 				}
 				else {
 					GameService.buyUpgrade($scope.category);
-					$scope.current = $scope.next;
-					getNextUpgrade();
 				}
 			};
 
 			$scope.$on("gameUpdated", function() {
-				updatePlayer();
+				update();
 			});
 
 			// Initialisation
-			updatePlayer();
-			if (GameService.getGame().updates[$scope.category]) {
-				$scope.all = GameService.getGame().updates[$scope.category];
-			}
-			getCurrentUpgrade();
-			getNextUpgrade();
+			update();
 
 		},
 		controllerAs: "shopUpgradeCtrl"

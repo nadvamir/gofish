@@ -150,6 +150,21 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				error(function() {
 					return errorMessage();
 				})
+		},
+		buyBait: function(name) {
+			$http.get(API_URL+"buy/"+name+"/").
+				success(function(data) {
+					if(data.error) {
+						alert(data.error);
+						return {};
+					}
+					else {
+						updateGame();
+					};
+				}).
+				error(function() {
+					return errorMessage();
+				})
 		}
 	}
 
