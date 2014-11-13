@@ -11,6 +11,8 @@ class Player(models.Model):
 
     # how much currency this player has
     money     = models.IntegerField(default=10)
+    # how many games has he played in total
+    numGames  = models.IntegerField(default=0)
     # what updates has it bought (JSON)
     updates   = models.TextField(default='{}')
     # what modifiers does it has (JSON)
@@ -66,7 +68,9 @@ class Player(models.Model):
         }
 
     def __unicode__(self):
-        return self.user.username + ' ' + str(self.getCueDetail())
+        return self.user.username + ' ' \
+                + str(self.numGames) + ' ' \
+                + str(self.getCueDetail())
 
     #############################################################
     # helpers

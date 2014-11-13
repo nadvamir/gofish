@@ -50,6 +50,9 @@ class Game(models.Model):
                 return None
             # remove the price of the level from player
             player.money -= level['cost']
+            # update the number of games for this player
+            player.numGames += 1
+            # save changes to player
             player.savePlayer()
 
             game = Game(player=player, level=json.dumps(level))
@@ -68,7 +71,7 @@ class Game(models.Model):
     def deleteGame(self):
         # log the players performance for the research
         # (counting end game in the same fashion, as move)
-        self.logPerformance()
+        self.logPerformance(True)
 
         earned = 0
         for fish in self.caught:
@@ -167,7 +170,7 @@ class Game(models.Model):
         self.level['yields'][pos] = yieldMerger.merge()
 
     # returns optimal time to spend in the given location
-    def getOptimalTime(self, pos):
+    def getOptimalTime(self, pos, local = False):
         self.ensureYieldsExist(pos)
 
         maxVal = 0.0
@@ -183,22 +186,46 @@ class Game(models.Model):
             if val / (time * fishingCost + travelCost) > maxVal:
                 maxVal = val / (time * fishingCost + travelCost)
                 bestTime = time
+            elif val / (time*fishingCost + travelCost) < maxVal\
+                    and True == local:
+                # local optima found
+                return bestTime
             time += 1
 
         return bestTime
 
+    # returns how much money was earned in loc till given time
+    def getMoneyEarnedIn(self, pos, timeSpent):
+        earned = 0
+        fish = self.level['yields'][pos]
+        for i in range(0, timeSpent):
+            if None != fish[i]:
+                earned += fish[i]['value']
+        return earned
 
     # a method to log users performance
-    def logPerformance(self):
+    def logPerformance(self, endGame = False):
         logger = logging.getLogger('gofish')
 
+        levelInfo = str(self)
         pos = self.level['position']
         timeSpent = self.level['timeInLoc'][pos]
         optimalTime = self.getOptimalTime(pos)
+        localOptT = self.getOptimalTime(pos, local=True)
+        moneyEarned = str(self.getMoneyEarnedIn(pos, timeSpent))
+        optimalM = str(self.getMoneyEarnedIn(pos, optimalTime))
+        localOptM = str(self.getMoneyEarnedIn(pos, localOptT))
+        endGame = '1' if endGame else '0'
+        moveCost = str(self.player.getMoveCost())
+        fishCost = '5'
 
-        msg = str(self) + ' ' + str(timeSpent) + ' ' \
-                + str(optimalTime)
-        logger.info(msg)
+        msg = [
+            levelInfo, moveCost, fishCost, endGame,
+            str(timeSpent), str(optimalTime), str(localOptT),
+            moneyEarned, optimalM, localOptM
+        ]
+
+        logger.info(' '.join(msg))
 
     #############################################################
     # actions
