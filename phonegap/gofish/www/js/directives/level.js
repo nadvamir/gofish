@@ -11,6 +11,8 @@ goFish.directive("level", [function(){
 				var playerMoney = GameService.getGame().player.money;
 				if (playerMoney < $scope.levelData.cost) {
 					alert("You don't have enough money to fish in "+$scope.levelData.name);
+					GameService.startLevel($scope.levelData["index"]);
+					GameService.updateGame();
 				}
 				else {
 					GameService.startLevel($scope.levelData["index"]);

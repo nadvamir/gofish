@@ -1,0 +1,10 @@
+<h1>Results</h1>
+<h2>Money earned this trip: {{results.earned}}</h2>
+<h2>Total Money: {{results.total}}</h2>
+<h2>Fish Caught:</h2>
+<ul>
+	<li ng-repeat="fish in results.caught | orderBy:'-value'">
+		<p>{{fish.weight}}kg {{fish.name}} measuring {{fish.length}}cm [+{{fish.value}}]</p>
+	</li>
+</ul>
+<a href ng-click="exit()">Return</a>

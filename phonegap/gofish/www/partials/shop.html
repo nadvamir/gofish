@@ -1,11 +1,13 @@
 <div class="container shop-screen">
 
 	<h1>Shop</h1>
-
+	<h2>Upgrades</h2>
 	<div ng-repeat="(category, items) in game.updates">
-		<shop-item-category category="category"
-							items="items">
-		</shop-item-category>
+		<shop-upgrade category="category"
+					 items="items">
+		</shop-upgrade>
 	</div>
+	<h2>Bait</h2>
+	<shop-bait-list></shop-bait-list>
 
 </div>
