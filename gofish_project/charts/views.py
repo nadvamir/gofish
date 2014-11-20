@@ -41,5 +41,10 @@ def dataAggregated(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def getData(request):
-    response = {}
+    response = {
+            'xName': 'Moves',
+            'yName': 'Divergence from Optimum',
+            'rows' : [ [1, 3], [2, 2], [3, 1], [4, -1], [5, 0] ],
+            'title': 'How Optimal was the Amount of Time Spent in Location'
+    }
     return HttpResponse(json.dumps(response), content_type="application/json")

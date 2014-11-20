@@ -16,13 +16,25 @@ a:visited {
     </style>
     
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
+    <!-- Our js libraries -->
+    <script type="text/javascript" src="/static/js/graphs.js"></script>
+    <script type="text/javascript" src="/static/js/api.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            drawData('');
+        });
+    </script>
     
 </head>
 <body>
     <header><h1>User data explorer</h1></header>
     
     <section>
-        <p>TODO</p>
+        <p onclick="drawChart()">TODO</p>
+        <div id="chart-div"/>
     </section>
 </body>
 </html>
