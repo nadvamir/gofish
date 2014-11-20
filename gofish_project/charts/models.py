@@ -38,5 +38,5 @@ class DataPoint(models.Model):
     # this has to be included to make Django realise
     # that this model belongs to the app
     class Meta:
-        app_label = 'gofish'
+        app_label = 'charts'
 

@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^gofish/', include('gofish.urls')),
+    url(r'^charts/', include('charts.urls')),
     url(r'^convert/', include('lazysignup.urls')),
 )
 
