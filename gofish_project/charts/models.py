@@ -28,6 +28,8 @@ class DataPoint(models.Model):
     optimalM  = models.IntegerField()
     # how much money would local optimum bring
     locOptM   = models.IntegerField()
+    # time the datapoint was recorded
+    createdAt = models.IntegerField()
 
     def __unicode__(self):
         'a data point'

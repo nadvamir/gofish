@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import json
 import logging
+import time
 
 from player import Player
 from gofish.engine.yieldmerger import YieldMerger
@@ -207,22 +208,24 @@ class Game(models.Model):
     def logPerformance(self, endGame = False):
         logger = logging.getLogger('gofish')
 
-        levelInfo = str(self)
-        pos = self.level['position']
-        timeSpent = self.level['timeInLoc'][pos]
+        levelInfo   = str(self)
+        pos         = self.level['position']
+        timeSpent   = self.level['timeInLoc'][pos]
         optimalTime = self.getOptimalTime(pos)
-        localOptT = self.getOptimalTime(pos, local=True)
+        localOptT   = self.getOptimalTime(pos, local=True)
         moneyEarned = str(self.getMoneyEarnedIn(pos, timeSpent))
-        optimalM = str(self.getMoneyEarnedIn(pos, optimalTime))
-        localOptM = str(self.getMoneyEarnedIn(pos, localOptT))
-        endGame = '1' if endGame else '0'
-        moveCost = str(self.player.getMoveCost())
-        fishCost = '5'
+        optimalM    = str(self.getMoneyEarnedIn(pos, optimalTime))
+        localOptM   = str(self.getMoneyEarnedIn(pos, localOptT))
+        endGame     = '1' if endGame else '0'
+        moveCost    = str(self.player.getMoveCost())
+        fishCost    = '5'
+        createdAt   = str(int(round(time.time())))
 
         msg = [
             levelInfo, moveCost, fishCost, endGame,
             str(timeSpent), str(optimalTime), str(localOptT),
-            moneyEarned, optimalM, localOptM
+            moneyEarned, optimalM, localOptM,
+            createdAt
         ]
 
         logger.info(' '.join(msg))
