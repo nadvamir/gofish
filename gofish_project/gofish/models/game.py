@@ -303,7 +303,7 @@ class Game(models.Model):
                     time += stepCost
                     spotTime += 1
 
-            if time > totalTime or spotTime == len(spotYield):
+            if time + stepCost > totalTime or spotTime == len(spotYield):
                 break
 
             if '1' == succeeded:
@@ -337,7 +337,7 @@ class Game(models.Model):
         caught = []
         response = []
         for succeeded in fishList:
-            if time > totalTime or spotTime == len(spotYield):
+            if time + stepCost > totalTime or spotTime == len(spotYield):
                 break
 
             if '1' == succeeded and None != spotYield[spotTime]:
