@@ -213,9 +213,9 @@ class Game(models.Model):
         timeSpent   = self.level['timeInLoc'][pos]
         optimalTime = self.getOptimalTime(pos)
         localOptT   = self.getOptimalTime(pos, local=True)
-        moneyEarned = str(self.getMoneyEarnedIn(pos, timeSpent))
-        optimalM    = str(self.getMoneyEarnedIn(pos, optimalTime))
-        localOptM   = str(self.getMoneyEarnedIn(pos, localOptT))
+        moneyEarned = str(int(self.getMoneyEarnedIn(pos, timeSpent)))
+        optimalM    = str(int(self.getMoneyEarnedIn(pos, optimalTime)))
+        localOptM   = str(int(self.getMoneyEarnedIn(pos, localOptT)))
         endGame     = '1' if endGame else '0'
         moveCost    = str(self.player.getMoveCost())
         fishCost    = '5'

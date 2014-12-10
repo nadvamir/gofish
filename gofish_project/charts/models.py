@@ -35,6 +35,37 @@ class DataPoint(models.Model):
         'a data point'
 
     #############################################################
+    # creators
+    #############################################################
+    # take a line from log and store it in the database
+    @staticmethod
+    def insertFromLine(line):
+        # our data is space separated
+        line = line.split(' ')
+        print line
+        print len(line)
+
+        # create a data point
+        point = DataPoint(
+            username  = line[0],
+            gameNum   = int(line[1]),
+            cueDetail = int(line[2]),
+            level     = int(line[3]),
+            moveCost  = int(line[4]),
+            fishCost  = int(line[5]),
+            endGame   = int(line[6]),
+            timeSpent = int(line[7]),
+            optTime   = int(line[8]),
+            locOptT   = int(line[9]),
+            earnedM   = int(line[10]),
+            optimalM  = int(line[11]),
+            locOptM   = int(line[12]),
+            createdAt = int(line[13]))
+
+        # store it
+        point.save()
+
+    #############################################################
     # Django boilerplate
     #############################################################
     # this has to be included to make Django realise
