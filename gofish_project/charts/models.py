@@ -42,8 +42,6 @@ class DataPoint(models.Model):
     def insertFromLine(line):
         # our data is space separated
         line = line.split(' ')
-        print line
-        print len(line)
 
         # create a data point
         point = DataPoint(
