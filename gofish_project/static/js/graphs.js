@@ -4,13 +4,15 @@ google.load('visualization', '1.0', {'packages':['corechart']});
 // Callback that creates and populates a data table,
 // instantiates the pie chart, passes in the data and
 // draws it.
-function drawChart(params) {
+function drawChart(params, result) {
     console.log(params);
     // Create the data table.
     var data = new google.visualization.DataTable();
-    data.addColumn('number', params.xName);
-    data.addColumn('number', params.yName);
-    data.addRows(params.rows);
+    for (var i in params.names) {
+        data.addColumn('number', params.names[i]);
+    }
+    data.addRows(params.dataF(result));
+    console.log(params.dataF(result));
 
     // Set chart options
     var options = {'title'  : params.title,

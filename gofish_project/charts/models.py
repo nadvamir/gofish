@@ -1,4 +1,5 @@
 from django.db import models
+from copy import copy
 
 # a data point for charting
 class DataPoint(models.Model):
@@ -34,6 +35,11 @@ class DataPoint(models.Model):
     def __unicode__(self):
         'a data point'
 
+    def toDict(self):
+        d = copy(self.__dict__)
+        d['_state'] = None
+        return d
+
     #############################################################
     # creators
     #############################################################
@@ -62,6 +68,38 @@ class DataPoint(models.Model):
 
         # store it
         point.save()
+
+    #############################################################
+    # accessors
+    #############################################################
+    # return all data points for a query
+    @staticmethod
+    def query(username=None, gameNum=None, cueDetail=None,
+              level=None, moveCost=None, endGame=None):
+        qs = DataPoint.objects.all()
+
+        if None != username:  qs = qs.filter(username=username)
+        if None != gameNum:   qs = qs.filter(gameNum=gameNum)
+        if None != cueDetail: qs = qs.filter(cueDetail=cueDetail)
+        if None != level:     qs = qs.filter(level=level)
+        if None != moveCost:  qs = qs.filter(moveCost=moveCost)
+        if None != endGame:   qs = qs.filter(endGame=endGame)
+
+        qs = qs.order_by('id')
+
+        return qs
+
+    # return overall info about our data
+    @staticmethod
+    def describeData():
+        qs = DataPoint.objects.all();
+        return {
+            'usernames'  : qs.values('username').distinct(),
+            'gameNums'   : qs.values('gameNum').distinct(),
+            'cueDetails' : qs.values('cueDetail').distinct(),
+            'levels'     : qs.values('level').distinct(),
+            'moveCosts'  : qs.values('moveCost').distinct()
+        }
 
     #############################################################
     # Django boilerplate

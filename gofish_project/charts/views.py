@@ -43,8 +43,10 @@ def parseLog(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def dataByUser(request):
+    choices = DataPoint.describeData()
     context = RequestContext(request)
-    context_dict = {}
+    context_dict = {'choices': choices}
+    print choices
     return render_to_response('charts/data_user.html', context_dict, context)
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -55,10 +57,13 @@ def dataAggregated(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 def getData(request):
-    response = {
-            'xName': 'Moves',
-            'yName': 'Divergence from Optimum',
-            'rows' : [ [1, 3], [2, 2], [3, 1], [4, -1], [5, 0] ],
-            'title': 'How Optimal was the Amount of Time Spent in Location'
-    }
+    qs = DataPoint.query(
+        username  = request.GET.get('username', None),
+        gameNum   = request.GET.get('gameNum', None),
+        cueDetail = request.GET.get('cueDetail', None),
+        level     = request.GET.get('level', None),
+        moveCost  = request.GET.get('moveCost', None),
+        endGame   = request.GET.get('endGame', None))
+
+    response = {'data': [el.toDict() for el in qs]}
     return HttpResponse(json.dumps(response), content_type="application/json")
