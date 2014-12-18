@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from copy import copy
 
 # a data point for charting
@@ -88,6 +89,45 @@ class DataPoint(models.Model):
         qs = qs.order_by('id')
 
         return qs
+
+    # return data for bar chart queries (so, aggregated)
+    @staticmethod
+    def queryBarData(x):
+        xExpr = {
+            'optTime'      : '(timeSpent-optTime)',
+            'optMoney'     : '(earnedM-optimalM)',
+            'loptTime'     : '(timeSpent-locOptT)',
+            'loptMoney'    : '(earnedM-locOptM)',
+            'optTimeAbs'   : 'abs(timeSpent-optTime)',
+            'optMoneyAbs'  : 'abs(earnedM-optimalM)',
+            'loptTimeAbs'  : 'abs(timeSpent-locOptT)',
+            'loptMoneyAbs' : 'abs(earnedM-locOptM)'
+        }
+        x = 'optTime' if x not in xExpr else x
+
+        return DataPoint.objects\
+                .extra(select = {'x': xExpr[x]})\
+                .values('x')\
+                .annotate(Count('id'))\
+                .order_by('x')
+
+    # return data for box chart queries (grouped, not aggregated)
+    @staticmethod
+    def queryBoxData(x, y):
+        yExpr = {
+            'optTimeAbs'   : 'abs(timeSpent-optTime)',
+            'optMoneyAbs'  : 'abs(earnedM-optimalM)',
+            'loptTimeAbs'  : 'abs(timeSpent-locOptT)',
+            'loptMoneyAbs' : 'abs(earnedM-locOptM)'
+        }
+        x = 'cueDetail' if None == x else x
+        y = 'optTimeAbs' if y not in yExpr else y
+
+        return DataPoint.objects\
+                .extra(select = {'y': yExpr[y], 'x': x})\
+                .values('x', 'y')\
+                .order_by(x)
+        return []
 
     # return overall info about our data
     @staticmethod

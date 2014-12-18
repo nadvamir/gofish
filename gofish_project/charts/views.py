@@ -55,6 +55,10 @@ def dataAggregated(request):
     context_dict = {}
     return render_to_response('charts/data_aggregated.html', context_dict, context)
 
+#################################################################
+# Data API
+#################################################################
+# data for single user query
 @user_passes_test(lambda u: u.is_superuser)
 def getData(request):
     qs = DataPoint.query(
@@ -67,3 +71,22 @@ def getData(request):
 
     response = {'data': [el.toDict() for el in qs]}
     return HttpResponse(json.dumps(response), content_type="application/json")
+
+# data for aggregated bar charts 
+@user_passes_test(lambda u: u.is_superuser)
+def getBarData(request):
+    qs = DataPoint.queryBarData(request.GET.get('x', None))
+
+    response = {'data': [el for el in qs]}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+# data for aggregated box charts
+@user_passes_test(lambda u: u.is_superuser)
+def getBoxData(request):
+    qs = DataPoint.queryBoxData(
+        x = request.GET.get('x', None),
+        y = request.GET.get('y', None))
+
+    response = {'data': [el for el in qs]}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
