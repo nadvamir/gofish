@@ -29,8 +29,9 @@ def parseLog(request):
     # parse the log file
     with open('gofish.log', 'r') as f:
         for line in f:
-            DataPoint.insertFromLine(line)
-            numEntries += 1
+            if line != '\n':
+                DataPoint.insertFromLine(line)
+                numEntries += 1
 
     # flush the log file
     with open('gofish.log', 'w') as f:
