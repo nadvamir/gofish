@@ -74,6 +74,10 @@ def dataAggregated(request):
                 'level'        : 'Level of Game',
             },
             'boxY': {
+                'optTime'      : 'Optimality of Time',
+                'optMoney'     : 'Optimality of Money',
+                'loptTime'     : 'Local Opt. of Time',
+                'loptMoney'    : 'Local Opt. of Money',
                 'optTimeAbs'   : 'Absolute Opt. of Time',
                 'optMoneyAbs'  : 'Absolute Opt. of Money',
                 'loptTimeAbs'  : 'Absolute Loc. Opt. of Time',

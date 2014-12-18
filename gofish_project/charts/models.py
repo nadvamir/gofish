@@ -115,6 +115,10 @@ class DataPoint(models.Model):
     @staticmethod
     def queryBoxData(x, y):
         yExpr = {
+            'optTime'      : '(timeSpent-optTime)',
+            'optMoney'     : '(earnedM-optimalM)',
+            'loptTime'     : '(timeSpent-locOptT)',
+            'loptMoney'    : '(earnedM-locOptM)',
             'optTimeAbs'   : 'abs(timeSpent-optTime)',
             'optMoneyAbs'  : 'abs(earnedM-optimalM)',
             'loptTimeAbs'  : 'abs(timeSpent-locOptT)',
