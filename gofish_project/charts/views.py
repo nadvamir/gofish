@@ -46,13 +46,40 @@ def dataByUser(request):
     choices = DataPoint.describeData()
     context = RequestContext(request)
     context_dict = {'choices': choices}
-    print choices
     return render_to_response('charts/data_user.html', context_dict, context)
 
 @user_passes_test(lambda u: u.is_superuser)
 def dataAggregated(request):
     context = RequestContext(request)
-    context_dict = {}
+    context_dict = {
+        'choices': {
+            'bar': {
+                'optTime'      : 'Optimality of Time',
+                'optMoney'     : 'Optimality of Money',
+                'loptTime'     : 'Local Opt. of Time',
+                'loptMoney'    : 'Local Opt. of Money',
+                'optTimeAbs'   : 'Absolute Opt. of Time',
+                'optMoneyAbs'  : 'Absolute Opt. of Money',
+                'loptTimeAbs'  : 'Absolute Loc. Opt. of Time',
+                'loptMoneyAbs' : 'Absolute Loc. Opt. of Money'
+            },
+            'boxX': {
+                'cueDetail'    : 'Detail of Cues',
+                'level'        : 'Level of Game',
+                'gameNum'      : 'Game Number',
+                'fishCost'     : 'Fishing Cost',
+                'moveCost'     : 'Moving Cost',
+                'endGame'      : 'End Game',
+                'level'        : 'Level of Game',
+            },
+            'boxY': {
+                'optTimeAbs'   : 'Absolute Opt. of Time',
+                'optMoneyAbs'  : 'Absolute Opt. of Money',
+                'loptTimeAbs'  : 'Absolute Loc. Opt. of Time',
+                'loptMoneyAbs' : 'Absolute Loc. Opt. of Money'
+            }
+        }
+    }
     return render_to_response('charts/data_aggregated.html', context_dict, context)
 
 #################################################################
