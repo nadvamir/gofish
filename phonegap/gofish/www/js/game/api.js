@@ -1,4 +1,4 @@
-var API = "http://nadvamir.pythonanywhere.com/gofish/api/" // Root URL for API commands
+var API = "http://sjakobsen.pythonanywhere.com/gofish/api/" // Root URL for API commands
 
 function getObjectFromAPI(url) {
     $.getJSON( url, function( data )
