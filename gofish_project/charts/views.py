@@ -88,6 +88,15 @@ def dataAggregated(request):
     return render_to_response('charts/data_aggregated.html', context_dict, context)
 
 #################################################################
+# Optimisation of the Game
+#################################################################
+@user_passes_test(lambda u: u.is_superuser)
+def optimise(request):
+    context = RequestContext(request)
+    context_dict = {}
+    return render_to_response('charts/optimise.html', context_dict, context)
+
+#################################################################
 # Data API
 #################################################################
 # data for single user query

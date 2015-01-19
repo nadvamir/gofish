@@ -4,6 +4,7 @@ from charts import views
 urlpatterns = patterns('',
         # index page, to show the options
         url(r'^$', views.index, name='index'),
+
         # consumes log and creates database entries from it
         url(r'^parse_log/$', views.parseLog, name='parseLog'),
         # visualiser of individual user data
@@ -12,6 +13,11 @@ urlpatterns = patterns('',
         # visualiser of aggregated data
         url(r'^data_aggregated/$', views.dataAggregated,
             name='dataAggregated'),
+
+        # calculates reward for fish and cost of levels
+        url(r'^optimise/$', views.optimise,
+            name='optimise'),
+
         # api call to get specific data
         url(r'^api/get_data/$', views.getData,
             name='getData'),
