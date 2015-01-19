@@ -49,8 +49,15 @@ function open(selector) {
 function generateLevelUrls(levels) {
     var h = '';
     for (var i in levels) {
-        h += '<a href="#" onclick="selectLevel(' + i + ')">' + levels[i].name + 
-             '</a>, cost <strong>' + levels[i].cost + '</strong><br/ >';
+        if (i <= GAME.player.level) {
+            h += '<a href="#" onclick="selectLevel(' + i + ')">' + levels[i].name + 
+                 '</a>, unlocked<br/ >';
+        } else if (i == GAME.player.level + 1) {
+            h += '<a href="#" onclick="selectLevel(' + i + ')">' + levels[i].name + 
+                 '</a>, cost <strong>' + levels[i].cost + '</strong><br/ >';
+        } else {
+            h += levels[i].name + '<br/ >';
+        }
     }
     $('#levels').html(h);
 }

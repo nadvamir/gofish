@@ -3,8 +3,6 @@ from django.contrib.auth.models import User
 import json
 import gofish.engine.gamedef as gamedef
 
-MIN_MONEY = 10
-
 # a player of the game
 class Player(models.Model):
     user      = models.OneToOneField(User)
@@ -13,6 +11,8 @@ class Player(models.Model):
     money     = models.IntegerField(default=10)
     # how many games has he played in total
     numGames  = models.IntegerField(default=0)
+    # what is the highest level unlocked by a player
+    level     = models.IntegerField(default=0)
     # what updates has it bought (JSON)
     updates   = models.TextField(default='{}')
     # what modifiers does it has (JSON)
@@ -62,14 +62,16 @@ class Player(models.Model):
 
     def toDict(self):
         return {
-            'money': self.money,
-            'updates': self.updates,
-            'modifiers': self.modifiers,
+            'money'     : self.money,
+            'updates'   : self.updates,
+            'modifiers' : self.modifiers,
+            'level'     : self.level,
         }
 
     def __unicode__(self):
         return self.user.username + ' ' \
                 + str(self.numGames) + ' ' \
+                + str(self.level) + ' ' \
                 + str(self.getCueDetail())
 
     #############################################################
@@ -103,9 +105,8 @@ class Player(models.Model):
         return None
 
     # returns if there is enough money to buy something
-    # a minimum has to remain, otherwise fishing is impossible
     def hasEnoughFor(self, amount):
-        return self.money - MIN_MONEY >= amount
+        return self.money >= amount
 
     # augment probability to catch a fiven fish
     def augmentProb(self, fish, probability):

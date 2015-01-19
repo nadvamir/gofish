@@ -8,6 +8,8 @@ class DataPoint(models.Model):
     username  = models.TextField()
     # game number for this player
     gameNum   = models.IntegerField()
+    # the maximum level player has unlocked
+    playerLvl = models.IntegerField()
     # detauls for the cues
     cueDetail = models.IntegerField()
     # game level index
@@ -54,18 +56,19 @@ class DataPoint(models.Model):
         point = DataPoint(
             username  = line[0],
             gameNum   = int(line[1]),
-            cueDetail = int(line[2]),
-            level     = int(line[3]),
-            moveCost  = int(line[4]),
-            fishCost  = int(line[5]),
-            endGame   = int(line[6]),
-            timeSpent = int(line[7]),
-            optTime   = int(line[8]),
-            locOptT   = int(line[9]),
-            earnedM   = int(line[10]),
-            optimalM  = int(line[11]),
-            locOptM   = int(line[12]),
-            createdAt = int(line[13]))
+            playerLvl = int(line[2]),
+            cueDetail = int(line[3]),
+            level     = int(line[4]),
+            moveCost  = int(line[5]),
+            fishCost  = int(line[6]),
+            endGame   = int(line[7]),
+            timeSpent = int(line[8]),
+            optTime   = int(line[9]),
+            locOptT   = int(line[10]),
+            earnedM   = int(line[11]),
+            optimalM  = int(line[12]),
+            locOptM   = int(line[13]),
+            createdAt = int(line[14]))
 
         # store it
         point.save()
@@ -75,12 +78,14 @@ class DataPoint(models.Model):
     #############################################################
     # return all data points for a query
     @staticmethod
-    def query(username=None, gameNum=None, cueDetail=None,
+    def query(username=None, gameNum=None,
+              playerLvl=None, cueDetail=None,
               level=None, moveCost=None, endGame=None):
         qs = DataPoint.objects.all()
 
         if None != username:  qs = qs.filter(username=username)
         if None != gameNum:   qs = qs.filter(gameNum=gameNum)
+        if None != playerLvl: qs = qs.filter(playerLvl=playerLvl)
         if None != cueDetail: qs = qs.filter(cueDetail=cueDetail)
         if None != level:     qs = qs.filter(level=level)
         if None != moveCost:  qs = qs.filter(moveCost=moveCost)
@@ -140,6 +145,7 @@ class DataPoint(models.Model):
         return {
             'usernames'  : qs.values('username').distinct(),
             'gameNums'   : qs.values('gameNum').distinct(),
+            'playerLvls' : qs.values('playerLvl').distinct(),
             'cueDetails' : qs.values('cueDetail').distinct(),
             'levels'     : qs.values('level').distinct(),
             'moveCosts'  : qs.values('moveCost').distinct()

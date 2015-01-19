@@ -9,8 +9,6 @@ from gofish.engine.yieldmerger import YieldMerger
 from gofish.engine.cues import *
 import gofish.engine.gamedef as gamedef
 
-MIN_MONEY = 10
-
 generators = [
     lambda g, p: BaseCue().get(),                     # no cues
     lambda g, p: DepthCue(g, p).get(),                # map
@@ -29,9 +27,9 @@ class Game(models.Model):
     # a json representation of the fish caught
     caught = models.TextField(default='[]')
     
-    ##############################################################
+    #############################################################
     # access
-    ##############################################################
+    #############################################################
     # a method to get initialised game object
     @staticmethod
     def initialise(player, level=None):
@@ -46,11 +44,20 @@ class Game(models.Model):
             # that we don't want to create a game
             if None == level:
                 return None
-            # if there is not enough money, return None
-            if player.money < level['cost']:
-                return None
-            # remove the price of the level from player
-            player.money -= level['cost']
+
+            # if it is the first time we play, 
+            # then consume the money
+            if player.level < level['index']:
+                # can only move one level at a time
+                if level['index'] - player.level > 1:
+                    return None
+                # if there is not enough money, return None
+                if player.money < level['cost']:
+                    return None
+                # remove the price of the level from player
+                player.money -= level['cost']
+                player.level += 1
+
             # update the number of games for this player
             player.numGames += 1
             # save changes to player
@@ -78,8 +85,6 @@ class Game(models.Model):
         for fish in self.caught:
             earned += fish['value']
         self.player.money += earned
-        if self.player.money < MIN_MONEY:
-            self.player.money = MIN_MONEY
         self.player.savePlayer()
 
         self.delete()

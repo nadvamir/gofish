@@ -128,7 +128,7 @@ GAME = {
                 },
             },
         },
-        'cost': 10,
+        'cost': 0,
       }, {
         'name': 'Lake',
         'fish': {
