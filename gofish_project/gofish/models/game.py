@@ -68,10 +68,19 @@ class Game(models.Model):
 
         # unmarshal json fields
         game.unmarshal()
+        # error if the game is restored, and it is different
+        # than the one we ask for
         if level and game.level['index'] != level['index']:
             # or, maybe end the previous game and start a new one
             return None
 
+        return game
+
+    # a method to get test game
+    @staticmethod
+    def stub(player, level):
+        game = Game(player=player, level=json.dumps(level))
+        game.unmarshal()
         return game
 
     # a special delete method, that calculates the value

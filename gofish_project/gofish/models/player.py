@@ -39,6 +39,13 @@ class Player(models.Model):
 
         return player
 
+    # a method to get test user
+    @staticmethod
+    def stub():
+        player = Player(user=None)
+        player.unmarshal()
+        return player
+
     # a method to marshal fields
     def marshal(self):
         if not isinstance(self.updates, basestring):
