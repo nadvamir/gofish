@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 import json
 
 from models import DataPoint
+from optimise import *
 
 #################################################################
 # CHART ADMIN
@@ -93,6 +94,10 @@ def dataAggregated(request):
 @user_passes_test(lambda u: u.is_superuser)
 def optimise(request):
     context = RequestContext(request)
+
+    # 1. Monte Carlo simulation
+    yields = YieldCalculator.getYields()
+
     context_dict = {}
     return render_to_response('charts/optimise.html', context_dict, context)
 
