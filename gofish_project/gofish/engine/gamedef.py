@@ -5,6 +5,7 @@ TOTAL_TIME = 480
 GAME = {
     'fish': {
         'shoe': {
+            'id': 'shoe',
             'name': 'Shoe',
             'value': 1,
             'weight': 0.3,
@@ -12,6 +13,7 @@ GAME = {
             'habitat': 1,
         },
         'bass': {
+            'id': 'bass',
             'name': 'Bass',
             'value': 3,
             'weight': 0.2,
@@ -19,6 +21,7 @@ GAME = {
             'habitat': 4,
         },
         'brime': {
+            'id': 'brime',
             'name': 'Brime',
             'value': 7,
             'weight': 1.0,
@@ -26,6 +29,7 @@ GAME = {
             'habitat': 6,
         },
         'pike': {
+            'id': 'pike',
             'name': 'Pike',
             'value': 17,
             'weight': 1.5,
@@ -33,6 +37,7 @@ GAME = {
             'habitat': 3,
         },
         'catfish': {
+            'id': 'catfish',
             'name': 'Catfish',
             'value': 41,
             'weight': 10.0,

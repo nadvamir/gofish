@@ -49,6 +49,7 @@ class YieldMerger:
     def __catch(self, probability, fish):
         if random() <= probability:
             caught = {
+                'id': fish['id'],
                 'name': fish['name'],
                 'weight': round(gauss(fish['weight'],\
                                 fish['weight'] * 0.25), 2),

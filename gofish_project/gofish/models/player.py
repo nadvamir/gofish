@@ -42,7 +42,7 @@ class Player(models.Model):
     # a method to get test user
     @staticmethod
     def stub():
-        player = Player(user=None)
+        player = Player(user=User())
         player.unmarshal()
         return player
 
