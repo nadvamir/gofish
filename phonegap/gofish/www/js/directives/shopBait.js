@@ -22,7 +22,7 @@ goFish.directive("shopBait", [function(){
 				if (playerMoney < $scope.bait.price) {
 					alert("You cannot afford this item.");
 				}
-				else {
+				else if (!scope.owned) {
 					GameService.buyBait($scope.name);
 				}
 			};

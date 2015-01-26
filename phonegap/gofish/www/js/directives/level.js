@@ -7,7 +7,7 @@ goFish.directive("level", [function(){
 			levelData: "="
 		},
 		controller: function($scope, GameService) {
-			this.selectLevel = function() {
+			$scope.selectLevel = function() {
 				var playerMoney = GameService.getGame().player.money;
 				if (playerMoney < $scope.levelData.cost) {
 					alert("You don't have enough money to fish in "+$scope.levelData.name);

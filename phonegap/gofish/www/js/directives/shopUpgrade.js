@@ -63,7 +63,7 @@ goFish.directive("shopUpgrade", [function(){
 				if (playerMoney < $scope.next.price) {
 					alert("You cannot afford this item.");
 				}
-				else {
+				else if ($scope.next != null) {
 					GameService.buyUpgrade($scope.category);
 				}
 			};
