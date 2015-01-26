@@ -1,4 +1,6 @@
-<h3>{{category}}</h3>
-<p ng-show="current">You own: {{current.name}}</p>
-<p ng-show="next"><a href ng-click="buy()">Upgrade to {{next.name}}</a><br/>Cost: {{next.price}}</p>
-<p ng-hide="next">We don't stock anything finer than this.</p>
+<div class="shop-item">
+	<h3>{{next.name}}</h3>
+	<p ng-show="current">You own: {{current.name}}</p>
+	<p ng-show="next"><a href ng-click="buy()">Buy</a><br/>Cost: {{next.price}}</p>
+	<p ng-hide="next">We don't stock anything finer than this.</p>
+</div>

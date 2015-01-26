@@ -8,6 +8,8 @@
 		</shop-upgrade>
 	</div>
 	<h2>Bait</h2>
-	<shop-bait-list></shop-bait-list>
+	<div ng-repeat="(name, bait) in game.modifiers">
+		<shop-bait name="name" bait="bait"></shop-bait>
+	</div>
 
 </div>

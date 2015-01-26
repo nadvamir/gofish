@@ -1,9 +1,91 @@
-body {
-	min-height: 2000px;
+/* GENERAL */
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.top {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 999;
+}
+
+.allow-for-nav {
 	padding-top: 70px;
 }
+
+/* HUD */
+
+.bait-icon {
+	width: 25%;
+}
+
+.hud {
+	width: 100%;
+}
+
+.hud-money {
+	background-color: yellow;
+}
+
+.hud-right {
+	width: 20%;
+	padding-top: 2%;
+}
+
+.hud-left {
+	width: 80%;
+	padding-top: 2%;
+}
+
+.map-icon {
+	width: 100%;
+}
+
+.progress {
+	width: 80%;
+	margin: 0 0 0 0;
+	border-radius: 0;
+}
+
+/* GAME */
+
+.level-screen {
+	margin-top: 30%;
+}
+
+.fishing-spot-depth {
+	width: 100%;
+	background-color: blue;
+}
+
+/* LEVEL SELECT */
 
 .user-icon {
 	width: 42px;
 	height: 42px;
+}
+
+/* SHOP */
+
+.shop-item, .level {
+	height: 15%;
+	padding: 1%;
+	margin-top: 2.5%;
+	margin-bottom: 2.5%;
+	background-color: green;
+	/*
+	background-image: url(../img/wood.jpg);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	*/
+}
+
+.shop-item h3, .level h3 {
+	margin-top: 0px;
 }

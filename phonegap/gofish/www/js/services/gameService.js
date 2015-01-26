@@ -1,6 +1,6 @@
 goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope) {
 
-	var API_URL = "http://nadvamir.pythonanywhere.com/gofish/api/";
+	var API_URL = "http://sjakobsen.pythonanywhere.com/gofish/api/";
 	var thisService = this;
 	var game = {};
 	var currentLevel = {};
