@@ -8,6 +8,15 @@
 	float: right;
 }
 
+.left-75 {
+	width: 74%;
+	padding-right: 1%;
+}
+
+.right-25 {
+	width: 25%;
+}
+
 .top {
 	position: fixed;
 	top: 0;
@@ -43,10 +52,6 @@
 	padding-top: 2%;
 }
 
-.map-icon {
-	width: 100%;
-}
-
 .progress {
 	width: 80%;
 	margin: 0 0 0 0;
@@ -71,7 +76,11 @@
 	height: 42px;
 }
 
-/* SHOP */
+.level-icon {
+	width: 100%;
+}
+
+/* SHOP & LEVEL */
 
 .shop-item, .level {
 	height: 15%;
@@ -88,4 +97,8 @@
 
 .shop-item h3, .level h3 {
 	margin-top: 0px;
+}
+
+.shop-item-icon, .map-icon {
+	width: 100%;
 }

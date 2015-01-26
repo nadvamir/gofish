@@ -1,6 +1,11 @@
 <div class="shop-item">
-	<h3>{{next.name}}</h3>
-	<p ng-show="current">You own: {{current.name}}</p>
-	<p ng-show="next"><a href ng-click="buy()">Buy</a><br/>Cost: {{next.price}}</p>
-	<p ng-hide="next">We don't stock anything finer than this.</p>
+	<div class="left left-75">
+		<h3 ng-show="next"><a href ng-click="buy()">{{next.name}} (£{{next.price}})</a></h3>
+		<h3 ng-hide="next">SOLD OUT</h3>
+		<p ng-show="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+		<p ng-hide="next">We don't stock anything finer than what you have.</p>
+	</div>
+	<div class="right right-25">
+		<img class="shop-item-icon" src="./img/placeholderbait.jpg"></img>
+	</div>
 </div>

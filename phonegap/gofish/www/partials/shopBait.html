@@ -1,5 +1,11 @@
 <div class="shop-item">
-	<h3> {{name}} </h3>
-	<p ng-hide="owned"><a href ng-click="buy()">Buy</a><br/>Cost: {{bait.price}}</p>
-	<p ng-show="owned">{{name}}<br/>You already own this!</p>
+	<div class="left left-75">
+		<h3 ng-hide="owned"><a href ng-click="buy()">{{name}} (£{{bait.price}})</a></h3>
+		<h3 ng-show="owned">SOLD OUT</h3>
+		<p ng-hide="owned">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+		<p ng-show="owned">You already own this bait.</p>
+	</div>
+	<div class="right right-25">
+		<img class="shop-item-icon" src="./img/placeholderbait.jpg"></img>
+	</div>
 </div>
