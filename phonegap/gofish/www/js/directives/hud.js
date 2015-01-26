@@ -19,6 +19,11 @@ goFish.directive("hud", [function(){
 				if (currentLevel.money) {
 					$scope.money = currentLevel.money;
 				}
+				// Check if time is up and end level when necessary
+				if ($scope.timeSpent >= $scope.totalTime) {
+					console.log("HUD ending level");
+					GameService.endLevel();
+				}
 			};
 
 			$scope.reset = function() {	
