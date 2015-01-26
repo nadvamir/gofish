@@ -10,11 +10,18 @@
 
 .left-75 {
 	width: 74%;
+	height: 100%;
 	padding-right: 1%;
 }
 
 .right-25 {
 	width: 25%;
+	height: 100%;
+}
+
+.scrollable {
+	overflow: -moz-scrollbars-none;
+	overflow: auto;
 }
 
 .top {
@@ -60,12 +67,35 @@
 
 /* GAME */
 
-.level-screen {
-	margin-top: 30%;
+.above-water {
+	padding-top: 30%;
+	height: 40%;
+}
+
+.water {
+	height: 60%;
+	background-color: green;
+}
+
+
+.left-hint {
+	width: 15%;
+	height: 100%;
+}
+
+.right-hint {
+	width: 15%;
+	height: 100%;
+}
+
+.centre-spot {
+	width: 70%;
+	display: inline-block;
 }
 
 .fishing-spot-depth {
 	width: 100%;
+	height: 20%;
 	background-color: blue;
 }
 

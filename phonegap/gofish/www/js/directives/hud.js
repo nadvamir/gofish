@@ -6,19 +6,18 @@ goFish.directive("hud", [function(){
 		scope: {},
 		controller: function($scope, GameService) {
 
-			$scope.updatePlayer = function() {
-				if (GameService.getGame().player) {
-					$scope.player = GameService.getGame().player;
-				}
-			};
-
-			$scope.updateTime = function() {
+			$scope.updateHUD = function() {
 				var currentLevel = GameService.getCurrentLevel();
-				if (currentLevel.level && currentLevel.level.time) {
-					$scope.timeSpent = currentLevel.level.time;
+				if (currentLevel.level) {
+					if (currentLevel.level.time) {
+						$scope.timeSpent = currentLevel.level.time;
+					}
+					if (currentLevel.level.totalTime) {
+						$scope.totalTime = currentLevel.level.totalTime;
+					}
 				}
-				if (currentLevel.level && currentLevel.level.totalTime) {
-					$scope.totalTime = currentLevel.level.totalTime;
+				if (currentLevel.money) {
+					$scope.money = currentLevel.money;
 				}
 			};
 
@@ -26,6 +25,7 @@ goFish.directive("hud", [function(){
 				$scope.player = {};
 				$scope.totalTime = 480;
 				$scope.timeSpent = 0;
+				$scope.money = 0;
 			}
 
 			$scope.getTimePercentage = function() {
@@ -36,16 +36,12 @@ goFish.directive("hud", [function(){
 			$scope.reset();
 
 			// Listen for updates
-			$scope.$on("gameUpdated", function() {
-				$scope.updatePlayer();
-			});
-
 			$scope.$on("levelStarted", function() {
-				$scope.updateTime();
+				$scope.updateHUD();
 			});
 
 			$scope.$on("levelUpdated", function() {
-				$scope.updateTime();
+				$scope.updateHUD();
 			});
 
 			// Ensure a clean HUD on next level

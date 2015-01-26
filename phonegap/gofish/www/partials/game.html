@@ -1,13 +1,24 @@
 <div class="level-screen">
 	<hud></hud>
 
-	<h1>{{level.level.name}}</h1>
-	<h2>Time Left: {{level.level.totalTime - level.level.time}}</h2>
-	<h2>Money: {{level.money}}</h2>
-	<a href ng-click="moveLeft()">LEFT</a>
-	<a href ng-click="fish()">FISH</a>
-	<a href ng-click="moveRight()">RIGHT</a>
-	<a href ng-click="end()">END LEVEL</a>
+	<div class="above-water">
+		<!--
+		<h1>{{level.level.name}}</h1>
+		<h2>Time Left: {{level.level.totalTime - level.level.time}}</h2>
+		<h2>Money: {{level.money}}</h2>
+		<a href ng-click="moveLeft()">LEFT</a>
+		<a href ng-click="fish()">FISH</a>
+		<a href ng-click="moveRight()">RIGHT</a>
+	-->
+		<a href ng-click="end()">END LEVEL</a>
+	</div>
 
-	<fishing-spot></fishing-spot>
+
+	<div class="water">
+		<div class="left left-hint" ng-click="moveLeft()"></div>
+		<div class="right right-hint" ng-click="moveRight()"></div>
+		<div class="centre-spot">
+			<fishing-spot></fishing-spot>
+		</div>
+	</div>
 </div>
