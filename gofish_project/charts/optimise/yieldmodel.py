@@ -23,7 +23,7 @@ class YieldModel(object):
         # add variables for level costs
         # (first one is free):
         self.problem.addVariable(1, range(50, 200))
-        self.problem.addVariable(2, range(100, 2000))
+        self.problem.addVariable(2, range(200, 1000))
         numLvl = len(gamedef.GAME['levels'])
 
         # now, setting up the constraints
@@ -42,7 +42,7 @@ class YieldModel(object):
     # this thing actually tries to optimise the result
     # because the domain space is too big to solve...
     # should probably rename it...
-    def solve(self):
+    def optimise(self):
         print 'solving...'
         it = self.problem.getSolutionIter()
         solution = {}
