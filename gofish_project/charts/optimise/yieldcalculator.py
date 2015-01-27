@@ -56,8 +56,17 @@ class YieldCalculator(object):
         for i in range(nPos):
             for j in range(nTimes):
                 if None != game.level['yields'][i][j]:
+                    # we divide by nPos, because the yield is
+                    # aggregated over all the positions into
+                    # single value
                     y[j][game.level['yields'][i][j]['id']] += \
                             1.0 / nPos
+
+        # withing the yield, accumulate the value
+        for i in range(1, nTimes):
+            for fish in y[i].keys():
+                y[i][fish] += y[i-1][fish]
+
         return y
 
     # get initial yield for the level
