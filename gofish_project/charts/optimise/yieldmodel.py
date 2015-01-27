@@ -9,16 +9,21 @@ class YieldModel(object):
         self.yields = yields
 
         # add variables for fish prices
-        self.problem.addVariable('shoe', range(1, 10))
-        self.problem.addVariable('bass', range(3, 20))
-        self.problem.addVariable('brime', range(7, 30))
-        self.problem.addVariable('pike', range(17, 50))
-        self.problem.addVariable('catfish', range(41, 100))
+        #self.problem.addVariable('shoe', range(1, 10))
+        #self.problem.addVariable('bass', range(3, 20))
+        #self.problem.addVariable('brime', range(7, 30))
+        #self.problem.addVariable('pike', range(17, 50))
+        #self.problem.addVariable('catfish', range(41, 100))
+        self.problem.addVariable('shoe', [1])
+        self.problem.addVariable('bass', [3])
+        self.problem.addVariable('brime', [7])
+        self.problem.addVariable('pike', [17])
+        self.problem.addVariable('catfish', [41])
 
         # add variables for level costs
         # (first one is free):
         self.problem.addVariable(1, range(50, 200))
-        self.problem.addVariable(2, range(200, 2000))
+        self.problem.addVariable(2, range(100, 2000))
         numLvl = len(gamedef.GAME['levels'])
 
         # now, setting up the constraints
@@ -34,14 +39,23 @@ class YieldModel(object):
         for i in range(numLvl - 1):
             self._constrainLevel(i)
 
+    # this thing actually tries to optimise the result
+    # because the domain space is too big to solve...
+    # should probably rename it...
     def solve(self):
         print 'solving...'
         it = self.problem.getSolutionIter()
-        solution = {}; minCost = 1 << 20
+        solution = {}
+        minCost = 1 << 20
+        n0 = gamedef.GAME['levels'][0]['timesToPlay']
+        n1 = gamedef.GAME['levels'][1]['timesToPlay']
+
         try:
-            for i in range(100000):
+            for i in range(1000000):
                 s = it.next()
-                cost = abs(self._getOptYield(s, 0) - s[1]) + abs(self._getOptYield(s, 1) - s[2])
+                cost0 = abs(self._getOptYield(s, 0) * n0 - s[1])
+                cost1 = abs(self._getOptYield(s, 1) * n1 - s[2])
+                cost = cost0 + cost1
                 if cost < minCost:
                     minCost = cost
                     solution = s
@@ -49,16 +63,12 @@ class YieldModel(object):
                     print i, ': ', s, cost
         except StopIteration:
             print 'reached end'
-        print solution
-        print minCost
-        print self._getOptYield(solution, 0)
-        return {}
 
-        solutions = self.problem.getSolutions()
-        print 'found ' + len(solutions) + ' solutions.'
-        if len(solutions) > 0:
-            print solutions[0]
-        return {}
+        print 'solution:', solution
+        print 'min cost:', minCost
+        print 'exp. 0:  ', self._getOptYield(solution, 0)
+        print 'exp. 1:  ', self._getOptYield(solution, 1)
+        return solution
 
     # constraining a level
     def _constrainLevel(self, level):
