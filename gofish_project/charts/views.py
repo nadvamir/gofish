@@ -97,6 +97,10 @@ def optimise(request):
 
     # 1. Monte Carlo simulation
     yields = YieldCalculator.getYields()
+    # 2. Build a cp model from resulting yields
+    model = YieldModel(yields)
+    # 3. Solve the model
+    solutions = model.solve()
 
     context_dict = {}
     return render_to_response('charts/optimise.html', context_dict, context)

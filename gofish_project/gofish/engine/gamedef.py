@@ -134,6 +134,7 @@ GAME = {
             },
         },
         'cost': 0,
+        'timesToPlay': 4,
       }, {
         'name': 'Lake',
         'fish': {
@@ -167,6 +168,7 @@ GAME = {
             },
         },
         'cost': 100,
+        'timesToPlay': 5,
       }, {
         'name': 'River',
         'fish': {
@@ -201,6 +203,7 @@ GAME = {
             },
         },
         'cost': 1000,
+        'timesToPlay': 6,
     }],
 }
 
