@@ -52,6 +52,7 @@
 }
 
 .hud-money {
+	padding-left: 5%;
 	background-color: yellow;
 }
 
@@ -102,10 +103,6 @@
 	height: 42px;
 }
 
-.level-icon {
-	width: 100%;
-}
-
 /* SHOP & LEVEL */
 
 .shop-item, .level {
@@ -125,6 +122,6 @@
 	margin-top: 0px;
 }
 
-.shop-item-icon, .bait-icon {
-	width: 100%;
+.shop-item-icon, .level-icon, .bait-icon {
+	height: 100%;
 }
