@@ -39,7 +39,7 @@ GAME = {
         'catfish': {
             'id': 'catfish',
             'name': 'Catfish',
-            'value': 41,
+            'value': 200,
             'weight': 10.0,
             'length': 100,
             'habitat': 9,
@@ -167,7 +167,7 @@ GAME = {
                 },
             },
         },
-        'cost': 100,
+        'cost': 120,
         'timesToPlay': 5,
       }, {
         'name': 'River',
@@ -202,7 +202,7 @@ GAME = {
                 },
             },
         },
-        'cost': 1000,
+        'cost': 740,
         'timesToPlay': 6,
     }],
 }
