@@ -2,8 +2,8 @@
 	<hud></hud>
 
 	<div class="above-water">
-		<a href ng-click="moveLeft()">LEFT</a>
-		<a href ng-click="moveRight()">RIGHT</a>
+		<a href ng-hide="level.level.position === 0" ng-click="moveLeft()" style="color: yellow;">LEFT</a>
+		<a href ng-hide="level.level.position === 19"ng-click="moveRight()" style="color: yellow;">RIGHT</a>
 	</div>
 
 	<div class="water">
