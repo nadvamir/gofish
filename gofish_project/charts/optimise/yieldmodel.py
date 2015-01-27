@@ -18,7 +18,7 @@ class YieldModel(object):
         self.problem.addVariable('bass', [3])
         self.problem.addVariable('brime', [7])
         self.problem.addVariable('pike', [17])
-        self.problem.addVariable('catfish', [41])
+        self.problem.addVariable('catfish', [200])
 
         # add variables for level costs
         # (first one is free):
@@ -68,7 +68,14 @@ class YieldModel(object):
         print 'min cost:', minCost
         print 'exp. 0:  ', self._getOptYield(solution, 0)
         print 'exp. 1:  ', self._getOptYield(solution, 1)
-        return solution
+        print 'exp. 2:  ', self._getOptYield(solution, 2)
+        return {
+            'solution' : solution,
+            'minCost' : minCost,
+            'exp0'     : self._getOptYield(solution, 0),
+            'exp1'     : self._getOptYield(solution, 1),
+            'exp2'     : self._getOptYield(solution, 2),
+        }
 
     # constraining a level
     def _constrainLevel(self, level):

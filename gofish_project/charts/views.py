@@ -100,9 +100,8 @@ def optimise(request):
     # 2. Build a cp model from resulting yields
     model = YieldModel(yields)
     # 3. Solve the model
-    solutions = model.optimise()
+    context_dict = model.optimise()
 
-    context_dict = {}
     return render_to_response('charts/optimise.html', context_dict, context)
 
 #################################################################

@@ -19,14 +19,16 @@ a:visited {
     
 </head>
 <body>
-    <header><h1>TODO: calculate rewards for fish and prices for locations</h1></header>
+    <header><h1>System thinks that optimal bundle is:</h1></header>
     
     <section>
-        <ol>
-            <li>Run a MonteCarlo simulation of all the levels, to calculate average yields</li>
-            <li>Build a model with some constraint programming toolkit out of it</li>
-            <li>Solve it and display the results here.</li>
-        </ol>
+        <pre>
+solution: {{solution}}
+cost:     {{minCost}}
+yield 0:  {{exp0}}
+yield 1:  {{exp1}}
+yield 2:  {{exp2}}
+        </pre>
     </section>
 </body>
 </html>
