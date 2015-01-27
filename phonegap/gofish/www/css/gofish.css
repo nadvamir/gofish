@@ -24,11 +24,20 @@
 	overflow: auto;
 }
 
+.forward {
+	z-index: 999;
+}
+
 .top {
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 999;
+}
+
+.bottom {
+	position: fixed;
+	top: 100%;
+	left: 0;
 }
 
 .allow-for-nav {
@@ -37,12 +46,9 @@
 
 /* HUD */
 
-.bait-icon {
-	width: 25%;
-}
-
 .hud {
 	width: 100%;
+	height: 15%;
 }
 
 .hud-money {
@@ -56,11 +62,18 @@
 
 .hud-left {
 	width: 80%;
+	height: 100%;
 	padding-top: 2%;
 }
 
+.minimap {
+	width: 65%;
+	height: 100%;
+	background-color: rgba(122, 137, 234, 0.5);
+}
+
 .progress {
-	width: 80%;
+	width: 65%;
 	margin: 0 0 0 0;
 	border-radius: 0;
 }
@@ -74,23 +87,6 @@
 
 .water {
 	height: 60%;
-	background-color: green;
-}
-
-
-.left-hint {
-	width: 15%;
-	height: 100%;
-}
-
-.right-hint {
-	width: 15%;
-	height: 100%;
-}
-
-.centre-spot {
-	width: 70%;
-	display: inline-block;
 }
 
 .fishing-spot-depth {
@@ -129,6 +125,6 @@
 	margin-top: 0px;
 }
 
-.shop-item-icon, .map-icon {
+.shop-item-icon, .bait-icon {
 	width: 100%;
 }

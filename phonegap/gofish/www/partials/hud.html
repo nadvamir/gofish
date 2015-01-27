@@ -1,16 +1,18 @@
-<div class="hud top">
+<div class="hud top forward">
+	<span class="right hud-right">
+		<div class="hud-money">
+			£{{money}}
+		</div>
+		<img class="bait-icon" src="./img/placeholderbait.jpg"></img>
+	</span>
 	<span class="left hud-left">
 		<div class="progress">
 			<div class="progress-bar" role="progressbar" aria-valuenow="{{timeSpent}}" aria-valuemin="0" aria-valuemax="{{totalTime}}" ng-style="{width: (getTimePercentage() + '%')}" >
     			<span class="sr-only">{{getTimePercentage()}}% Complete</span>
  			</div>
 		</div>
-		<img class="bait-icon" src="./img/placeholderbait.jpg"></img>
-	</span>
-	<span class="right hud-right">
-		<div class="hud-money">
-			£{{money}}
+		<div class="minimap">
+			<p>Minimap</p>
 		</div>
-		<img class="map-icon" src="./img/placeholdermap.png"></img>
 	</span>
 </div>
