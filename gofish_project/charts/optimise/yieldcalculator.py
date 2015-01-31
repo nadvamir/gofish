@@ -1,5 +1,6 @@
 import gofish.engine.gamedef as gamedef
 import gofish.models as models
+from math import sqrt
 
 # a simulator, that calculates average yields
 # for every game level
@@ -7,44 +8,82 @@ class YieldCalculator(object):
     ############################################################
     # Public API
     ############################################################
-    # return yields for every level
-    # that are expressed as fish per fishing time in loc
-    @staticmethod
-    def getYields():
-        yields = []
+    # run the simulation, producing non-reduced data
+    def __init__(self, N=100):
+        self.N = N
+        self.yields = []
         player = models.Player.stub()
 
         for i in range(len(gamedef.GAME['levels'])):
-            yc = YieldCalculator(player, gamedef.getLevel(i))
-            yields.append(yc.simulate())
+            level = gamedef.getLevel(i)
+            self.yields.append(self.simulate(player, level))
 
-        return yields
+    # return yields for every level
+    # that are expressed as fish per fishing time in loc
+    def getYields(self):
+        # reduce helper function to accumulate fish
+        # caught in different simulations simulations
+        def addUp(acc, instance):
+            # for every time spent in fishing in this instance
+            for t in range(len(instance)):
+                for fish, amount in instance[t].iteritems():
+                    acc[t][fish] += amount / self.N
+            return acc
+
+        # getting initial yield without creating level object
+        def insert0(d, k): d[k] = 0.0; return d
+        init = lambda i: map(lambda y: reduce(insert0, y.keys(), {}), i)
+        # averaging all simulation yields for the level
+        averageLvl = lambda lvlYield: reduce(addUp, lvlYield, init(lvlYield[0]))
+
+        return map(lambda l: averageLvl(l), self.yields)
+
+    # describe yields in terms of money
+    def describeYields(self, fishVal):
+        toMoney = lambda l: map(lambda i: \
+                YieldCalculator.getOptYield(fishVal, i), l)
+
+        def describe(level):
+            mean     = getMean(level)
+            variance = getVariance(level, mean)
+            return mean, sqrt(variance)
+
+        return map(lambda l: describe(toMoney(l)), self.yields)
+
+    # calculating optimal yield
+    @staticmethod
+    def getOptYield(fish, lvlYield, movingCost=30.0):
+        # for now, static parameters:
+        time = 480.0
+        fishingCost = 5.0
+
+        # optimal yield is that, which maximises
+        # the overall yield of the game
+        maxYield = 0.0
+        for i in range(len(lvlYield)):
+            y = 0.0
+            # yield from one location
+            for f, n in lvlYield[i].iteritems():
+                y += fish[f] * n
+            # yield overall from a game
+            y *= time / ((i + 1) * fishingCost + movingCost)
+            # saving the largest so far:
+            if maxYield < y:
+                maxYield = y
+
+        return maxYield
 
     ############################################################
     # MonteCarlo internals
     ############################################################
-    # create an instance of calculator for one level
-    def __init__(self, player, level):
-        self.player = player
-        self.level  = level
-
     # run a simulation
-    def simulate(self):
-        nTimes, y = self.getInitY()
-
-        N = 100
-        for n in range(N):
-            instance = self.getYield()
-            for i in range(len(instance)):
-                for fish, amount in instance[i].iteritems():
-                    y[i][fish] += amount / N
-
-        return y
+    def simulate(self, player, level):
+        return [self.getYield(player, level) for n in range(self.N)]
 
     # get an average yield of a level
-    def getYield(self):
+    def getYield(self, player, level):
         # create a game stub
-        game = models.Game.stub(self.player, self.level)
+        game = models.Game.stub(player, level)
 
         # set yields for every position
         nPos = len(game.level['yields'])
@@ -52,7 +91,7 @@ class YieldCalculator(object):
             game.setYieldFor(i)
 
         # aggregate the yield
-        nTimes, y = self.getInitY()
+        nTimes, y = getInitY(level)
         for i in range(nPos):
             for j in range(nTimes):
                 if None != game.level['yields'][i][j]:
@@ -69,16 +108,28 @@ class YieldCalculator(object):
 
         return y
 
-    # get initial yield for the level
-    def getInitY(self):
-        nTimes = gamedef.TOTAL_TIME / 5 # 5 is fishing time
-        y = [toYield(gamedef.getFishForLevel(self.level['index'])) \
-                for i in range(nTimes)]
-        return nTimes, y
-
+#################################################################
+# Private Functions
+#################################################################
 # a function to convert a list of fish to yield
 def toYield(l):
     y = {}
-    for fish, whatever in l.iteritems():
+    for fish in l.keys():
         y[fish] = 0.0
     return y
+
+# get initial yield for the level
+def getInitY(level):
+    nTimes = gamedef.TOTAL_TIME / 5 # 5 is fishing time
+    y = [toYield(gamedef.getFishForLevel(level['index'])) \
+            for i in range(nTimes)]
+    return nTimes, y
+
+# returns mean for an array
+def getMean(X):
+    return reduce(lambda x, y: x + y, X, 0.0) / len(X)
+
+# returns variance of an array
+def getVariance(X, mean):
+    return reduce(lambda x, y: x + pow(y - mean, 2), X, 0.0) / len(X)
+

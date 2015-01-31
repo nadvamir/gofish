@@ -1,5 +1,6 @@
 from constraint import *
 import gofish.engine.gamedef as gamedef
+from yieldcalculator import YieldCalculator
 
 class YieldModel(object):
     def __init__(self, yields):
@@ -53,8 +54,10 @@ class YieldModel(object):
         try:
             for i in range(1000000):
                 s = it.next()
-                cost0 = abs(self._getOptYield(s, 0) * n0 - s[1])
-                cost1 = abs(self._getOptYield(s, 1) * n1 - s[2])
+                optY0 = YieldCalculator.getOptYield(s, self.yields[0])
+                optY1 = YieldCalculator.getOptYield(s, self.yields[1])
+                cost0 = abs(optY0 * n0 - s[1])
+                cost1 = abs(optY1 * n1 - s[2])
                 cost = cost0 + cost1
                 if cost < minCost:
                     minCost = cost
@@ -66,15 +69,9 @@ class YieldModel(object):
 
         print 'solution:', solution
         print 'min cost:', minCost
-        print 'exp. 0:  ', self._getOptYield(solution, 0)
-        print 'exp. 1:  ', self._getOptYield(solution, 1)
-        print 'exp. 2:  ', self._getOptYield(solution, 2)
         return {
             'solution' : solution,
             'minCost' : minCost,
-            'exp0'     : self._getOptYield(solution, 0),
-            'exp1'     : self._getOptYield(solution, 1),
-            'exp2'     : self._getOptYield(solution, 2),
         }
 
     # constraining a level
@@ -91,7 +88,7 @@ class YieldModel(object):
             }
 
             # getting the optimal yield for this level
-            optYield = self._getOptYield(fish, level)
+            optYield = YieldCalculator.getOptYield(fish, self.yields[level])
 
             # the actual constraint:
             return optYield * gamedef.GAME['levels'][level]['timesToPlay'] >= cost
@@ -101,25 +98,3 @@ class YieldModel(object):
                 progressionConstraint,
                 (level+1, 'shoe', 'bass', 'brime', 'pike', 'catfish'))
 
-    # calculating optimal yield for the level
-    def _getOptYield(self, fish, level):
-        # for now, static parameters:
-        time = 480.0
-        fishingCost = 5.0
-        movingCost = 30.0
-
-        # optimal yield is that, which maximises
-        # the overall yield of the game
-        maxYield = 0.0
-        for i in range(len(self.yields[level])):
-            y = 0.0
-            # yield from one location
-            for f, n in self.yields[level][i].iteritems():
-                y += fish[f] * n
-            # yield overall from a game
-            y *= time / ((i + 1) * fishingCost + movingCost)
-            # saving the largest so far:
-            if maxYield < y:
-                maxYield = y
-
-        return maxYield
