@@ -96,15 +96,16 @@ def optimise(request):
     context = RequestContext(request)
 
     # 1. Monte Carlo simulation
-    yc = YieldCalculator()
+    yc = YieldCalculator(100)
     # 2. Build a cp model from resulting yields
     yields = yc.getYields()
     model = YieldModel(yields)
     # 3. Solve the model
     context_dict = model.optimise()
-    # 4. Get descriptives for our simulation
-    context_dict['stats'] = \
-            yc.describeYields(context_dict['solution'])
+    # 4. Get descriptives for our simulation, if successful
+    if context_dict['solution']:
+        context_dict['stats'] = \
+                yc.describeYields(context_dict['solution'])
 
     return render_to_response('charts/optimise.html', context_dict, context)
 

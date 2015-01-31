@@ -44,6 +44,30 @@ GAME = {
             'length': 100,
             'habitat': 9,
         },
+        'cod': {
+            'id': 'cod',
+            'name': 'Cod',
+            'value': 120,
+            'weight': 10.0,
+            'length': 100,
+            'habitat': 9,
+        },
+        'tuna': {
+            'id': 'tuna',
+            'name': 'Tuna',
+            'value': 1000,
+            'weight': 20.0,
+            'length': 110,
+            'habitat': 9,
+        },
+        'carp': {
+            'id': 'carp',
+            'name': 'Carp',
+            'value': 100,
+            'weight': 2.0,
+            'length': 30,
+            'habitat': 5,
+        },
     },
 
     'updates': {
@@ -107,7 +131,15 @@ GAME = {
             'brime': 0.5,
             'pike': 1.4,
             'catfish': 1.2,
-            'price': 2000,
+            'price': 200,
+        },
+        'jig': {
+            'brime': 0.5,
+            'pike': 0.5,
+            'perch': 1.2,
+            'tuna': 1.5,
+            'cod': 1.5,
+            'price': 5000,
         }
     },
 
@@ -135,8 +167,8 @@ GAME = {
         },
         'cost': 0,
         'timesToPlay': 4,
-        'mean': 35.0,
-        'std': 3.7,
+        'mean': 33.0,
+        'std': 3.5,
       }, {
         'name': 'Lake',
         'fish': {
@@ -171,8 +203,8 @@ GAME = {
         },
         'cost': 120,
         'timesToPlay': 5,
-        'mean': 166.0,
-        'std': 16.0,
+        'mean': 128.0,
+        'std': 14.0,
       }, {
         'name': 'River',
         'fish': {
@@ -206,10 +238,74 @@ GAME = {
                 },
             },
         },
-        'cost': 740,
+        'cost': 650,
         'timesToPlay': 6,
-        'mean': 351.0,
-        'std': 64.0,
+        'mean': 325.0,
+        'std': 50.0,
+      }, {
+        'name': 'Sea',
+        'fish': {
+            'bass': {
+                'probability': 0.7,
+                'distribution': {
+                    'type': 'uniform-declining',
+                    'options': {
+                        'zero-at': 15,
+                    },
+                },
+            },
+            'cod': {
+                'probability': 0.7,
+                'distribution': {
+                    'type': 'uniform-declining',
+                    'options': {
+                        'zero-at': 30,
+                    },
+                },
+            },
+            'tuna': {
+                'probability': 0.2,
+                'distribution': {
+                    'type': 'nth-constant',
+                    'options': {
+                        'n': 7,
+                        'val': 1.0,
+                    },
+                },
+            },
+        },
+        'cost': 1750,
+        'timesToPlay': 7,
+        'mean': 3260.0,
+        'std': 300.0,
+      }, {
+        'name': 'Carp Pond',
+        'fish': {
+            'carp': {
+                'probability': 0.7,
+                'distribution': {
+                    'type': 'uniform-random',
+                    'options': {
+                        'lower': 0.0,
+                        'upper': 1.0,
+                    },
+                },
+            },
+            'pike': {
+                'probability': 0.2,
+                'distribution': {
+                    'type': 'nth-declining',
+                    'options': {
+                        'n': 3,
+                        'zero-at-n': 10,
+                    },
+                },
+            },
+        },
+        'cost': 22500,
+        'timesToPlay': 8,
+        'mean': 2650.0,
+        'std': 87.0,
     }],
 }
 
