@@ -51,7 +51,7 @@ function generateLevelUrls(levels) {
     for (var i in levels) {
         if (i <= GAME.player.level) {
             h += '<a href="#" onclick="selectLevel(' + i + ')">' + levels[i].name + 
-                 '</a>, unlocked<br/ >';
+                 '</a>, unlocked. ' + Array(levels[i].stars).join('*') + '<br/ >';
         } else if (i == GAME.player.level + 1) {
             h += '<a href="#" onclick="selectLevel(' + i + ')">' + levels[i].name + 
                  '</a>, cost <strong>' + levels[i].cost + '</strong><br/ >';
