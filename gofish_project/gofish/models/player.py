@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import json
 import gofish.engine.gamedef as gamedef
+from achievement import Achievement
 
 # a player of the game
 class Player(models.Model):
@@ -9,14 +10,14 @@ class Player(models.Model):
 
     # how much currency this player has
     money     = models.IntegerField(default=10)
-    # how many games has he played in total
-    numGames  = models.IntegerField(default=0)
-    # what is the highest level unlocked by a player
-    level     = models.IntegerField(default=0)
     # what updates has it bought (JSON)
     updates   = models.TextField(default='{}')
     # what modifiers does it has (JSON)
     modifiers = models.TextField(default='{}')
+    # how many games has he played in total
+    numGames  = models.IntegerField(default=0)
+    # what is the highest level unlocked by a player
+    level     = models.IntegerField(default=0)
 
     #############################################################
     # access
@@ -130,6 +131,17 @@ class Player(models.Model):
             probability *= bait[fish]
 
         return probability
+
+    # return a specific achievement
+    def getAchievement(self, name):
+        try:
+            return Achievement.objects.get(player=self, name=name)
+        except Achievement.DoesNotExist:
+            return None
+
+    # a method to store achievements
+    def storeAchievement(self, name, value=0.0, rating=0):
+        Achievement.upsert(self, name, value, rating)
 
     #############################################################
     # actions

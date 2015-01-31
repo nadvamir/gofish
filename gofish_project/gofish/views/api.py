@@ -21,7 +21,7 @@ def start(request, level):
             'level': game.level,
             'cues': game.getCues(),
             'caught': game.caught,
-            'money': player.money
+            'money': player.money,
         }
     return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -30,12 +30,17 @@ def end(request):
     player = models.Player.initialise(request.user)
     game = models.Game.initialise(player)
     response = {'error': 'Game does not exist'}
+
     if None != game:
         earned = game.deleteGame()
+        stars = player.getAchievement('moneyIn' + str(game.level))
+        stars = stars.rating if None != stars else 0
         response = {
             'earned': earned,
-            'money': player.money
+            'money': player.money,
+            'stars': stars
         }
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user
@@ -95,6 +100,13 @@ def getgame(request):
     player = models.Player.initialise(request.user)
     response = gamedef.GAME
     response['player'] = player.toDict()
+
+    # add star scores
+    for i in range(len(response['levels'])):
+        stars = player.getAchievement('moneyIn' + str(i))
+        stars = stars.rating if None != stars else 0
+        response['levels'][i]['stars'] = stars
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user

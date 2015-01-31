@@ -90,9 +90,23 @@ class Game(models.Model):
         # (counting end game in the same fashion, as move)
         self.logPerformance(True)
 
+        # calculate, how much was earned
         earned = 0
         for fish in self.caught:
             earned += fish['value']
+
+        # give stars
+        mean = gamedef.GAME['levels'][self.level['index']]['mean']
+        std  = gamedef.GAME['levels'][self.level['index']]['std']
+        ratings = [mean, mean + std, mean + 1.5*std]
+        rating = 0
+        while rating < len(ratings) and earned > ratings[rating]:
+            rating += 1
+
+        self.player.storeAchievement('moneyIn' +\
+                str(self.level['index']), earned, rating)
+
+        # store the money 
         self.player.money += earned
         self.player.savePlayer()
 

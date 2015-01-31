@@ -135,6 +135,8 @@ GAME = {
         },
         'cost': 0,
         'timesToPlay': 4,
+        'mean': 35.0,
+        'std': 3.7,
       }, {
         'name': 'Lake',
         'fish': {
@@ -169,6 +171,8 @@ GAME = {
         },
         'cost': 120,
         'timesToPlay': 5,
+        'mean': 166.0,
+        'std': 16.0,
       }, {
         'name': 'River',
         'fish': {
@@ -204,6 +208,8 @@ GAME = {
         },
         'cost': 740,
         'timesToPlay': 6,
+        'mean': 351.0,
+        'std': 64.0,
     }],
 }
 
