@@ -107,6 +107,13 @@ def getgame(request):
         stars = stars.rating if None != stars else 0
         response['levels'][i]['stars'] = stars
 
+    # add trophies
+    response['trophies'] = {}
+    for fish in response['fish'].keys():
+        trophy = player.getAchievement(fish)
+        trophy = trophy.toDict() if None != trophy else {'value': 0.0, 'rating': 0}
+        response['trophies'][fish] = trophy
+
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 @allow_lazy_user

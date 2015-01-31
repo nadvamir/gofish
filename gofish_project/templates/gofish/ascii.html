@@ -151,6 +151,14 @@ function generateModifiers(modifiers, playerModifiers) {
     $('#modifiers').html(html);
 }
 
+function generateTrophies(trophies, fish) {
+    var html = '';
+    for (var f in trophies) {
+        html += fish[f].name + ': ' + trophies[f].value + ' kg, <strong>' + trophies[f].rating + '</strong> money<br/ >';
+    }
+    $('#trophies').html(html);
+}
+
 function selectLevel(lvl) {
     $.getJSON(url('start/' + lvl), function(data) {
         if (data.error) {
@@ -194,14 +202,6 @@ function drawLevel() {
     }
     map += "<b>*</b>\n";
     
-    /*var maxDepth = 10;
-    for (var i = 0; i < maxDepth; i++) {
-        for (var j = 0; j < LEVEL.level.map[0].length; j++) {
-            var d = (j == LEVEL.level.position) ? '<b>X</b>' : '#';
-            map += (i > LEVEL.level.map[0][j]) ? ' ' : d;
-        }
-        map += "\n";
-    }*/
     // no cues that we know:
     if (!GAME.player.updates.cues) {
         for (var j = 0; j < LEVEL.level.map[0].length; j++) {
@@ -316,6 +316,7 @@ function initGame() {
         generateLevelUrls(GAME.levels);
         generateUpdates(GAME.updates, GAME.player.updates);
         generateModifiers(GAME.modifiers, GAME.player.modifiers);
+        generateTrophies(GAME.trophies, GAME.fish);
         open('start');
     });
 }
@@ -336,6 +337,9 @@ $(document).ready(initGame);
         <br/>
         <strong>----- [ Baits ] ------------</strong><br/>
         <div id="modifiers"></div>
+        <br/>
+        <strong>----- [ Trophies ] ---------</strong><br/>
+        <div id="trophies"></div>
     </section>
     
     <section id="game">

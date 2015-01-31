@@ -94,6 +94,8 @@ class Game(models.Model):
         earned = 0
         for fish in self.caught:
             earned += fish['value']
+            # also, store it if it is a trophy
+            self.player.storeAchievement(fish['id'], fish['weight'], fish['value'])
 
         # give stars
         mean = gamedef.GAME['levels'][self.level['index']]['mean']

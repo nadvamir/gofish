@@ -39,6 +39,14 @@ class Achievement(models.Model):
                 .filter(name=name)\
                 .order_by('value')[:N]
 
+    # serialisation
+    def toDict(self):
+        return {
+            'name'   : self.name,
+            'value'  : self.value,
+            'rating' : self.rating,
+        }
+
     #############################################################
     # Django boilerplate
     #############################################################
