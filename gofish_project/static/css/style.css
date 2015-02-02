@@ -1,0 +1,127 @@
+@import url(http://fonts.googleapis.com/css?family=Geo);
+
+* {
+    font-size: 100%;
+    font-family: Geo, sans-serif;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.right { float: right }
+.left { float: left }
+
+/* ----------------------------------------------------------- */
+body {
+    background: url('/static/images/upfeathers.png');
+}
+
+body > section {
+    width: 800px;
+    height: 600px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px black;
+    background: white;
+    position: relative;
+}
+
+/* ----------------------------------------------------------- */
+nav {
+    position: absolute;
+    left: -40px;
+    width: 40px;
+    background: #ffcc5e;
+    /*box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);*/
+}
+
+nav a, .top-bar a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 12px;
+    color: white;
+}
+
+nav a {
+    border-bottom: 1px solid #7f7f7f;
+    background: #3e4cb7;
+}
+nav a:hover {
+    background: #8693f4;
+}
+
+/* ----------------------------------------------------------- */
+#page {
+}
+
+/* ----------------------------------------------------------- */
+.top-bar {
+    height: 40px;
+    line-height: 38px;
+    vertical-align: middle;
+    padding-left: 5px;
+    border-bottom: 1px solid #7f7f7f;
+}
+
+.top-bar a {
+    background: #ff2300;
+}
+.top-bar a:hover {
+    background: #ff9b90;
+}
+
+.time-indicator {
+    vertical-align: middle;
+    display: inline-block;
+    height: 10px;
+}
+.time-left {
+    background: #3e4cb7;
+    margin-left: 5px;
+}
+.time-full {
+    background: #7f7f7f;
+}
+
+.money-ind {
+    margin-right: 5px;
+}
+.money-ind span {
+    font-size: 20px;
+}
+
+/* ----------------------------------------------------------- */
+#game-actions {
+    width: 800px;
+    margin-top: 0px;
+}
+#game-actions a {
+    display: inline-block;
+    width: 200px;
+    background: #3e4cb7;
+    color: white;
+    font-size: 20px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    vertical-align: center;
+}
+#game-actions a:hover {
+    background: #8693f4;
+}
+
+/* ----------------------------------------------------------- */
+#info-area {
+    height: 69px;
+    font-size: 20px;
+    padding: 5px;
+}
+
+/* ----------------------------------------------------------- */
+#game-map {
+    height: 440px;
+    background: url('/static/images/green_gobbler.png');
+}
