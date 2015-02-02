@@ -8,9 +8,6 @@
 # node
 gofish_project/node_modules/
 
-# coffeescript
-*.js.map
-
 # Phonegap
 *.metadata/
 phonegap/gofish/platforms/*
