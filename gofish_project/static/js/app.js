@@ -1,48 +1,71 @@
-var app;
+var game, nav, shop, trophies;
 
-app = {};
+nav = {};
 
-app.PageList = function() {
+nav.LinkList = function() {
   return m.prop([
     {
-      title: "Getting Started",
-      url: "getting-started.html"
+      url: '/',
+      title: 'Game'
     }, {
-      title: "Documentation",
-      url: "mithril.html"
+      url: '/shop',
+      title: 'Shop'
     }, {
-      title: "Mithril Blog",
-      url: "http://lhorie.github.io/mithril-blog/"
-    }, {
-      title: "Mailing List",
-      url: "https://groups.google.com/forum/#!forum/mithriljs"
+      url: '/trophies',
+      title: 'Trophies'
     }
   ]);
 };
 
-app.controller = function() {
-  var pages;
-  pages = app.PageList();
+nav.controller = function() {
   return {
-    pages: pages,
-    rotate: function() {
-      return pages().push(pages().shift());
-    }
+    links: nav.LinkList()
   };
 };
 
-app.view = function(ctrl) {
+nav.view = function(ctrl) {
   return [
-    ctrl.pages().map(function(page) {
-      return m("a", {
-        href: page.url
-      }, page.title);
-    }), m("button", {
-      onclick: ctrl.rotate
-    }, "Rotate links")
+    ctrl.links().map(function(link) {
+      return m('a', {
+        href: link.url,
+        config: m.route
+      }, link.title);
+    })
   ];
 };
 
-m.module(document, app);
+m.module(document.getElementById('nav'), nav);
+
+game = {};
+
+game.controller = function() {};
+
+game.view = function() {
+  return ['game'];
+};
+
+shop = {};
+
+shop.controller = function() {};
+
+shop.view = function() {
+  return ['shop'];
+};
+
+trophies = {};
+
+trophies.controller = function() {};
+
+trophies.view = function() {
+  return ['trophies'];
+};
+
+m.route.mode = 'hash';
+
+m.route(document.getElementById('page'), '/', {
+  '/': game,
+  '/shop': shop,
+  '/trophies': trophies
+});
 
 //# sourceMappingURL=app.js.map

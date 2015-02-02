@@ -1,38 +1,59 @@
-#namespace
-app = {}
+# --------------------------------------------------------------
+# navigation module
+# --------------------------------------------------------------
+nav = {}
 
-#model
-app.PageList = -> m.prop [
-    {
-        title: "Getting Started",
-        url: "getting-started.html"
-    },
-    {
-        title: "Documentation",
-        url: "mithril.html"
-    },
-    {
-        title: "Mithril Blog",
-        url: "http://lhorie.github.io/mithril-blog/"
-    },
-    {
-        title: "Mailing List",
-        url: "https://groups.google.com/forum/#!forum/mithriljs"
+# model
+nav.LinkList = -> m.prop [{
+        url: '/',
+        title: 'Game',
+    }, {
+        url: '/shop',
+        title: 'Shop',
+    }, {
+        url: '/trophies',
+        title: 'Trophies',
     }
 ]
 
-#controller
-app.controller = ->
-    pages = app.PageList()
+nav.controller = ->
+    links: nav.LinkList()
 
-    pages: pages,
-    rotate: -> pages().push(pages().shift())
-
-#view
-app.view = (ctrl) -> [
-    ctrl.pages().map((page) ->  m("a", {href: page.url}, page.title)),
-    m("button", {onclick: ctrl.rotate}, "Rotate links")
+nav.view = (ctrl) -> [
+    ctrl.links().map((link) ->
+        m('a', {href: link.url, config: m.route}, link.title))
 ]
 
-#initialize
-m.module(document, app)
+m.module document.getElementById('nav'), nav
+
+# --------------------------------------------------------------
+# game module
+# --------------------------------------------------------------
+game = {}
+game.controller = ->
+game.view = -> ['game']
+
+# --------------------------------------------------------------
+# shop module
+# --------------------------------------------------------------
+shop = {}
+shop.controller = ->
+shop.view = -> ['shop']
+
+# --------------------------------------------------------------
+# trophies module
+# --------------------------------------------------------------
+trophies = {}
+trophies.controller = ->
+trophies.view = -> ['trophies']
+
+# --------------------------------------------------------------
+# routing
+# --------------------------------------------------------------
+m.route.mode = 'hash'
+m.route document.getElementById('page'), '/', {
+    '/'         : game,
+    '/shop'     : shop,
+    '/trophies' : trophies
+}
+
