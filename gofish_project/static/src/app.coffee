@@ -3,14 +3,18 @@
 # --------------------------------------------------------------
 nav         = {}
 
+home        = {}
+
 game        = {}
-ingame      = {}
 topBar      = {}
 gameActions = {}
 infoArea    = {}
 gameMap     = {}
 
+caught      = {}
+
 shop        = {}
+
 trophies    = {}
 
 # --------------------------------------------------------------
@@ -40,6 +44,12 @@ nav.view = (ctrl) -> [
 m.module document.getElementById('nav'), nav
 
 # --------------------------------------------------------------
+# home module
+# --------------------------------------------------------------
+home.controller = ->
+home.view = -> ['home']
+
+# --------------------------------------------------------------
 # game module
 # --------------------------------------------------------------
 # game model
@@ -61,87 +71,64 @@ game.vm = do ->
     init: ->
         # game object
         @game = new game.Game()
-        # state
-        @state = m.prop 'ingame'
-
-class game.controller
-    constructor: ->
-        game.vm.init()
-
-    showCaught: ->
-        console.log 'caught asked'
 
     act: (action) ->
         console.log 'send a request to server'
         console.log action
 
-# subviews
-game.subviews = {ingame}
+class game.controller
+    constructor: ->
+        game.vm.init()
 
-game.view = (ctrl) ->
-    subview = game.subviews[game.vm.state()]
-    [subview.view(new subview.controller(ctrl))]
-
-# --------------------------------------------------------------
-# game:ingame module
-# --------------------------------------------------------------
-class ingame.controller
-    constructor: (pctrl) ->
-        @topBar = new topBar.controller(pctrl)
-        @gameActions = new gameActions.controller(pctrl)
-        @infoArea = new infoArea.controller(pctrl)
-        @gameMap = new gameMap.controller(pctrl)
-
-ingame.view = (ctrl) -> [
-    topBar.view ctrl.topBar
-    gameActions.view ctrl.gameActions
-    infoArea.view ctrl.infoArea
-    gameMap.view ctrl.gameMap
+game.view = (ctrl) -> [
+    topBar.view()
+    gameActions.view()
+    infoArea.view()
+    gameMap.view()
 ]
 
 # --------------------------------------------------------------
-# ingame:topBar module
+# game:topBar module
 # --------------------------------------------------------------
-class topBar.controller
+topBar.vm = do ->
     BAR_W = 400
-
-    constructor: (pctrl) ->
-        @showCaught = pctrl.showCaught
 
     timeLeftW: ->
         g = game.vm.game
         g.timeLeft() / g.totalTime() * BAR_W
 
-    timeFullW: =>
+    timeFullW: ->
         BAR_W - @timeLeftW()
 
     valueCaught: ->
         game.vm.game.valCaught()
 
-topBar.timeSW = (ctrl) -> [
+# time sub-view
+topBar.timeSW = -> [
     m('i.fa.fa-clock-o')
     m('span.time-indicator.time-left',
-        {style: {width: ctrl.timeLeftW()+'px'}}, m.trust '&nbsp;')
+        {style: {width: topBar.vm.timeLeftW()+'px'}}, m.trust '&nbsp;')
     m('span.time-indicator.time-full',
-        {style: {width: ctrl.timeFullW()+'px'}}, m.trust '&nbsp;')
+        {style: {width: topBar.vm.timeFullW()+'px'}}, m.trust '&nbsp;')
 ]
 
-topBar.moneySW = (ctrl) -> m('div.right.money-ind', [
+# money sub-view
+topBar.moneySW = -> m('div.right.money-ind', [
     '+'
-    m('span', {}, ctrl.valueCaught())
+    m('span', {}, topBar.vm.valueCaught())
     ' coins'
 ])
 
 topBar.view = (ctrl) -> m('div.top-bar', [
     topBar.timeSW(ctrl)
-    m('a.right[href=#]', {onclick: ctrl.showCaught}, 'Caught')
+    m('a.right[href=/caught]', {config: m.route}, 'Caught')
     topBar.moneySW(ctrl)
 ])
 
 # --------------------------------------------------------------
-# ingame:gameActions module
+# game:gameActions module
 # --------------------------------------------------------------
-gameActions.Actions = -> m.prop [{
+gameActions.actions = m.prop [{
         action : 'left',
         title  : 'move left',
     }, {
@@ -156,29 +143,28 @@ gameActions.Actions = -> m.prop [{
     }
 ]
 
-gameActions.controller = (pctrl) ->
-    actions: gameActions.Actions()
-    act: (action) ->
-        -> pctrl.act(action)
-
-gameActions.view = (ctrl) -> [
+gameActions.view = -> [
     m('div#game-actions', [
-        ctrl.actions().map((action) ->
-            m('a[href="#"]', {onclick: ctrl.act(action.action)},
+        gameActions.actions().map((action) ->
+            m('a[href="#"]', {onclick: game.vm.act(action.action)},
                 action.title))])
 ]
 
 # --------------------------------------------------------------
-# ingame:infoArea module
+# game:infoArea module
 # --------------------------------------------------------------
-infoArea.controller = ->
-infoArea.view = (ctrl) -> m('div#info-area', 'infoArea')
+infoArea.view = -> m('div#info-area', 'infoArea')
 
 # --------------------------------------------------------------
-# ingame:gameMap module
+# game:gameMap module
 # --------------------------------------------------------------
-gameMap.controller = ->
-gameMap.view = (ctrl) -> m('div#game-map', 'gameMap')
+gameMap.view = -> m('div#game-map', 'gameMap')
+
+# --------------------------------------------------------------
+# caught module
+# --------------------------------------------------------------
+caught.controller = ->
+caught.view = -> ['caught']
 
 # --------------------------------------------------------------
 # shop module
@@ -196,8 +182,10 @@ trophies.view = -> ['trophies']
 # routing
 # --------------------------------------------------------------
 m.route.mode = 'hash'
-m.route document.getElementById('page'), '/', {
-    '/'         : game,
+m.route document.getElementById('page'), '/game', {
+    '/'         : home,
+    '/game'     : game,
+    '/caught'   : caught,
     '/shop'     : shop,
     '/trophies' : trophies
 }
