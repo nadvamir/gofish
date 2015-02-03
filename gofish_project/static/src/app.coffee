@@ -51,7 +51,9 @@ class game.Game
         @valCaught = m.prop 15
         @location  = 7
         @showDepth = true
-        @map       = []
+        @map       = [[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]
+        @position  = 3
+        @cues      = [[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]]
         @caught    = []
 
 # view model to switch between game modes

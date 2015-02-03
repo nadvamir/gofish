@@ -61,7 +61,9 @@ game.Game = (function() {
     this.valCaught = m.prop(15);
     this.location = 7;
     this.showDepth = true;
-    this.map = [];
+    this.map = [[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]];
+    this.position = 3;
+    this.cues = [[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]];
     this.caught = [];
   }
 
