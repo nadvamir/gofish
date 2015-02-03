@@ -59,14 +59,12 @@ class game.Game
         @timeLeft  = m.prop 405
         @money     = m.prop 151
         @valCaught = m.prop 15
-        @location  = 7
-        @showDepth = true
-        @map       = [[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]
-        @position  = 3
-        @cues      = [[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]]
-        @caught    = []
+        @showDepth = m.prop true
+        @map       = m.prop [[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]
+        @position  = m.prop 3
+        @cues      = m.prop [[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]]
+        @caught    = m.prop []
 
-# view model to switch between game modes
 game.vm = do ->
     init: ->
         # game object
@@ -75,6 +73,15 @@ game.vm = do ->
     act: (action) ->
         console.log 'send a request to server'
         console.log action
+
+    getWaterClass: (i, j) ->
+        if i < @game.map()[0][j]
+            if j != @game.position() or @game.cues()[i][0] + 1 < 0.001
+                'dark-water'
+            else
+                'light-water.fish-' + Math.round(@game.cues()[i][0])
+        else
+            'ground'
 
 class game.controller
     constructor: ->
@@ -158,7 +165,25 @@ infoArea.view = -> m('div#info-area', 'infoArea')
 # --------------------------------------------------------------
 # game:gameMap module
 # --------------------------------------------------------------
-gameMap.view = -> m('div#game-map', 'gameMap')
+# tile width
+gameMap.TILE_W = 40
+
+# a sub view for displaying boat
+gameMap.boatSW = -> m('p', [m('span.boat', {style:
+        {marginLeft: gameMap.TILE_W * game.vm.game.position() + 'px'}})
+])
+
+# a sub-view for displaying actual water depth map
+gameMap.waterSW = ->
+    if game.vm.game.showDepth()
+        [m('p', [m('span.' + game.vm.getWaterClass(i, j)) for j in [0...20]]) for i in [0...10]]
+    else
+        [m('span.dark-water') for i in [0...20]]
+
+gameMap.view = -> m('div#game-map', [
+    gameMap.boatSW()
+    gameMap.waterSW()
+])
 
 # --------------------------------------------------------------
 # caught module

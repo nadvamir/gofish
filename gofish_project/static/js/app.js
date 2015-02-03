@@ -66,12 +66,11 @@ game.Game = (function() {
     this.timeLeft = m.prop(405);
     this.money = m.prop(151);
     this.valCaught = m.prop(15);
-    this.location = 7;
-    this.showDepth = true;
-    this.map = [[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]];
-    this.position = 3;
-    this.cues = [[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]];
-    this.caught = [];
+    this.showDepth = m.prop(true);
+    this.map = m.prop([[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]);
+    this.position = m.prop(3);
+    this.cues = m.prop([[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]]);
+    this.caught = m.prop([]);
   }
 
   return Game;
@@ -86,6 +85,17 @@ game.vm = (function() {
     act: function(action) {
       console.log('send a request to server');
       return console.log(action);
+    },
+    getWaterClass: function(i, j) {
+      if (i < this.game.map()[0][j]) {
+        if (j !== this.game.position() || this.game.cues()[i][0] + 1 < 0.001) {
+          return 'dark-water';
+        } else {
+          return 'light-water.fish-' + Math.round(this.game.cues()[i][0]);
+        }
+      } else {
+        return 'ground';
+      }
     }
   };
 })();
@@ -179,8 +189,56 @@ infoArea.view = function() {
   return m('div#info-area', 'infoArea');
 };
 
+gameMap.TILE_W = 40;
+
+gameMap.boatSW = function() {
+  return m('p', [
+    m('span.boat', {
+      style: {
+        marginLeft: gameMap.TILE_W * game.vm.game.position() + 'px'
+      }
+    })
+  ]);
+};
+
+gameMap.waterSW = function() {
+  var i, j;
+  if (game.vm.game.showDepth()) {
+    return [
+      (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 0; _i < 10; i = ++_i) {
+          _results.push(m('p', [
+            (function() {
+              var _j, _results1;
+              _results1 = [];
+              for (j = _j = 0; _j < 20; j = ++_j) {
+                _results1.push(m('span.' + game.vm.getWaterClass(i, j)));
+              }
+              return _results1;
+            })()
+          ]));
+        }
+        return _results;
+      })()
+    ];
+  } else {
+    return [
+      (function() {
+        var _i, _results;
+        _results = [];
+        for (i = _i = 0; _i < 20; i = ++_i) {
+          _results.push(m('span.dark-water'));
+        }
+        return _results;
+      })()
+    ];
+  }
+};
+
 gameMap.view = function() {
-  return m('div#game-map', 'gameMap');
+  return m('div#game-map', [gameMap.boatSW(), gameMap.waterSW()]);
 };
 
 caught.controller = function() {};

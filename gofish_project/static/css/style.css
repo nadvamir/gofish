@@ -124,4 +124,25 @@ nav a:hover {
 #game-map {
     height: 440px;
     background: url('/static/images/green_gobbler.png');
+    line-height: 9px; /* otherwise we get spaces... */
+}
+
+#game-map p:first-child {
+    background: white;
+}
+
+#game-map span {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+}
+
+#game-map .boat {
+    background-color: red;
+}
+#game-map .light-water {
+    background: #8693f4;
+}
+#game-map .dark-water {
+    background: #3e4cb7;
 }
