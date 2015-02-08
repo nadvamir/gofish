@@ -3,7 +3,8 @@
 	<fishing-spot-depth depth="depth">
 	</fishing-spot-depth>
 	</div>
-	<div class="fishing-spot-depth" ng-click="fish()">
+	<!-- ng-if used to ensure that cueDepth is computed before image is assigned -->
+	<div ng-if="cueDepth" class="fishing-spot-depth" ng-click="fish()" ng-style="{'background-image':'url(./img/levels/LocalPond/{{cueDepth}}.png)'}">
 		<p>{{leftDepthCue}}    {{rightDepthCue}}</p>
 	</div>
 </div>
