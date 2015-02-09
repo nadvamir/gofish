@@ -38,6 +38,7 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 				console.log("STARTED");
 				// Set appropriate background image after variables have been initialised
 				$('.level-screen').css('background-image', "url('./img/levels/"+$scope.levelName+"/background.png')");
+				$('.above-water').css('background-image', "url('./img/levels/"+$scope.levelName+"/landscape.png')");
 			});
 			$scope.$on("levelUpdated", function() {
 				$scope.updateLevel();
