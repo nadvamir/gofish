@@ -46,10 +46,26 @@
 	padding-top: 70px;
 }
 
+.centred-image {
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /* HUD */
 
 .bait-icon {
 	width: 100%;
+}
+
+.arrow {
+	height: 25%;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+.boat {
+	width: 40%;
 }
 
 .hud {
