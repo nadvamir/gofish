@@ -65,6 +65,10 @@ goFish.directive("fishingSpot", [function(){
 			$scope.$on("moved", function() {
 				$scope.redrawCueDepth();
 			});
+			$scope.$on("levelEnded", function() {
+				// On starting next level, initial cueDepth must be calculated
+				delete $scope.cueDepth;
+			});
 
 
 			// Initialisation

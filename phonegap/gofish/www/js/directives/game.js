@@ -1,4 +1,4 @@
-goFish.directive("game", [function(){
+goFish.directive("game", ["$rootScope", function($rootScope){
 
 	return {
 		restrict: "E",
@@ -8,6 +8,9 @@ goFish.directive("game", [function(){
 			// Functions
 			$scope.updateLevel = function() {
 				$scope.level = GameService.getCurrentLevel();
+				if ($scope.level && $scope.level.level) {
+					$scope.levelName = ($scope.level.level.name).replace(/\s/g, '');
+				}
 			};
 
 			$scope.moveLeft = function() {
@@ -32,6 +35,9 @@ goFish.directive("game", [function(){
 			// Watch for level updates
 			$scope.$on("levelStarted", function() {
 				$scope.updateLevel();
+				console.log("STARTED");
+				// Set appropriate background image after variables have been initialised
+				$('.levelScreen').css('background-image', "url('./img/levels/"+$scope.levelName+"/background.png')");
 			});
 			$scope.$on("levelUpdated", function() {
 				$scope.updateLevel();
