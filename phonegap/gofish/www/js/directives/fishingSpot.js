@@ -8,11 +8,13 @@ goFish.directive("fishingSpot", [function(){
 			// Functions
 			$scope.updateFishingSpot = function() {
 				var currentLevel = GameService.getCurrentLevel();
-				if (currentLevel.level && (currentLevel.level.position >= 0) && currentLevel.level.map && currentLevel.cues) {
+				if (currentLevel.level && (currentLevel.level.position >= 0) && currentLevel.level.map && currentLevel.cues && currentLevel.level.name) {
 					// Update variables
 					$scope.position = currentLevel.level.position;
 					$scope.map = currentLevel.level.map[0];
 					$scope.cues = currentLevel.cues;
+					// Remove spaces for css image selection
+					$scope.level = (currentLevel.level.name).replace(/\s/g, '');
 
 					// Generate an array to traverse with ng-repeat to draw depth levels
 					var depth = $scope.map[$scope.position];
