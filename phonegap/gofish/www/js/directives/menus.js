@@ -4,12 +4,27 @@ goFish.directive("menus", [function(){
 		restrict: "E",
 		templateUrl: "./partials/menus.html",
 		scope: {},
-		controller: function() {
-			this.tab=0;
+		controller: function($scope, GameService) {
 
-			this.setTab = function(value) {
-				this.tab=value;
+			$scope.setTab = function(value) {
+				$scope.tab=value;
 			};
+
+			$scope.updatePlayer = function() {
+				if (GameService.getGame().player) {
+					$scope.player = GameService.getGame().player;
+				}
+			};
+
+			$scope.$on("gameUpdated", function() {
+				$scope.updatePlayer();
+			});
+
+			// Initialisation
+			$scope.player = {};
+			$scope.tab = 0;
+
+			$scope.updatePlayer();
 		},
 		controllerAs: "menusCtrl"
 	};
