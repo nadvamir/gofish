@@ -49,6 +49,12 @@ goFish.directive("fishingSpot", [function(){
 				}
 			};
 
+			$scope.redrawCueDepth = function() {
+				// ng-style was not updating the background image for the cue depth
+				// force css update
+				$('#cueDepth').css('background-image', "url('./img/levels/"+$scope.level+"/"+$scope.cueDepth+".png')");
+			}
+
 			// Listen for level updates
 			$scope.$on("levelStarted", function() {
 				$scope.updateFishingSpot();
@@ -56,6 +62,10 @@ goFish.directive("fishingSpot", [function(){
 			$scope.$on("levelUpdated", function() {
 				$scope.updateFishingSpot();
 			});
+			$scope.$on("moved", function() {
+				$scope.redrawCueDepth();
+			});
+
 
 			// Initialisation
 			$scope.map = null;

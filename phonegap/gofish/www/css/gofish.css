@@ -104,6 +104,10 @@
 	background-size: auto 100%;
 }
 
+.depth-cue {
+	width: 100%;
+}
+
 /* LEVEL SELECT */
 
 .user-icon {
