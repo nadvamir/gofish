@@ -52,6 +52,17 @@
     margin-right: auto;
 }
 
+/* Splash Screen */
+
+#titleSign {
+	height: 50%;
+}
+
+#playSign {
+	height: 50%;
+	padding-top: 20%;
+}
+
 /* HUD */
 
 .bait-icon {
@@ -59,9 +70,9 @@
 }
 
 .arrow {
-	height: 25%;
-	margin-left: 10%;
-	margin-right: 10%;
+	width: 30%;
+	padding-left: 8%;
+	padding-right: 8%;
 }
 
 .boat {
