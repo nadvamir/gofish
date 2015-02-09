@@ -65,11 +65,13 @@ game.Game = (function() {
     this.totalTime = m.prop(480);
     this.timeLeft = m.prop(405);
     this.money = m.prop(151);
+    this.boat = m.prop(0);
+    this.line = m.prop(0);
     this.valCaught = m.prop(15);
     this.showDepth = m.prop(true);
     this.map = m.prop([[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]);
     this.position = m.prop(3);
-    this.cues = m.prop([[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]]);
+    this.cues = m.prop([[1.0, 4], [3.0, 4], [0.0, 4], [0.0, 4], [5.0, 0], [-1, 0], [-1, 0]]);
     this.caught = m.prop([]);
   }
 
@@ -193,7 +195,7 @@ gameMap.TILE_W = 40;
 
 gameMap.boatSW = function() {
   return m('p', [
-    m('span.boat', {
+    m('span.boat-' + game.vm.game.boat(), {
       style: {
         marginLeft: gameMap.TILE_W * game.vm.game.position() + 'px'
       }

@@ -58,11 +58,13 @@ class game.Game
         @totalTime = m.prop 480
         @timeLeft  = m.prop 405
         @money     = m.prop 151
+        @boat      = m.prop 0
+        @line      = m.prop 0
         @valCaught = m.prop 15
         @showDepth = m.prop true
         @map       = m.prop [[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]
         @position  = m.prop 3
-        @cues      = m.prop [[1.0, 4], [1.0, 4], [0.0, 4], [0.0, 4], [1.0, 0], [-1, 0], [-1, 0]]
+        @cues      = m.prop [[1.0, 4], [3.0, 4], [0.0, 4], [0.0, 4], [5.0, 0], [-1, 0], [-1, 0]]
         @caught    = m.prop []
 
 game.vm = do ->
@@ -169,7 +171,8 @@ infoArea.view = -> m('div#info-area', 'infoArea')
 gameMap.TILE_W = 40
 
 # a sub view for displaying boat
-gameMap.boatSW = -> m('p', [m('span.boat', {style:
+gameMap.boatSW = -> m('p', [
+    m('span.boat-' + game.vm.game.boat(), {style:
         {marginLeft: gameMap.TILE_W * game.vm.game.position() + 'px'}})
 ])
 
