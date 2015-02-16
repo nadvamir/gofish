@@ -58,6 +58,22 @@ nav a:hover {
 }
 
 /* ----------------------------------------------------------- */
+.list li {
+    padding: 8px 10px;
+    list-style: none;
+}
+.list li a {
+    color: #3e4cb7;
+    font-size: 20px;
+}
+.list li a:hover {
+    color: #8693f4;
+}
+.list li strong {
+    font-size: 20px;
+}
+
+/* ----------------------------------------------------------- */
 .top-bar {
     height: 40px;
     line-height: 38px;

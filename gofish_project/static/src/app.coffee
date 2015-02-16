@@ -1,5 +1,5 @@
 # --------------------------------------------------------------
-# module declarations
+# module declarations with their submodules
 # --------------------------------------------------------------
 nav         = {}
 
@@ -16,6 +16,11 @@ caught      = {}
 shop        = {}
 
 trophies    = {}
+
+# --------------------------------------------------------------
+# reusable components
+# --------------------------------------------------------------
+list        = {}
 
 # --------------------------------------------------------------
 # navigation module
@@ -46,12 +51,94 @@ m.module document.getElementById('nav'), nav
 # --------------------------------------------------------------
 # home module
 # --------------------------------------------------------------
+# model for game location
+class home.Level
+    constructor: (id) ->
+        @id       = m.prop id
+        @name     = m.prop 'Local Pond'
+        @unlocked = m.prop true
+        @active   = m.prop true
+        @cost     = m.prop 100
+        @stars    = m.prop 2
+        @index    = m.prop 0
+
+# model for all game locations
+home.Levels = Array
+
+home.vm = do ->
+    init: ->
+        @levels = new home.Levels()
+        @levels.push new home.Level(0)
+        @levels.push new home.Level(1)
+        @levels.push new home.Level(2)
+        @levels.push new home.Level(3)
+        @levels[1].unlocked(false)
+        @levels[2].unlocked(false)
+        @levels[2].cost(1000)
+        @levels[3].unlocked(false)
+        @levels[3].active(false)
+
+    chooseLevel: ->
+        console.log @index()
+        m.route('/game')
+
+    # an item view function, has to be bound to a model
+    getItemView: ->
+        # unlocked and playable
+        if @unlocked()
+            [
+                m('a[href=#]', {onclick:
+                    link home.vm.chooseLevel.bind(@)}, @name())
+                ', unlocked. '
+                ['*' for star in [0...@stars()]]
+            ]
+        # available to unlock
+        else if @active() and @cost() <= game.vm.game.money()
+            [
+                m('a[href=#]', {onclick:
+                    link home.vm.chooseLevel.bind(@)}, @name())
+                ', cost '
+                m('strong', @cost())
+            ]
+        # not available to unlock
+        else if @active()
+            [
+                @name()
+                ', cost '
+                m('strong', @cost())
+            ]
+        # not yet playable
+        else
+            @name()
+
 home.controller = ->
-home.view = -> ['home']
+    home.vm.init()
+    game.vm.init()
+
+home.topBar = -> m('div.top-bar', [
+    'Choose a location:'
+    m('div.right.money-ind', [
+        m('span', {}, game.vm.game.money())
+        ' coins'
+    ])
+])
+
+home.view = -> [
+    home.topBar()
+    list.view(home.vm.levels, home.vm.getItemView)
+]
 
 # --------------------------------------------------------------
 # game module
 # --------------------------------------------------------------
+# model of a Fish
+class game.Fish
+    constructor: ->
+        @id     = m.prop new Date().getTime()
+        @name   = m.prop 'Bass'
+        @value  = m.prop 105
+        @weight = m.prop 5.3
+
 # game model
 class game.Game
     constructor: ->
@@ -67,6 +154,10 @@ class game.Game
         @cues      = m.prop [[1.0, 4], [3.0, 4], [0.0, 4], [0.0, 4], [5.0, 0], [-1, 0], [-1, 0]]
         @caught    = m.prop []
 
+        @caught().push new game.Fish()
+        @caught().push new game.Fish()
+        @caught().push new game.Fish()
+
 game.vm = do ->
     init: ->
         # game object
@@ -75,6 +166,9 @@ game.vm = do ->
     act: (action) ->
         console.log 'send a request to server'
         console.log action
+
+    inGame: ->
+        @game != null
 
     getWaterClass: (i, j) ->
         if i < @game.map()[0][j]
@@ -128,10 +222,10 @@ topBar.moneySW = -> m('div.right.money-ind', [
     ' coins'
 ])
 
-topBar.view = (ctrl) -> m('div.top-bar', [
-    topBar.timeSW(ctrl)
-    m('a.right[href=/caught]', {config: m.route}, 'Caught')
-    topBar.moneySW(ctrl)
+topBar.view = (caught) -> m('div.top-bar', [
+    topBar.timeSW()
+    (caught and m('a.right[href=/game]', {config: m.route}, 'Back') or m('a.right[href=/caught]', {config: m.route}, 'Caught'))
+    topBar.moneySW()
 ])
 
 # --------------------------------------------------------------
@@ -155,7 +249,7 @@ gameActions.actions = m.prop [{
 gameActions.view = -> [
     m('div#game-actions', [
         gameActions.actions().map((action) ->
-            m('a[href="#"]', {onclick: game.vm.act(action.action)},
+            m('a[href="#"]', {onclick: link game.vm.act.bind(@, action.action)},
                 action.title))])
 ]
 
@@ -192,7 +286,42 @@ gameMap.view = -> m('div#game-map', [
 # caught module
 # --------------------------------------------------------------
 caught.controller = ->
-caught.view = -> ['caught']
+    home.vm.init()
+    game.vm.init()
+
+caught.vm = do ->
+    getItemView: -> [
+        @name()
+        ', weight '
+        @weight()
+        ' kg, value '
+        m('strong', @value())
+    ]
+
+caught.topBarGame = -> m('div.top-bar', [
+    'Choose a location:'
+    m('div.right.money-ind', [
+        m('span', {}, game.vm.game.money())
+        ' coins'
+    ])
+])
+
+# a top bar at the end of the game
+caught.topBar = -> m('div.top-bar', [
+    'Results of this fishing trip:'
+    m('div.right.money-ind', [
+        '+'
+        m('span', {}, topBar.vm.valueCaught())
+        ' coins. Total: '
+        m('span', {}, game.vm.game.money())
+    ])
+])
+
+caught.view = -> [
+    (game.vm.inGame() and topBar.view(true) or caught.topBar())
+    list.view(game.vm.game.caught(), caught.vm.getItemView)
+]
+
 
 # --------------------------------------------------------------
 # shop module
@@ -207,10 +336,24 @@ trophies.controller = ->
 trophies.view = -> ['trophies']
 
 # --------------------------------------------------------------
+# reusable components and functions
+# --------------------------------------------------------------
+# list component, produces a list when given an array of items
+list.view = (items, view) -> m('ul.list', [
+    items.map((item) ->
+        m('li', {key: item.id()}, [view.apply(item)]))
+])
+
+link = (f) ->
+    (e) ->
+        e.preventDefault()
+        f()
+
+# --------------------------------------------------------------
 # routing
 # --------------------------------------------------------------
 m.route.mode = 'hash'
-m.route document.getElementById('page'), '/game', {
+m.route document.getElementById('page'), '/', {
     '/'         : home,
     '/game'     : game,
     '/caught'   : caught,

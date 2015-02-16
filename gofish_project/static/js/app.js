@@ -1,4 +1,4 @@
-var caught, game, gameActions, gameMap, home, infoArea, nav, shop, topBar, trophies;
+var caught, game, gameActions, gameMap, home, infoArea, link, list, nav, shop, topBar, trophies;
 
 nav = {};
 
@@ -19,6 +19,8 @@ caught = {};
 shop = {};
 
 trophies = {};
+
+list = {};
 
 nav.LinkList = function() {
   return m.prop([
@@ -54,11 +56,97 @@ nav.view = function(ctrl) {
 
 m.module(document.getElementById('nav'), nav);
 
-home.controller = function() {};
+home.Level = (function() {
+  function Level(id) {
+    this.id = m.prop(id);
+    this.name = m.prop('Local Pond');
+    this.unlocked = m.prop(true);
+    this.active = m.prop(true);
+    this.cost = m.prop(100);
+    this.stars = m.prop(2);
+    this.index = m.prop(0);
+  }
+
+  return Level;
+
+})();
+
+home.Levels = Array;
+
+home.vm = (function() {
+  return {
+    init: function() {
+      this.levels = new home.Levels();
+      this.levels.push(new home.Level(0));
+      this.levels.push(new home.Level(1));
+      this.levels.push(new home.Level(2));
+      this.levels.push(new home.Level(3));
+      this.levels[1].unlocked(false);
+      this.levels[2].unlocked(false);
+      this.levels[2].cost(1000);
+      this.levels[3].unlocked(false);
+      return this.levels[3].active(false);
+    },
+    chooseLevel: function() {
+      console.log(this.index());
+      return m.route('/game');
+    },
+    getItemView: function() {
+      var star;
+      if (this.unlocked()) {
+        return [
+          m('a[href=#]', {
+            onclick: link(home.vm.chooseLevel.bind(this))
+          }, this.name()), ', unlocked. ', [
+            (function() {
+              var _i, _ref, _results;
+              _results = [];
+              for (star = _i = 0, _ref = this.stars(); 0 <= _ref ? _i < _ref : _i > _ref; star = 0 <= _ref ? ++_i : --_i) {
+                _results.push('*');
+              }
+              return _results;
+            }).call(this)
+          ]
+        ];
+      } else if (this.active() && this.cost() <= game.vm.game.money()) {
+        return [
+          m('a[href=#]', {
+            onclick: link(home.vm.chooseLevel.bind(this))
+          }, this.name()), ', cost ', m('strong', this.cost())
+        ];
+      } else if (this.active()) {
+        return [this.name(), ', cost ', m('strong', this.cost())];
+      } else {
+        return this.name();
+      }
+    }
+  };
+})();
+
+home.controller = function() {
+  home.vm.init();
+  return game.vm.init();
+};
+
+home.topBar = function() {
+  return m('div.top-bar', ['Choose a location:', m('div.right.money-ind', [m('span', {}, game.vm.game.money()), ' coins'])]);
+};
 
 home.view = function() {
-  return ['home'];
+  return [home.topBar(), list.view(home.vm.levels, home.vm.getItemView)];
 };
+
+game.Fish = (function() {
+  function Fish() {
+    this.id = m.prop(new Date().getTime());
+    this.name = m.prop('Bass');
+    this.value = m.prop(105);
+    this.weight = m.prop(5.3);
+  }
+
+  return Fish;
+
+})();
 
 game.Game = (function() {
   function Game() {
@@ -73,6 +161,9 @@ game.Game = (function() {
     this.position = m.prop(3);
     this.cues = m.prop([[1.0, 4], [3.0, 4], [0.0, 4], [0.0, 4], [5.0, 0], [-1, 0], [-1, 0]]);
     this.caught = m.prop([]);
+    this.caught().push(new game.Fish());
+    this.caught().push(new game.Fish());
+    this.caught().push(new game.Fish());
   }
 
   return Game;
@@ -87,6 +178,9 @@ game.vm = (function() {
     act: function(action) {
       console.log('send a request to server');
       return console.log(action);
+    },
+    inGame: function() {
+      return this.game !== null;
     },
     getWaterClass: function(i, j) {
       if (i < this.game.map()[0][j]) {
@@ -151,11 +245,13 @@ topBar.moneySW = function() {
   return m('div.right.money-ind', ['+', m('span', {}, topBar.vm.valueCaught()), ' coins']);
 };
 
-topBar.view = function(ctrl) {
+topBar.view = function(caught) {
   return m('div.top-bar', [
-    topBar.timeSW(ctrl), m('a.right[href=/caught]', {
+    topBar.timeSW(), caught && m('a.right[href=/game]', {
       config: m.route
-    }, 'Caught'), topBar.moneySW(ctrl)
+    }, 'Back') || m('a.right[href=/caught]', {
+      config: m.route
+    }, 'Caught'), topBar.moneySW()
   ]);
 };
 
@@ -180,7 +276,7 @@ gameActions.view = function() {
     m('div#game-actions', [
       gameActions.actions().map(function(action) {
         return m('a[href="#"]', {
-          onclick: game.vm.act(action.action)
+          onclick: link(game.vm.act.bind(this, action.action))
         }, action.title);
       })
     ])
@@ -243,10 +339,29 @@ gameMap.view = function() {
   return m('div#game-map', [gameMap.boatSW(), gameMap.waterSW()]);
 };
 
-caught.controller = function() {};
+caught.controller = function() {
+  home.vm.init();
+  return game.vm.init();
+};
+
+caught.vm = (function() {
+  return {
+    getItemView: function() {
+      return [this.name(), ', weight ', this.weight(), ' kg, value ', m('strong', this.value())];
+    }
+  };
+})();
+
+caught.topBarGame = function() {
+  return m('div.top-bar', ['Choose a location:', m('div.right.money-ind', [m('span', {}, game.vm.game.money()), ' coins'])]);
+};
+
+caught.topBar = function() {
+  return m('div.top-bar', ['Results of this fishing trip:', m('div.right.money-ind', ['+', m('span', {}, topBar.vm.valueCaught()), ' coins. Total: ', m('span', {}, game.vm.game.money())])]);
+};
 
 caught.view = function() {
-  return ['caught'];
+  return [game.vm.inGame() && topBar.view(true) || caught.topBar(), list.view(game.vm.game.caught(), caught.vm.getItemView)];
 };
 
 shop.controller = function() {};
@@ -261,9 +376,26 @@ trophies.view = function() {
   return ['trophies'];
 };
 
+list.view = function(items, view) {
+  return m('ul.list', [
+    items.map(function(item) {
+      return m('li', {
+        key: item.id()
+      }, [view.apply(item)]);
+    })
+  ]);
+};
+
+link = function(f) {
+  return function(e) {
+    e.preventDefault();
+    return f();
+  };
+};
+
 m.route.mode = 'hash';
 
-m.route(document.getElementById('page'), '/game', {
+m.route(document.getElementById('page'), '/', {
   '/': home,
   '/game': game,
   '/caught': caught,
