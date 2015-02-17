@@ -46,7 +46,6 @@ def v2player(request):
         'line'  : getIndex(player, 'lines'),
         'cue'   : getIndex(player, 'cues'),
     }}
-    print response
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 # get the information about the active game
@@ -59,6 +58,8 @@ def v2game(request):
 
     caught = reduce(lambda a, f: a + f['value'], game.caught, 0)
     response = {'game' : {
+        'day'       : player.numGames,
+        'name'      : game.level['name'],
         'totalTime' : game.level['totalTime'],
         'timeLeft'  : game.level['totalTime']-game.level['time'],
         'valCaught' : caught,
@@ -90,3 +91,4 @@ def v2trophies(request):
 # get index for a player update
 def getIndex(player, update):
     return -1 if update not in player.updates else gamedef.getIndex(player.updates[update], update)
+

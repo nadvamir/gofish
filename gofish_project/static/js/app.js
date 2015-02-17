@@ -1,4 +1,4 @@
-var caught, game, gameActions, gameMap, get, home, infoArea, link, list, nav, shop, topBar, trophies, url;
+var caught, end, game, gameActions, gameMap, get, home, infoArea, link, list, nav, shop, topBar, trophies, url;
 
 nav = {};
 
@@ -15,6 +15,8 @@ infoArea = {};
 gameMap = {};
 
 caught = {};
+
+end = {};
 
 shop = {};
 
@@ -90,8 +92,13 @@ home.vm = (function() {
       })(this));
     },
     chooseLevel: function() {
-      console.log(this.id());
-      return m.route('/game');
+      return get('/start/' + this.id()).then(function(r) {
+        if (r.error) {
+          return console.log(r);
+        } else {
+          return m.route('/game');
+        }
+      });
     },
     getItemView: function() {
       var star;
@@ -169,6 +176,8 @@ game.Player = (function() {
 game.Game = (function() {
   function Game(g) {
     var f, _i, _len, _ref;
+    this.day = m.prop(g.day);
+    this.name = m.prop(g.name);
     this.totalTime = m.prop(g.totalTime);
     this.timeLeft = m.prop(g.timeLeft);
     this.valCaught = m.prop(g.valCaught);
@@ -197,6 +206,7 @@ game.vm = (function() {
         };
       })(this));
       this.game = null;
+      this.info = m.prop('');
       return get('/v2/game').then((function(_this) {
         return function(r) {
           return _this.game = new game.Game(r.game);
@@ -204,8 +214,51 @@ game.vm = (function() {
       })(this));
     },
     act: function(action) {
-      console.log('send a request to server');
-      return console.log(action);
+      var actions, common, fish, move, urls;
+      urls = {
+        fish: '/action/catchall/1',
+        left: '/action/move/left',
+        right: '/action/move/right'
+      };
+      common = function(r) {
+        var g;
+        if (r.error) {
+          return m.route('/end');
+        }
+        g = game.vm.game;
+        g.timeLeft(g.totalTime() - parseInt(r.time, 10));
+        return g.cues(r.cues);
+      };
+      move = function(r) {
+        common(r);
+        game.vm.game.position(r.position);
+        return game.vm.info('');
+      };
+      fish = function(r) {
+        var f, g;
+        if (0 === r.fishList.length) {
+          return m.route('/end');
+        }
+        common(r);
+        fish = r.fishList[0];
+        if (null !== fish) {
+          g = game.vm.game;
+          g.valCaught(g.valCaught() + fish.value);
+          f = new game.Fish(fish);
+          game.vm.info(['You\'ve got ', caught.vm.getItemView.apply(f)]);
+          return g.caught().push(f);
+        } else {
+          return game.vm.info('Nothing was caught');
+        }
+      };
+      actions = {
+        fish: fish,
+        left: move,
+        right: move
+      };
+      return get(urls[action]).then(actions[action], function() {
+        return m.route('/end');
+      });
     },
     inGame: function() {
       return this.game !== null;
@@ -255,6 +308,10 @@ topBar.vm = (function() {
   };
 })();
 
+topBar.daySW = function() {
+  return m('.day-ind', ['Day ', m('span', game.vm.game.day()), '. ', m('span', game.vm.game.name())]);
+};
+
 topBar.timeSW = function() {
   return [
     m('i.fa.fa-clock-o'), m('span.time-indicator.time-left', {
@@ -275,11 +332,11 @@ topBar.moneySW = function() {
 
 topBar.view = function(caught) {
   return m('div.top-bar', [
-    topBar.timeSW(), caught && m('a.right[href=/game]', {
+    topBar.timeSW(), topBar.daySW(), caught && m('a.right[href=/game]', {
       config: m.route
     }, 'Back') || m('a.right[href=/caught]', {
       config: m.route
-    }, 'Caught'), topBar.moneySW()
+    }, "Caught " + (game.vm.game.caught().length) + " fish"), topBar.moneySW()
   ]);
 };
 
@@ -288,14 +345,11 @@ gameActions.actions = m.prop([
     action: 'left',
     title: 'move left'
   }, {
-    action: 'right',
-    title: 'move right'
-  }, {
     action: 'fish',
     title: 'fish here'
   }, {
-    action: 'end',
-    title: 'end game'
+    action: 'right',
+    title: 'move right'
   }
 ]);
 
@@ -312,7 +366,7 @@ gameActions.view = function() {
 };
 
 infoArea.view = function() {
-  return m('div#info-area', 'infoArea');
+  return m('div#info-area', game.vm.info());
 };
 
 gameMap.TILE_W = 40;
@@ -376,6 +430,9 @@ caught.vm = (function() {
   return {
     getItemView: function() {
       return [this.name(), ', weight ', this.weight(), ' kg, value ', m('strong', this.value())];
+    },
+    compare: function(a, b) {
+      return b.value() - a.value();
     }
   };
 })();
@@ -389,8 +446,29 @@ caught.topBar = function() {
 };
 
 caught.view = function() {
-  return [game.vm.inGame() && topBar.view(true) || caught.topBar(), list.view(game.vm.game.caught(), caught.vm.getItemView)];
+  return [game.vm.inGame() && topBar.view(true) || caught.topBar(), list.view(game.vm.game.caught().sort(caught.vm.compare), caught.vm.getItemView)];
 };
+
+end.controller = (function() {
+  function controller() {
+    get('/end').then((function(_this) {
+      return function(r) {
+        _this.earned = m.prop(r.earned);
+        _this.money = m.prop(r.money);
+        return _this.stars = m.prop(r.stars);
+      };
+    })(this));
+  }
+
+  return controller;
+
+})();
+
+end.view = function(c) {
+  return [m('div.top-bar', ['This day is over!']), m('ul.list', [m('li', ['Earned ', m('strong', c.earned())]), m('li', ['Now you have ', m('strong', c.money()), ' coins']), c.stars() > 0 && (m('li', ['Achieved ', m('strong', c.stars()), ' stars'])) || ''])];
+};
+
+shop.controller = function() {};
 
 shop.view = function() {
   return ['shop'];
@@ -436,6 +514,7 @@ m.route(document.getElementById('page'), '/', {
   '/': home,
   '/game': game,
   '/caught': caught,
+  '/end': end,
   '/shop': shop,
   '/trophies': trophies
 });

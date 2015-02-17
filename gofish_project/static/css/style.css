@@ -64,13 +64,17 @@ nav a:hover {
 }
 .list li a {
     color: #3e4cb7;
-    font-size: 20px;
+    font-size: 26px;
 }
 .list li a:hover {
     color: #8693f4;
 }
 .list li strong {
-    font-size: 20px;
+    font-size: 26px;
+}
+.list {
+    overflow-y: auto;
+    max-height: 559px;
 }
 
 /* ----------------------------------------------------------- */
@@ -83,10 +87,16 @@ nav a:hover {
 }
 
 .top-bar a {
-    background: #ff2300;
+    background: #23aa00;
+    width: 100px;
 }
 .top-bar a:hover {
-    background: #ff9b90;
+    background: #9bcc90;
+}
+
+.day-ind {
+    display: inline-block;
+    margin-left: 5px;
 }
 
 .time-indicator {
@@ -96,6 +106,7 @@ nav a:hover {
 }
 .time-left {
     background: #3e4cb7;
+    background: #23aa00;
     margin-left: 5px;
 }
 .time-full {
@@ -105,18 +116,19 @@ nav a:hover {
 .money-ind {
     margin-right: 5px;
 }
-.money-ind span {
-    font-size: 20px;
+.money-ind span, .day-ind span {
+    font-size: 26px;
 }
 
 /* ----------------------------------------------------------- */
 #game-actions {
     width: 800px;
     margin-top: 0px;
+    background: #3e4cb7;
 }
 #game-actions a {
     display: inline-block;
-    width: 200px;
+    width: 33.3333%;
     background: #3e4cb7;
     color: white;
     font-size: 20px;
@@ -134,6 +146,11 @@ nav a:hover {
     height: 69px;
     font-size: 20px;
     padding: 5px;
+    text-align: center;
+}
+#info-area strong {
+    font-size: 26px;
+    font-weight: normal;
 }
 
 /* ----------------------------------------------------------- */

@@ -13,6 +13,8 @@ gameMap     = {}
 
 caught      = {}
 
+end         = {}
+
 shop        = {}
 
 trophies    = {}
@@ -73,8 +75,11 @@ home.vm = do ->
                 @levels.push new home.Level(level)
 
     chooseLevel: ->
-        console.log @id()
-        m.route('/game')
+        get('/start/' + @id()).then (r) ->
+            if r.error
+                console.log r
+            else
+                m.route('/game')
 
     # an item view function, has to be bound to a model
     getItemView: ->
@@ -146,6 +151,8 @@ class game.Player
 # game model
 class game.Game
     constructor: (g) ->
+        @day       = m.prop g.day
+        @name      = m.prop g.name
         @totalTime = m.prop g.totalTime
         @timeLeft  = m.prop g.timeLeft
         @valCaught = m.prop g.valCaught
@@ -162,12 +169,47 @@ game.vm = do ->
         get('/v2/player').then (r) =>
             @player = new game.Player(r.player)
         @game = null
+        @info = m.prop ''
         get('/v2/game').then (r) =>
             @game = new game.Game(r.game)
 
     act: (action) ->
-        console.log 'send a request to server'
-        console.log action
+        urls =
+            fish  : '/action/catchall/1'
+            left  : '/action/move/left'
+            right : '/action/move/right'
+
+        common = (r) ->
+            if r.error
+                return m.route '/end'
+            g = game.vm.game
+            g.timeLeft(g.totalTime() - parseInt(r.time, 10))
+            g.cues(r.cues)
+
+        move = (r) ->
+            common(r)
+            game.vm.game.position(r.position)
+            game.vm.info ''
+
+        fish = (r) ->
+            # if there is no fishes, then it is the end
+            if 0 == r.fishList.length
+                return m.route '/end'
+            # otherwise, common pattern
+            common(r)
+            fish = r.fishList[0]
+            if null != fish
+                g = game.vm.game
+                g.valCaught(g.valCaught() + fish.value)
+                f = new game.Fish(fish)
+                game.vm.info ['You\'ve got ', caught.vm.getItemView.apply(f)]
+                g.caught().push f
+            else
+                game.vm.info 'Nothing was caught'
+
+        actions = {fish : fish, left : move, right : move}
+
+        get(urls[action]).then actions[action], -> m.route '/end'
 
     inGame: ->
         @game != null
@@ -208,6 +250,14 @@ topBar.vm = do ->
     valueCaught: ->
         game.vm.game.valCaught()
 
+# Day sub-view
+topBar.daySW = -> m('.day-ind', [
+    'Day '
+    m('span', game.vm.game.day())
+    '. '
+    m('span', game.vm.game.name())
+])
+
 # time sub-view
 topBar.timeSW = -> [
     m('i.fa.fa-clock-o')
@@ -226,7 +276,8 @@ topBar.moneySW = -> m('div.right.money-ind', [
 
 topBar.view = (caught) -> m('div.top-bar', [
     topBar.timeSW()
-    (caught and m('a.right[href=/game]', {config: m.route}, 'Back') or m('a.right[href=/caught]', {config: m.route}, 'Caught'))
+    topBar.daySW()
+    (caught and m('a.right[href=/game]', {config: m.route}, 'Back') or m('a.right[href=/caught]', {config: m.route}, "Caught #{game.vm.game.caught().length} fish"))
     topBar.moneySW()
 ])
 
@@ -237,14 +288,11 @@ gameActions.actions = m.prop [{
         action : 'left',
         title  : 'move left',
     }, {
-        action : 'right',
-        title  : 'move right',
-    }, {
         action : 'fish',
         title  : 'fish here',
     }, {
-        action : 'end',
-        title  : 'end game',
+        action : 'right',
+        title  : 'move right',
     }
 ]
 
@@ -258,7 +306,7 @@ gameActions.view = -> [
 # --------------------------------------------------------------
 # game:infoArea module
 # --------------------------------------------------------------
-infoArea.view = -> m('div#info-area', 'infoArea')
+infoArea.view = -> m('div#info-area', game.vm.info())
 
 # --------------------------------------------------------------
 # game:gameMap module
@@ -299,6 +347,8 @@ caught.vm = do ->
         ' kg, value '
         m('strong', @value())
     ]
+    compare: (a, b) ->
+        b.value() - a.value()
 
 caught.topBarGame = -> m('div.top-bar', [
     'Choose a location:'
@@ -321,13 +371,48 @@ caught.topBar = -> m('div.top-bar', [
 
 caught.view = -> [
     (game.vm.inGame() and topBar.view(true) or caught.topBar())
-    list.view(game.vm.game.caught(), caught.vm.getItemView)
+    list.view(game.vm.game.caught().sort(caught.vm.compare), caught.vm.getItemView)
 ]
 
 
 # --------------------------------------------------------------
+# end of game module
+# --------------------------------------------------------------
+class end.controller
+    constructor: ->
+        get('/end').then (r) =>
+            @earned = m.prop r.earned
+            @money  = m.prop r.money
+            @stars  = m.prop r.stars
+
+end.view = (c) -> [
+    m('div.top-bar', [
+        'This day is over!'
+    ])
+    m('ul.list', [
+        m('li', [
+            'Earned '
+            m('strong', c.earned())
+        ])
+        m('li', [
+            'Now you have '
+            m('strong', c.money())
+            ' coins'
+        ])
+        (c.stars() > 0 and (
+            m('li', [
+                'Achieved '
+                m('strong', c.stars())
+                ' stars'
+            ])
+        ) or '')
+    ])
+]
+
+# --------------------------------------------------------------
 # shop module
-# -------------------------------------------------------------- shop.controller = ->
+# --------------------------------------------------------------
+shop.controller = ->
 shop.view = -> ['shop']
 
 # --------------------------------------------------------------
@@ -364,6 +449,7 @@ m.route document.getElementById('page'), '/', {
     '/'         : home,
     '/game'     : game,
     '/caught'   : caught,
+    '/end'      : end,
     '/shop'     : shop,
     '/trophies' : trophies
 }
