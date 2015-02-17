@@ -336,3 +336,10 @@ def getLevel(level):
 
     return lvl
 
+# a function to get index for an update
+def getIndex(name, update):
+    for i in range(0, len(GAME['updates'][update])):
+        if GAME['updates'][update][i]['name'] == name:
+            return i
+    return -1
+

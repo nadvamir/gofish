@@ -53,33 +53,27 @@ m.module document.getElementById('nav'), nav
 # --------------------------------------------------------------
 # model for game location
 class home.Level
-    constructor: (id) ->
-        @id       = m.prop id
-        @name     = m.prop 'Local Pond'
-        @unlocked = m.prop true
-        @active   = m.prop true
-        @cost     = m.prop 100
-        @stars    = m.prop 2
-        @index    = m.prop 0
+    constructor: (lvl) ->
+        @id       = m.prop lvl.id
+        @name     = m.prop lvl.name
+        @unlocked = m.prop lvl.unlocked
+        @active   = m.prop lvl.active
+        @cost     = m.prop lvl.cost
+        @stars    = m.prop lvl.stars
 
 # model for all game locations
 home.Levels = Array
 
 home.vm = do ->
+    # initialisaton gets the list of levels
     init: ->
-        @levels = new home.Levels()
-        @levels.push new home.Level(0)
-        @levels.push new home.Level(1)
-        @levels.push new home.Level(2)
-        @levels.push new home.Level(3)
-        @levels[1].unlocked(false)
-        @levels[2].unlocked(false)
-        @levels[2].cost(1000)
-        @levels[3].unlocked(false)
-        @levels[3].active(false)
+        get('/v2/home').then (r) =>
+            @levels = new home.Levels()
+            for level in r.levels
+                @levels.push new home.Level(level)
 
     chooseLevel: ->
-        console.log @index()
+        console.log @id()
         m.route('/game')
 
     # an item view function, has to be bound to a model
@@ -93,7 +87,7 @@ home.vm = do ->
                 ['*' for star in [0...@stars()]]
             ]
         # available to unlock
-        else if @active() and @cost() <= game.vm.game.money()
+        else if @active() and @cost() <= game.vm.player.money()
             [
                 m('a[href=#]', {onclick:
                     link home.vm.chooseLevel.bind(@)}, @name())
@@ -113,12 +107,14 @@ home.vm = do ->
 
 home.controller = ->
     home.vm.init()
-    game.vm.init()
+    game.vm.init().then ->
+        if game.vm.inGame()
+            m.route('/game')
 
 home.topBar = -> m('div.top-bar', [
     'Choose a location:'
     m('div.right.money-ind', [
-        m('span', {}, game.vm.game.money())
+        m('span', {}, game.vm.player.money())
         ' coins'
     ])
 ])
@@ -133,35 +129,41 @@ home.view = -> [
 # --------------------------------------------------------------
 # model of a Fish
 class game.Fish
-    constructor: ->
+    constructor: (f) ->
         @id     = m.prop new Date().getTime()
-        @name   = m.prop 'Bass'
-        @value  = m.prop 105
-        @weight = m.prop 5.3
+        @name   = m.prop f.name
+        @value  = m.prop f.value
+        @weight = m.prop f.weight
+
+# a player model
+class game.Player
+    constructor: (p) ->
+        @money = m.prop p.money
+        @boat  = m.prop p.boat
+        @line  = m.prop p.line
+        @cue   = m.prop p.cue
 
 # game model
 class game.Game
-    constructor: ->
-        @totalTime = m.prop 480
-        @timeLeft  = m.prop 405
-        @money     = m.prop 151
-        @boat      = m.prop 0
-        @line      = m.prop 0
-        @valCaught = m.prop 15
-        @showDepth = m.prop true
-        @map       = m.prop [[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]
-        @position  = m.prop 3
-        @cues      = m.prop [[1.0, 4], [3.0, 4], [0.0, 4], [0.0, 4], [5.0, 0], [-1, 0], [-1, 0]]
+    constructor: (g) ->
+        @totalTime = m.prop g.totalTime
+        @timeLeft  = m.prop g.timeLeft
+        @valCaught = m.prop g.valCaught
+        @showDepth = m.prop g.showDepth
+        @map       = m.prop g.map
+        @position  = m.prop g.position
+        @cues      = m.prop g.cues
         @caught    = m.prop []
-
-        @caught().push new game.Fish()
-        @caught().push new game.Fish()
-        @caught().push new game.Fish()
+        for f in g.caught
+            @caught().push new game.Fish(f)
 
 game.vm = do ->
     init: ->
-        # game object
-        @game = new game.Game()
+        get('/v2/player').then (r) =>
+            @player = new game.Player(r.player)
+        @game = null
+        get('/v2/game').then (r) =>
+            @game = new game.Game(r.game)
 
     act: (action) ->
         console.log 'send a request to server'
@@ -266,7 +268,7 @@ gameMap.TILE_W = 40
 
 # a sub view for displaying boat
 gameMap.boatSW = -> m('p', [
-    m('span.boat-' + game.vm.game.boat(), {style:
+    m('span.boat-' + game.vm.player.boat(), {style:
         {marginLeft: gameMap.TILE_W * game.vm.game.position() + 'px'}})
 ])
 
@@ -301,7 +303,7 @@ caught.vm = do ->
 caught.topBarGame = -> m('div.top-bar', [
     'Choose a location:'
     m('div.right.money-ind', [
-        m('span', {}, game.vm.game.money())
+        m('span', {}, game.vm.player.money())
         ' coins'
     ])
 ])
@@ -313,7 +315,7 @@ caught.topBar = -> m('div.top-bar', [
         '+'
         m('span', {}, topBar.vm.valueCaught())
         ' coins. Total: '
-        m('span', {}, game.vm.game.money())
+        m('span', {}, game.vm.player.money())
     ])
 ])
 
@@ -325,8 +327,7 @@ caught.view = -> [
 
 # --------------------------------------------------------------
 # shop module
-# --------------------------------------------------------------
-shop.controller = ->
+# -------------------------------------------------------------- shop.controller = ->
 shop.view = -> ['shop']
 
 # --------------------------------------------------------------
@@ -344,11 +345,17 @@ list.view = (items, view) -> m('ul.list', [
         m('li', {key: item.id()}, [view.apply(item)]))
 ])
 
+# returns an onclick for links that runs js instead of defaults
 link = (f) ->
     (e) ->
         e.preventDefault()
         f()
 
+# returns an url that works with server
+url = (specifics) -> '/gofish/api' + specifics
+
+# makes a get query
+get = (q) -> m.request(method: 'GET', url: url(q))
 # --------------------------------------------------------------
 # routing
 # --------------------------------------------------------------

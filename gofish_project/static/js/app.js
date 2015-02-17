@@ -1,4 +1,4 @@
-var caught, game, gameActions, gameMap, home, infoArea, link, list, nav, shop, topBar, trophies;
+var caught, game, gameActions, gameMap, get, home, infoArea, link, list, nav, shop, topBar, trophies, url;
 
 nav = {};
 
@@ -57,14 +57,13 @@ nav.view = function(ctrl) {
 m.module(document.getElementById('nav'), nav);
 
 home.Level = (function() {
-  function Level(id) {
-    this.id = m.prop(id);
-    this.name = m.prop('Local Pond');
-    this.unlocked = m.prop(true);
-    this.active = m.prop(true);
-    this.cost = m.prop(100);
-    this.stars = m.prop(2);
-    this.index = m.prop(0);
+  function Level(lvl) {
+    this.id = m.prop(lvl.id);
+    this.name = m.prop(lvl.name);
+    this.unlocked = m.prop(lvl.unlocked);
+    this.active = m.prop(lvl.active);
+    this.cost = m.prop(lvl.cost);
+    this.stars = m.prop(lvl.stars);
   }
 
   return Level;
@@ -76,19 +75,22 @@ home.Levels = Array;
 home.vm = (function() {
   return {
     init: function() {
-      this.levels = new home.Levels();
-      this.levels.push(new home.Level(0));
-      this.levels.push(new home.Level(1));
-      this.levels.push(new home.Level(2));
-      this.levels.push(new home.Level(3));
-      this.levels[1].unlocked(false);
-      this.levels[2].unlocked(false);
-      this.levels[2].cost(1000);
-      this.levels[3].unlocked(false);
-      return this.levels[3].active(false);
+      return get('/v2/home').then((function(_this) {
+        return function(r) {
+          var level, _i, _len, _ref, _results;
+          _this.levels = new home.Levels();
+          _ref = r.levels;
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            level = _ref[_i];
+            _results.push(_this.levels.push(new home.Level(level)));
+          }
+          return _results;
+        };
+      })(this));
     },
     chooseLevel: function() {
-      console.log(this.index());
+      console.log(this.id());
       return m.route('/game');
     },
     getItemView: function() {
@@ -108,7 +110,7 @@ home.vm = (function() {
             }).call(this)
           ]
         ];
-      } else if (this.active() && this.cost() <= game.vm.game.money()) {
+      } else if (this.active() && this.cost() <= game.vm.player.money()) {
         return [
           m('a[href=#]', {
             onclick: link(home.vm.chooseLevel.bind(this))
@@ -125,11 +127,15 @@ home.vm = (function() {
 
 home.controller = function() {
   home.vm.init();
-  return game.vm.init();
+  return game.vm.init().then(function() {
+    if (game.vm.inGame()) {
+      return m.route('/game');
+    }
+  });
 };
 
 home.topBar = function() {
-  return m('div.top-bar', ['Choose a location:', m('div.right.money-ind', [m('span', {}, game.vm.game.money()), ' coins'])]);
+  return m('div.top-bar', ['Choose a location:', m('div.right.money-ind', [m('span', {}, game.vm.player.money()), ' coins'])]);
 };
 
 home.view = function() {
@@ -137,33 +143,45 @@ home.view = function() {
 };
 
 game.Fish = (function() {
-  function Fish() {
+  function Fish(f) {
     this.id = m.prop(new Date().getTime());
-    this.name = m.prop('Bass');
-    this.value = m.prop(105);
-    this.weight = m.prop(5.3);
+    this.name = m.prop(f.name);
+    this.value = m.prop(f.value);
+    this.weight = m.prop(f.weight);
   }
 
   return Fish;
 
 })();
 
+game.Player = (function() {
+  function Player(p) {
+    this.money = m.prop(p.money);
+    this.boat = m.prop(p.boat);
+    this.line = m.prop(p.line);
+    this.cue = m.prop(p.cue);
+  }
+
+  return Player;
+
+})();
+
 game.Game = (function() {
-  function Game() {
-    this.totalTime = m.prop(480);
-    this.timeLeft = m.prop(405);
-    this.money = m.prop(151);
-    this.boat = m.prop(0);
-    this.line = m.prop(0);
-    this.valCaught = m.prop(15);
-    this.showDepth = m.prop(true);
-    this.map = m.prop([[5, 5, 7, 7, 9, 10, 8, 8, 7, 7, 6, 4, 6, 6, 6, 5, 5, 4, 3, 2]]);
-    this.position = m.prop(3);
-    this.cues = m.prop([[1.0, 4], [3.0, 4], [0.0, 4], [0.0, 4], [5.0, 0], [-1, 0], [-1, 0]]);
+  function Game(g) {
+    var f, _i, _len, _ref;
+    this.totalTime = m.prop(g.totalTime);
+    this.timeLeft = m.prop(g.timeLeft);
+    this.valCaught = m.prop(g.valCaught);
+    this.showDepth = m.prop(g.showDepth);
+    this.map = m.prop(g.map);
+    this.position = m.prop(g.position);
+    this.cues = m.prop(g.cues);
     this.caught = m.prop([]);
-    this.caught().push(new game.Fish());
-    this.caught().push(new game.Fish());
-    this.caught().push(new game.Fish());
+    _ref = g.caught;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      f = _ref[_i];
+      this.caught().push(new game.Fish(f));
+    }
   }
 
   return Game;
@@ -173,7 +191,17 @@ game.Game = (function() {
 game.vm = (function() {
   return {
     init: function() {
-      return this.game = new game.Game();
+      get('/v2/player').then((function(_this) {
+        return function(r) {
+          return _this.player = new game.Player(r.player);
+        };
+      })(this));
+      this.game = null;
+      return get('/v2/game').then((function(_this) {
+        return function(r) {
+          return _this.game = new game.Game(r.game);
+        };
+      })(this));
     },
     act: function(action) {
       console.log('send a request to server');
@@ -291,7 +319,7 @@ gameMap.TILE_W = 40;
 
 gameMap.boatSW = function() {
   return m('p', [
-    m('span.boat-' + game.vm.game.boat(), {
+    m('span.boat-' + game.vm.player.boat(), {
       style: {
         marginLeft: gameMap.TILE_W * game.vm.game.position() + 'px'
       }
@@ -353,18 +381,16 @@ caught.vm = (function() {
 })();
 
 caught.topBarGame = function() {
-  return m('div.top-bar', ['Choose a location:', m('div.right.money-ind', [m('span', {}, game.vm.game.money()), ' coins'])]);
+  return m('div.top-bar', ['Choose a location:', m('div.right.money-ind', [m('span', {}, game.vm.player.money()), ' coins'])]);
 };
 
 caught.topBar = function() {
-  return m('div.top-bar', ['Results of this fishing trip:', m('div.right.money-ind', ['+', m('span', {}, topBar.vm.valueCaught()), ' coins. Total: ', m('span', {}, game.vm.game.money())])]);
+  return m('div.top-bar', ['Results of this fishing trip:', m('div.right.money-ind', ['+', m('span', {}, topBar.vm.valueCaught()), ' coins. Total: ', m('span', {}, game.vm.player.money())])]);
 };
 
 caught.view = function() {
   return [game.vm.inGame() && topBar.view(true) || caught.topBar(), list.view(game.vm.game.caught(), caught.vm.getItemView)];
 };
-
-shop.controller = function() {};
 
 shop.view = function() {
   return ['shop'];
@@ -391,6 +417,17 @@ link = function(f) {
     e.preventDefault();
     return f();
   };
+};
+
+url = function(specifics) {
+  return '/gofish/api' + specifics;
+};
+
+get = function(q) {
+  return m.request({
+    method: 'GET',
+    url: url(q)
+  });
 };
 
 m.route.mode = 'hash';

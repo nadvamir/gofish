@@ -30,4 +30,12 @@ urlpatterns = patterns('',
         url(r'^api/getmodifiers/$', views.getmodifiers, name='getmodifiers'),
         # get all updates in the game
         url(r'^api/getupdates/$', views.getupdates, name='getupdates'),
+
+        # next gen api
+        # get game info for a home screen
+        url(r'^api/v2/home/$', views.v2home, name='v2home'),
+        # get player information
+        url(r'^api/v2/player/$', views.v2player, name='v2player'),
+        # get game instance if it already exists
+        url(r'^api/v2/game/$', views.v2game, name='v2game'),
         )
