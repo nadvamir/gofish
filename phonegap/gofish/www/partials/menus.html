@@ -1,9 +1,11 @@
 <div class="menu-screen">
 
   <div class="top menu-nav">
-    <h2 class="left">GoFish</h2>
-    <h2 ng-show="tab === 1"><a class="right" href ng-click="setTab(0)">Levels</a></h2>
-    <h2 ng-show="tab === 0"><a class="right" href ng-click="setTab(1)">Shop</a></h2>
+    <h1 class="left">GoFish</h1>
+    <div class="right">
+      <h2><a ng-style="levelStyle" href ng-click="setTab(0)">Levels</a></h2>
+      <h2><a ng-style="shopStyle" href ng-click="setTab(1)">Shop</a></h2>
+    </div>
   </div>
   <div class="right menu-money">
     £{{player.money}}

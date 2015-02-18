@@ -7,7 +7,12 @@ goFish.directive("menus", [function(){
 		controller: function($scope, GameService) {
 
 			$scope.setTab = function(value) {
-				$scope.tab=value;
+				if ($scope.tab != value) {
+					$scope.tab=value;
+					var levelStyleCpy = $scope.levelStyle;
+					$scope.levelStyle = $scope.shopStyle;
+					$scope.shopStyle = levelStyleCpy;
+				}
 			};
 
 			$scope.updatePlayer = function() {
@@ -23,6 +28,8 @@ goFish.directive("menus", [function(){
 			// Initialisation
 			$scope.player = {};
 			$scope.tab = 0;
+			$scope.levelStyle = {color:'white'};
+			$scope.shopStyle = {color:'black'};
 
 			$scope.updatePlayer();
 		},

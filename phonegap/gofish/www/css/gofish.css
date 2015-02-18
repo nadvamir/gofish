@@ -152,11 +152,16 @@
 	width: 100%;
 	height: 10%;
 	padding: 0% 15px 0% 15px;
-	background-color: rgba(122, 137, 234, 0.8);
+	background-color: rgba(122, 137, 234, 1);
+}
+
+/* Center headings vertically */
+.menu-nav h2, .menu-nav h1 {
+	line-height: 100%;
+	display: inline-block;
 }
 
 .menu-nav a {
-	margin: auto 0% auto 0%;
 	color: white;
 }
 
