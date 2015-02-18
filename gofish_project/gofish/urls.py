@@ -40,4 +40,6 @@ urlpatterns = patterns('',
         url(r'^api/v2/game/$', views.v2game, name='v2game'),
         # return shop contents
         url(r'^api/v2/shop/$', views.v2shop, name='v2shop'),
+        # return trophies
+        url(r'^api/v2/trophies/$', views.v2trophies, name='v2trophies'),
         )

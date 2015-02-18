@@ -427,7 +427,7 @@ caught.controller = function() {
 caught.vm = (function() {
   return {
     getItemView: function() {
-      return [this.name(), ', weight ', this.weight(), ' kg, value ', m('strong', this.value())];
+      return [m('span', this.name()), ', weight ', this.weight(), ' kg, value ', m('strong', this.value())];
     },
     compare: function(a, b) {
       return b.value() - a.value();
@@ -566,12 +566,37 @@ shop.view = function() {
   return [topBar('Shop:', shop.vm.player.money()), m('h2', 'Boats'), shop.currentView(shop.vm.currentBoat()), shop.updateView(shop.vm.updateBoat()), m('h2', 'Lines'), shop.currentView(shop.vm.currentLine()), shop.updateView(shop.vm.updateLine()), m('h2', 'Cues'), shop.currentView(shop.vm.currentCue()), shop.updateView(shop.vm.updateCue())];
 };
 
+trophies.Trophies = Array;
+
 trophies.vm = (function() {
   return {
     init: function() {
-      return get('/v2/player').then((function(_this) {
+      get('/v2/player').then((function(_this) {
         return function(r) {
           return _this.player = new game.Player(r.player);
+        };
+      })(this));
+      this.userT = new trophies.Trophies();
+      this.gameT = new trophies.Trophies();
+      return get('/v2/trophies').then((function(_this) {
+        return function(r) {
+          var t, _i, _j, _len, _len1, _ref, _ref1;
+          _ref = r.userTrophies;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            t = _ref[_i];
+            _this.userT.push(new game.Fish(t));
+          }
+          _ref1 = r.gameTrophies;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            t = _ref1[_j];
+            _this.gameT.push(new game.Fish(t));
+          }
+          _this.userT.sort(function(a, b) {
+            return a.name() > b.name();
+          });
+          return _this.gameT.sort(function(a, b) {
+            return a.name() > b.name();
+          });
         };
       })(this));
     }
@@ -582,8 +607,26 @@ trophies.controller = function() {
   return trophies.vm.init();
 };
 
+trophies.item = function(userT, gameT) {
+  return m('li', [caught.vm.getItemView.apply(userT), m('.right', ['/ ', m('strong', gameT.value())])]);
+};
+
+trophies.listTrophies = function() {
+  var i;
+  return m('.list', [
+    (function() {
+      var _i, _ref, _results;
+      _results = [];
+      for (i = _i = 0, _ref = this.userT.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+        _results.push(trophies.item(this.userT[i], this.gameT[i]));
+      }
+      return _results;
+    }).call(this)
+  ]);
+};
+
 trophies.view = function() {
-  return [topBar('Trophies and records:', trophies.vm.player.money())];
+  return [topBar('Trophies and records:', trophies.vm.player.money()), trophies.listTrophies.apply(trophies.vm)];
 };
 
 list.view = function(items, view) {

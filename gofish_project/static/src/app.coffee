@@ -341,7 +341,7 @@ caught.controller = ->
 
 caught.vm = do ->
     getItemView: -> [
-        @name()
+        m('span', @name())
         ', weight '
         @weight()
         ' kg, value '
@@ -496,16 +496,42 @@ shop.view = -> [
 # --------------------------------------------------------------
 # trophies module
 # --------------------------------------------------------------
+trophies.Trophies = Array
+
 trophies.vm = do ->
     init: ->
         get('/v2/player').then (r) =>
             @player = new game.Player(r.player)
 
+        @userT = new trophies.Trophies()
+        @gameT = new trophies.Trophies()
+
+        get('/v2/trophies').then (r) =>
+            for t in r.userTrophies
+                @userT.push new game.Fish t
+            for t in r.gameTrophies
+                @gameT.push new game.Fish t
+            @userT.sort (a, b) -> a.name() > b.name()
+            @gameT.sort (a, b) -> a.name() > b.name()
+
 trophies.controller = ->
     trophies.vm.init()
 
+trophies.item = (userT, gameT) -> m('li', [
+    caught.vm.getItemView.apply(userT)
+    m('.right', [
+        '/ '
+        m('strong', gameT.value())
+    ])
+])
+
+trophies.listTrophies = ->
+    m('.list', [trophies.item(@userT[i], @gameT[i]) for i in [0...@userT.length]])
+
+
 trophies.view = -> [
     topBar('Trophies and records:', trophies.vm.player.money())
+    trophies.listTrophies.apply(trophies.vm)
 ]
 
 # --------------------------------------------------------------

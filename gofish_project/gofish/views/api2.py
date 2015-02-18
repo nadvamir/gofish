@@ -82,12 +82,26 @@ def v2game(request):
 @allow_lazy_user
 def v2trophies(request):
     player = models.Player.initialise(request.user)
-    response['trophies'] = {}
+    response = {'userTrophies': [], 'gameTrophies': []}
 
-    for fish in response['fish'].keys():
-        trophy = player.getAchievement(fish)
+    for _, fish in gamedef.GAME['fish'].iteritems():
+        # add user trophies
+        trophy = player.getAchievement(fish['id'])
         trophy = trophy.toDict() if None != trophy else {'value': 0.0, 'rating': 0}
-        response['trophies'][fish] = trophy
+        response['userTrophies'].append({
+            'name'   : fish['name'],
+            'value'  : trophy['rating'],
+            'weight' : trophy['value'],
+        })
+
+        # add best overall trophies
+        trophy = models.Achievement.getTop(fish['id'])
+        trophy = trophy[0].toDict() if 0 != len(trophy) else {'value': 0.0, 'rating': 0}
+        response['gameTrophies'].append({
+            'name'   : fish['name'],
+            'value'  : trophy['rating'],
+            'weight' : trophy['value'],
+        })
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 

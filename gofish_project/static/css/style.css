@@ -69,7 +69,7 @@ nav a:hover {
 .list li a:hover, .shop-item a:hover {
     color: #8693f4;
 }
-.list li strong, .shop-item strong, .shop-item span, h2 {
+.list li strong, .list li span, .shop-item strong, .shop-item span, h2 {
     font-size: 26px;
 }
 .list {
