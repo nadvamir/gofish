@@ -58,18 +58,18 @@ nav a:hover {
 }
 
 /* ----------------------------------------------------------- */
-.list li {
+.list li, .shop-item, h2 {
     padding: 8px 10px;
     list-style: none;
 }
-.list li a {
+.list li a, .shop-item a {
     color: #3e4cb7;
     font-size: 26px;
 }
-.list li a:hover {
+.list li a:hover, .shop-item a:hover {
     color: #8693f4;
 }
-.list li strong {
+.list li strong, .shop-item strong, .shop-item span, h2 {
     font-size: 26px;
 }
 .list {
@@ -116,7 +116,7 @@ nav a:hover {
 .money-ind {
     margin-right: 5px;
 }
-.money-ind span, .day-ind span {
+.money-ind span, .day-ind span, .large {
     font-size: 26px;
 }
 

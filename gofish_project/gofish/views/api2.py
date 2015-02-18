@@ -75,13 +75,73 @@ def v2game(request):
 # get the trophies
 @allow_lazy_user
 def v2trophies(request):
-    player   = models.Player.initialise(request.user)
+    player = models.Player.initialise(request.user)
     response['trophies'] = {}
 
     for fish in response['fish'].keys():
         trophy = player.getAchievement(fish)
         trophy = trophy.toDict() if None != trophy else {'value': 0.0, 'rating': 0}
         response['trophies'][fish] = trophy
+
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+# get the shop items
+@allow_lazy_user
+def v2shop(request):
+    response = {
+        'boats' : [],
+        'lines' : [],
+        'cues'  : []
+    }
+
+    # add a default boat
+    response['boats'].append({
+        'name' : 'Raft',
+        'cost' : 0,
+        'perk' : 'It floats.'
+    })
+    # add a default line
+    response['lines'].append({
+        'name' : 'Old Fishing Line',
+        'cost' : 0,
+        'perk' : 'You\'ve found it in the attic.'
+    })
+    # add a default queue
+    response['cues'].append({
+        'name' : 'Your Eyes',
+        'cost' : 0,
+        'perk' : 'You can\'t quite see underwater...'
+    })
+
+    # build boats
+    for boat in gamedef.GAME['updates']['boats']:
+        response['boats'].append({
+            'name' : boat['name'],
+            'cost' : boat['price'],
+            'perk' : 'It is ' + str(boat['time'] / (-5) * 16) + ' % faster!'
+        })
+
+    # build lines
+    for line in gamedef.GAME['updates']['lines']:
+        response['lines'].append({
+            'name' : line['name'],
+            'cost' : line['price'],
+            'perk' : str(line['probability'] * 100 - 100) + ' % more fish!'
+        })
+
+    # build cues
+    cues = gamedef.GAME['updates']['cues']
+    response['cues'].append({
+        'name' : cues[0]['name'],
+        'cost' : cues[0]['price'],
+        'perk' : 'It shows you how deep water is'
+    })
+    for i in range(1, len(cues)):
+        response['cues'].append({
+            'name' : cues[i]['name'],
+            'cost' : cues[i]['price'],
+            'perk' : 'It tells you the fish under you with the accuracy of ' + str(cues[i]['accuracy']) + ' %'
+        })
 
     return HttpResponse(json.dumps(response), content_type="application/json")
 

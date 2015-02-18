@@ -38,4 +38,6 @@ urlpatterns = patterns('',
         url(r'^api/v2/player/$', views.v2player, name='v2player'),
         # get game instance if it already exists
         url(r'^api/v2/game/$', views.v2game, name='v2game'),
+        # return shop contents
+        url(r'^api/v2/shop/$', views.v2shop, name='v2shop'),
         )

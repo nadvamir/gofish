@@ -97,22 +97,32 @@ GAME = {
             'name': 'A Map',
             'cueDetail': 1,
             'price': 50,
+            'depth': 0,
+            'accuracy': 0,
         }, {
             'name': 'Underwater Camera',
             'cueDetail': 2,
             'price': 200,
+            'depth': 4,
+            'accuracy': 50,
         }, {
             'name': 'Old Sonar',
             'cueDetail': 3,
             'price': 4000,
+            'depth': 7,
+            'accuracy': 70,
         }, {
             'name': 'Modern Sonar',
             'cueDetail': 4,
             'price': 10000,
+            'depth': 10,
+            'accuracy': 85,
         }, {
             'name': 'A Mermaid',
             'cueDetail': 5,
             'price': 30000,
+            'depth': 10,
+            'accuracy': 100,
         }],
     },
 

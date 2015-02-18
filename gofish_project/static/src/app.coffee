@@ -6,7 +6,7 @@ nav         = {}
 home        = {}
 
 game        = {}
-topBar      = {}
+gTopBar     = {}
 gameActions = {}
 infoArea    = {}
 gameMap     = {}
@@ -116,16 +116,8 @@ home.controller = ->
         if game.vm.inGame()
             m.route('/game')
 
-home.topBar = -> m('div.top-bar', [
-    'Choose a location:'
-    m('div.right.money-ind', [
-        m('span', {}, game.vm.player.money())
-        ' coins'
-    ])
-])
-
 home.view = -> [
-    home.topBar()
+    topBar('Choose a location:', game.vm.player.money())
     list.view(home.vm.levels, home.vm.getItemView)
 ]
 
@@ -228,7 +220,7 @@ class game.controller
         game.vm.init()
 
 game.view = (ctrl) -> [
-    topBar.view()
+    gTopBar.view()
     gameActions.view()
     infoArea.view()
     gameMap.view()
@@ -237,7 +229,7 @@ game.view = (ctrl) -> [
 # --------------------------------------------------------------
 # game:topBar module
 # --------------------------------------------------------------
-topBar.vm = do ->
+gTopBar.vm = do ->
     BAR_W = 400
 
     timeLeftW: ->
@@ -251,7 +243,7 @@ topBar.vm = do ->
         game.vm.game.valCaught()
 
 # Day sub-view
-topBar.daySW = -> m('.day-ind', [
+gTopBar.daySW = -> m('.day-ind', [
     'Day '
     m('span', game.vm.game.day())
     '. '
@@ -259,26 +251,26 @@ topBar.daySW = -> m('.day-ind', [
 ])
 
 # time sub-view
-topBar.timeSW = -> [
+gTopBar.timeSW = -> [
     m('i.fa.fa-clock-o')
     m('span.time-indicator.time-left',
-        {style: {width: topBar.vm.timeLeftW()+'px'}}, m.trust '&nbsp;')
+        {style: {width: gTopBar.vm.timeLeftW()+'px'}}, m.trust '&nbsp;')
     m('span.time-indicator.time-full',
-        {style: {width: topBar.vm.timeFullW()+'px'}}, m.trust '&nbsp;')
+        {style: {width: gTopBar.vm.timeFullW()+'px'}}, m.trust '&nbsp;')
 ]
 
 # money sub-view
-topBar.moneySW = -> m('div.right.money-ind', [
+gTopBar.moneySW = -> m('div.right.money-ind', [
     '+'
-    m('span', {}, topBar.vm.valueCaught())
+    m('span', {}, gTopBar.vm.valueCaught())
     ' coins'
 ])
 
-topBar.view = (caught) -> m('div.top-bar', [
-    topBar.timeSW()
-    topBar.daySW()
+gTopBar.view = (caught) -> m('div.top-bar', [
+    gTopBar.timeSW()
+    gTopBar.daySW()
     (caught and m('a.right[href=/game]', {config: m.route}, 'Back') or m('a.right[href=/caught]', {config: m.route}, "Caught #{game.vm.game.caught().length} fish"))
-    topBar.moneySW()
+    gTopBar.moneySW()
 ])
 
 # --------------------------------------------------------------
@@ -363,14 +355,14 @@ caught.topBar = -> m('div.top-bar', [
     'Results of this fishing trip:'
     m('div.right.money-ind', [
         '+'
-        m('span', {}, topBar.vm.valueCaught())
+        m('span', {}, gTopBar.vm.valueCaught())
         ' coins. Total: '
         m('span', {}, game.vm.player.money())
     ])
 ])
 
 caught.view = -> [
-    (game.vm.inGame() and topBar.view(true) or caught.topBar())
+    (game.vm.inGame() and gTopBar.view(true) or caught.topBar())
     list.view(game.vm.game.caught().sort(caught.vm.compare), caught.vm.getItemView)
 ]
 
@@ -412,14 +404,101 @@ end.view = (c) -> [
 # --------------------------------------------------------------
 # shop module
 # --------------------------------------------------------------
+class shop.Update
+    constructor: (b, type) ->
+        @name = m.prop b.name
+        @cost = m.prop b.cost
+        @perk = m.prop b.perk
+        @type = m.prop type
+
+shop.Updates = Array
+
+shop.vm = do ->
+    init: ->
+        get('/v2/player').then (r) =>
+            @player = new game.Player(r.player)
+
+        @boats = new shop.Updates()
+        @lines = new shop.Updates()
+        @cues  = new shop.Updates()
+
+        get('/v2/shop').then (r) =>
+            for u in r.boats
+                @boats.push new shop.Update u, 'boats'
+            for u in r.lines
+                @lines.push new shop.Update u, 'lines'
+            for u in r.cues
+                @cues.push new shop.Update u, 'cues'
+
+    currentBoat: -> shop.vm.boats[shop.vm.player.boat() + 1]
+    updateBoat: -> shop.vm.boats[shop.vm.player.boat() + 2]
+    currentLine: -> shop.vm.lines[shop.vm.player.line() + 1]
+    updateLine: -> shop.vm.lines[shop.vm.player.line() + 2]
+    currentCue: -> shop.vm.cues[shop.vm.player.cue() + 1]
+    updateCue: -> shop.vm.cues[shop.vm.player.cue() + 2]
+
+    update: ->
+        get('/update/' + @type()).then -> m.route '/shop'
+
 shop.controller = ->
-shop.view = -> ['shop']
+    shop.vm.init()
+
+shop.currentView = (u) -> m('div.shop-item', [
+    'You have a '
+    m('span', u.name())
+    ': '
+    u.perk()
+])
+
+shop.updateView = (u) ->
+    if not u
+        m('div.shop-item', 'Nothing is better!')
+    else if shop.vm.player.money() < u.cost()
+        m('div.shop-item', [
+            'Update to '
+            m('span', u.name())
+            ' for '
+            m('strong', u.cost())
+            ': '
+            u.perk()
+        ])
+    else
+        m('div.shop-item', [
+            'Upgrade to '
+            m('a[href=#]', {onclick: link shop.vm.update.bind u}, u.name())
+            ' for '
+            m('strong', u.cost())
+            ' coins: '
+            u.perk()
+        ])
+
+shop.view = -> [
+    topBar('Shop:', shop.vm.player.money())
+    m('h2', 'Boats')
+    shop.currentView(shop.vm.currentBoat())
+    shop.updateView(shop.vm.updateBoat())
+    m('h2', 'Lines')
+    shop.currentView(shop.vm.currentLine())
+    shop.updateView(shop.vm.updateLine())
+    m('h2', 'Cues')
+    shop.currentView(shop.vm.currentCue())
+    shop.updateView(shop.vm.updateCue())
+]
 
 # --------------------------------------------------------------
 # trophies module
 # --------------------------------------------------------------
+trophies.vm = do ->
+    init: ->
+        get('/v2/player').then (r) =>
+            @player = new game.Player(r.player)
+
 trophies.controller = ->
-trophies.view = -> ['trophies']
+    trophies.vm.init()
+
+trophies.view = -> [
+    topBar('Trophies and records:', trophies.vm.player.money())
+]
 
 # --------------------------------------------------------------
 # reusable components and functions
@@ -428,6 +507,15 @@ trophies.view = -> ['trophies']
 list.view = (items, view) -> m('ul.list', [
     items.map((item) ->
         m('li', {key: item.id()}, [view.apply(item)]))
+])
+
+# gets a top bar with a message and money from a player
+topBar = (text, money) -> m('div.top-bar', [
+    m('span.large', text)
+    m('div.right.money-ind', [
+        m('span', money)
+        ' coins'
+    ])
 ])
 
 # returns an onclick for links that runs js instead of defaults
@@ -441,6 +529,7 @@ url = (specifics) -> '/gofish/api' + specifics
 
 # makes a get query
 get = (q) -> m.request(method: 'GET', url: url(q))
+
 # --------------------------------------------------------------
 # routing
 # --------------------------------------------------------------
