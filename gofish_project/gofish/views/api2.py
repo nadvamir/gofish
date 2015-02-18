@@ -18,9 +18,13 @@ def v2home(request):
     response = {'levels': []}
 
     for i in range(len(gamedef.GAME['levels'])):
-        # star scores
-        stars = player.getAchievement('moneyIn' + str(i))
-        stars = stars.rating if None != stars else 0
+        # star scores for player
+        record = player.getAchievement('moneyIn' + str(i))
+        stars = record.rating if None != record else 0
+        highS = record.value if None != record else 0
+        # highest scores for everyone
+        records = models.Achievement.getTop('moneyIn' + str(i))
+        maxHighS = records[0].value if 0 != len(records) else 0
         # other parameters
         unlocked = player.level >= i
         active = player.level + 1 >= i
@@ -31,7 +35,9 @@ def v2home(request):
             'unlocked' : unlocked,
             'active'   : active,
             'cost'     : gamedef.GAME['levels'][i]['cost'],
-            'stars'    : stars
+            'stars'    : stars,
+            'highS'    : highS,
+            'maxHighS' : maxHighS,
         })
 
     return HttpResponse(json.dumps(response), content_type="application/json")

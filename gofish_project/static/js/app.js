@@ -66,6 +66,8 @@ home.Level = (function() {
     this.active = m.prop(lvl.active);
     this.cost = m.prop(lvl.cost);
     this.stars = m.prop(lvl.stars);
+    this.highS = m.prop(lvl.highS);
+    this.maxHighS = m.prop(lvl.maxHighS);
   }
 
   return Level;
@@ -115,7 +117,7 @@ home.vm = (function() {
               }
               return _results;
             }).call(this)
-          ]
+          ], m('.right', [m('strong', this.highS()), ' / ', m('strong', this.maxHighS())])
         ];
       } else if (this.active() && this.cost() <= game.vm.player.money()) {
         return [

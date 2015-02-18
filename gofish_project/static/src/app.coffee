@@ -62,6 +62,8 @@ class home.Level
         @active   = m.prop lvl.active
         @cost     = m.prop lvl.cost
         @stars    = m.prop lvl.stars
+        @highS    = m.prop lvl.highS
+        @maxHighS = m.prop lvl.maxHighS
 
 # model for all game locations
 home.Levels = Array
@@ -90,6 +92,12 @@ home.vm = do ->
                     link home.vm.chooseLevel.bind(@)}, @name())
                 ', unlocked. '
                 ['*' for star in [0...@stars()]]
+                # high score
+                m('.right', [
+                    m('strong', @highS())
+                    ' / '
+                    m('strong', @maxHighS())
+                ])
             ]
         # available to unlock
         else if @active() and @cost() <= game.vm.player.money()
