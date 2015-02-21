@@ -190,8 +190,10 @@ game.vm = do ->
     init: ->
         get('/v2/player').then (r) =>
             @player = new game.Player(r.player)
-        @game = null
+
         @info = m.prop ''
+
+        @game = null
         get('/v2/game').then (r) =>
             @game = new game.Game(r.game)
 
@@ -224,10 +226,10 @@ game.vm = do ->
                 g = game.vm.game
                 g.valCaught(g.valCaught() + fish.value)
                 f = new game.Fish(fish)
-                game.vm.info ['You\'ve got ', caught.vm.getItemView.apply(f)]
+                game.vm.addInfo(['You\'ve got ', caught.vm.getItemView.apply(f)], 4 + Math.ceil(f.value() / 5))
                 g.caught().push f
             else
-                game.vm.info 'Nothing was caught'
+                game.vm.addInfo 'Nothing was caught', 2
 
         actions = {fish : fish, left : move, right : move}
 
@@ -244,6 +246,16 @@ game.vm = do ->
                 'light-water.fish-' + Math.round(@game.cues()[i][0])
         else
             'ground'
+
+    # add info text and animate, depending on importance
+    addInfo: (text, importance) ->
+        @info '.'
+        maxImp = importance
+        timeOutF = =>
+            @info ['.' for i in [0..(maxImp-importance)]]
+            --importance < 0 and @info(text) or setTimeout timeOutF, 100
+            m.redraw()
+        setTimeout timeOutF, 100
 
 class game.controller
     constructor: ->

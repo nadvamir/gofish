@@ -234,8 +234,8 @@ game.vm = (function() {
           return _this.player = new game.Player(r.player);
         };
       })(this));
-      this.game = null;
       this.info = m.prop('');
+      this.game = null;
       return get('/v2/game').then((function(_this) {
         return function(r) {
           return _this.game = new game.Game(r.game);
@@ -274,10 +274,10 @@ game.vm = (function() {
           g = game.vm.game;
           g.valCaught(g.valCaught() + fish.value);
           f = new game.Fish(fish);
-          game.vm.info(['You\'ve got ', caught.vm.getItemView.apply(f)]);
+          game.vm.addInfo(['You\'ve got ', caught.vm.getItemView.apply(f)], 4 + Math.ceil(f.value() / 5));
           return g.caught().push(f);
         } else {
-          return game.vm.info('Nothing was caught');
+          return game.vm.addInfo('Nothing was caught', 2);
         }
       };
       actions = {
@@ -302,6 +302,29 @@ game.vm = (function() {
       } else {
         return 'ground';
       }
+    },
+    addInfo: function(text, importance) {
+      var maxImp, timeOutF;
+      this.info('.');
+      maxImp = importance;
+      timeOutF = (function(_this) {
+        return function() {
+          var i;
+          _this.info([
+            (function() {
+              var _i, _ref, _results;
+              _results = [];
+              for (i = _i = 0, _ref = maxImp - importance; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
+                _results.push('.');
+              }
+              return _results;
+            })()
+          ]);
+          --importance < 0 && _this.info(text) || setTimeout(timeOutF, 100);
+          return m.redraw();
+        };
+      })(this);
+      return setTimeout(timeOutF, 100);
     }
   };
 })();
