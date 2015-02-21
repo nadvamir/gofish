@@ -252,10 +252,16 @@ game.vm = do ->
     # add info text and animate, depending on importance
     addInfo: (text, importance) ->
         @info '.'
+        value = @game.valCaught(); @game.valCaught '?'
         maxImp = importance
+
+        end = =>
+            @info text
+            @game.valCaught value
+
         timeOutF = =>
             @info ['.' for i in [0..(maxImp-importance)]]
-            --importance < 0 and @info(text) or setTimeout timeOutF, 100
+            --importance < 0 and end() or setTimeout timeOutF, 100
             m.redraw()
         setTimeout timeOutF, 100
 

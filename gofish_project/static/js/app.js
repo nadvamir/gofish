@@ -306,9 +306,17 @@ game.vm = (function() {
       }
     },
     addInfo: function(text, importance) {
-      var maxImp, timeOutF;
+      var maxImp, timeOutF, value;
       this.info('.');
+      value = this.game.valCaught();
+      this.game.valCaught('?');
       maxImp = importance;
+      end = (function(_this) {
+        return function() {
+          _this.info(text);
+          return _this.game.valCaught(value);
+        };
+      })(this);
       timeOutF = (function(_this) {
         return function() {
           var i;
@@ -322,7 +330,7 @@ game.vm = (function() {
               return _results;
             })()
           ]);
-          --importance < 0 && _this.info(text) || setTimeout(timeOutF, 100);
+          --importance < 0 && end() || setTimeout(timeOutF, 100);
           return m.redraw();
         };
       })(this);
