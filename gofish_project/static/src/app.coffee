@@ -226,7 +226,9 @@ game.vm = do ->
                 g = game.vm.game
                 g.valCaught(g.valCaught() + fish.value)
                 f = new game.Fish(fish)
-                game.vm.addInfo(['You\'ve got ', caught.vm.getItemView.apply(f)], 4 + Math.ceil(f.value() / 5))
+                importance = 4 + Math.ceil(f.value() / 5)
+                importance = importance > 140 and 140 or importance
+                game.vm.addInfo(['You\'ve caught a ', caught.vm.getItemView.apply(f)], importance)
                 g.caught().push f
             else
                 game.vm.addInfo 'Nothing was caught', 2

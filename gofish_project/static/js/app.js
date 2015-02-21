@@ -264,7 +264,7 @@ game.vm = (function() {
         return game.vm.info('');
       };
       fish = function(r) {
-        var f, g;
+        var f, g, importance;
         if (0 === r.fishList.length) {
           return m.route('/end');
         }
@@ -274,7 +274,9 @@ game.vm = (function() {
           g = game.vm.game;
           g.valCaught(g.valCaught() + fish.value);
           f = new game.Fish(fish);
-          game.vm.addInfo(['You\'ve got ', caught.vm.getItemView.apply(f)], 4 + Math.ceil(f.value() / 5));
+          importance = 4 + Math.ceil(f.value() / 5);
+          importance = importance > 140 && 140 || importance;
+          game.vm.addInfo(['You\'ve caught a ', caught.vm.getItemView.apply(f)], importance);
           return g.caught().push(f);
         } else {
           return game.vm.addInfo('Nothing was caught', 2);
