@@ -84,7 +84,7 @@ loading.controller = (function() {
 })();
 
 loading.view = function(ctrl) {
-  return loading.vm.loading() && m('div', 'Loading...') || '';
+  return loading.vm.loading() && m('div', [m('span.fa.fa-spin.fa-spinner', ' '), ' Loading...']) || '';
 };
 
 m.module(document.getElementById('loading'), loading);

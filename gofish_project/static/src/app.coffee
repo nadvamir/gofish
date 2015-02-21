@@ -65,7 +65,10 @@ class loading.controller
         loading.vm.init()
 
 loading.view = (ctrl) ->
-    (loading.vm.loading() and m('div', 'Loading...') or '')
+    (loading.vm.loading() and m('div', [
+        m('span.fa.fa-spin.fa-spinner', ' ')
+        ' Loading...'
+    ]) or '')
 
 m.module document.getElementById('loading'), loading
 
