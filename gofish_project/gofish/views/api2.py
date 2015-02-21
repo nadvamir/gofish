@@ -124,7 +124,7 @@ def v2shop(request):
     response['lines'].append({
         'name' : 'Old Fishing Line',
         'cost' : 0,
-        'perk' : 'You\'ve found it in the attic.'
+        'perk' : 'Found in the attic.'
     })
     # add a default queue
     response['cues'].append({

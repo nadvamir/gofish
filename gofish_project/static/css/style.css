@@ -54,6 +54,18 @@ nav a:hover {
 }
 
 /* ----------------------------------------------------------- */
+#loading {
+    visibility: none;
+}
+
+#loading > div {
+    position: fixed;
+    top: 0; bottom: 0;
+    left: 0; right: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* ----------------------------------------------------------- */
 #page {
 }
 
@@ -151,6 +163,12 @@ nav a:hover {
 #info-area strong {
     font-size: 26px;
     font-weight: normal;
+}
+#info-area div {
+    padding: 5px;
+}
+#info-area .none {
+    display: none;
 }
 
 /* ----------------------------------------------------------- */

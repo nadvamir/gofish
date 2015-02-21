@@ -3,6 +3,8 @@
 # --------------------------------------------------------------
 nav         = {}
 
+loading     = {}
+
 home        = {}
 
 game        = {}
@@ -49,6 +51,23 @@ nav.view = (ctrl) -> [
 ]
 
 m.module document.getElementById('nav'), nav
+
+# --------------------------------------------------------------
+# loading module
+# --------------------------------------------------------------
+loading.vm = do ->
+    init: -> @loading = m.prop true
+    startLoading: -> @loading(true)
+    stopLoading: -> @loading(false)
+
+class loading.controller
+    constructor: ->
+        loading.vm.init()
+
+loading.view = (ctrl) ->
+    (loading.vm.loading() and m('div', 'Loading...') or '')
+
+m.module document.getElementById('loading'), loading
 
 # --------------------------------------------------------------
 # home module
@@ -238,7 +257,7 @@ game.view = (ctrl) -> [
 # game:topBar module
 # --------------------------------------------------------------
 gTopBar.vm = do ->
-    BAR_W = 400
+    BAR_W = 360
 
     timeLeftW: ->
         g = game.vm.game
@@ -306,7 +325,28 @@ gameActions.view = -> [
 # --------------------------------------------------------------
 # game:infoArea module
 # --------------------------------------------------------------
-infoArea.view = -> m('div#info-area', game.vm.info())
+infoArea.cues = [
+    'none',
+    'fa-map-marker',
+    'fa-camera-retro',
+    'fa-volume-up',
+    'fa-wifi',
+    'fa-user'
+]
+
+infoArea.lines = ['none', 'fa-angle-left', 'fa-angle-double-left']
+
+infoArea.view = -> m('div#info-area', [
+    game.vm.info()
+    m('div.right.fa', {
+        class: infoArea.cues[game.vm.player.cue() + 1]
+        title: 'Cue indicator'
+    })
+    m('div.right.fa', {
+        class: infoArea.lines[game.vm.player.line() + 1]
+        title: 'Fishing line quality indicator'
+    })
+])
 
 # --------------------------------------------------------------
 # game:gameMap module
@@ -562,7 +602,11 @@ link = (f) ->
 url = (specifics) -> '/gofish/api' + specifics
 
 # makes a get query
-get = (q) -> m.request(method: 'GET', url: url(q))
+get = (q) ->
+    loading.vm.startLoading()
+    m.request(method: 'GET', url: url(q)).then (response) ->
+        loading.vm.stopLoading()
+        response
 
 # --------------------------------------------------------------
 # routing

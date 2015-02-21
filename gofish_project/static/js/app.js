@@ -1,6 +1,8 @@
-var caught, end, gTopBar, game, gameActions, gameMap, get, home, infoArea, link, list, nav, shop, topBar, trophies, url;
+var caught, end, gTopBar, game, gameActions, gameMap, get, home, infoArea, link, list, loading, nav, shop, topBar, trophies, url;
 
 nav = {};
+
+loading = {};
 
 home = {};
 
@@ -57,6 +59,35 @@ nav.view = function(ctrl) {
 };
 
 m.module(document.getElementById('nav'), nav);
+
+loading.vm = (function() {
+  return {
+    init: function() {
+      return this.loading = m.prop(true);
+    },
+    startLoading: function() {
+      return this.loading(true);
+    },
+    stopLoading: function() {
+      return this.loading(false);
+    }
+  };
+})();
+
+loading.controller = (function() {
+  function controller() {
+    loading.vm.init();
+  }
+
+  return controller;
+
+})();
+
+loading.view = function(ctrl) {
+  return loading.vm.loading() && m('div', 'Loading...') || '';
+};
+
+m.module(document.getElementById('loading'), loading);
 
 home.Level = (function() {
   function Level(lvl) {
@@ -290,7 +321,7 @@ game.view = function(ctrl) {
 
 gTopBar.vm = (function() {
   var BAR_W;
-  BAR_W = 400;
+  BAR_W = 360;
   return {
     timeLeftW: function() {
       var g;
@@ -363,8 +394,20 @@ gameActions.view = function() {
   ];
 };
 
+infoArea.cues = ['none', 'fa-map-marker', 'fa-camera-retro', 'fa-volume-up', 'fa-wifi', 'fa-user'];
+
+infoArea.lines = ['none', 'fa-angle-left', 'fa-angle-double-left'];
+
 infoArea.view = function() {
-  return m('div#info-area', game.vm.info());
+  return m('div#info-area', [
+    game.vm.info(), m('div.right.fa', {
+      "class": infoArea.cues[game.vm.player.cue() + 1],
+      title: 'Cue indicator'
+    }), m('div.right.fa', {
+      "class": infoArea.lines[game.vm.player.line() + 1],
+      title: 'Fishing line quality indicator'
+    })
+  ]);
 };
 
 gameMap.TILE_W = 40;
@@ -655,9 +698,13 @@ url = function(specifics) {
 };
 
 get = function(q) {
+  loading.vm.startLoading();
   return m.request({
     method: 'GET',
     url: url(q)
+  }).then(function(response) {
+    loading.vm.stopLoading();
+    return response;
   });
 };
 
