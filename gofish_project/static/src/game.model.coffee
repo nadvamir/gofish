@@ -110,6 +110,7 @@ game.vm = do ->
         end = =>
             @info text
             @game.valCaught value
+            true
 
         timeOutF = =>
             @info ['.' for i in [0..(maxImp-importance)]]
