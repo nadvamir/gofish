@@ -37,7 +37,13 @@ def end(request):
         stars = stars.rating if None != stars else 0
         response = {
             'earned': earned,
-            'money': player.money,
+            # the game had a different player object
+            # which were not linked.
+            # at this point the database is updated
+            # but this player does not reflect updates.
+            # I wonder how many more bugs like that
+            # are in the code...
+            'money': player.money + earned,
             'stars': stars
         }
 
