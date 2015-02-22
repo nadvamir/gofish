@@ -268,11 +268,16 @@ game.vm = (function() {
       return this.game !== null;
     },
     getWaterClass: function(i, j) {
+      var cue;
       if (i < this.game.map()[0][j]) {
         if (j !== this.game.position() || this.game.cues()[i][0] + 1 < 0.001) {
           return 'dark-water';
         } else {
-          return 'light-water.fish-' + Math.round(this.game.cues()[i][0]);
+          cue = this.game.cues()[i][0];
+          if (cue > 9) {
+            cue = 9;
+          }
+          return "light-water.fish-" + cue;
         }
       } else {
         return 'ground';
@@ -287,7 +292,8 @@ game.vm = (function() {
       end = (function(_this) {
         return function() {
           _this.info(text);
-          return _this.game.valCaught(value);
+          _this.game.valCaught(value);
+          return true;
         };
       })(this);
       timeOutF = (function(_this) {

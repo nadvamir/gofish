@@ -239,7 +239,9 @@ game.vm = do ->
             if j != @game.position() or @game.cues()[i][0] + 1 < 0.001
                 'dark-water'
             else
-                'light-water.fish-' + Math.round(@game.cues()[i][0])
+                cue = @game.cues()[i][0]
+                cue = 9 if cue > 9
+                "light-water.fish-#{cue}"
         else
             'ground'
 
@@ -252,6 +254,7 @@ game.vm = do ->
         end = =>
             @info text
             @game.valCaught value
+            true
 
         timeOutF = =>
             @info ['.' for i in [0..(maxImp-importance)]]
