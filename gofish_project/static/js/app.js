@@ -63,10 +63,12 @@ loading.vm = (function() {
       return this.loading = m.prop(true);
     },
     startLoading: function() {
-      return this.loading(true);
+      this.loading(true);
+      return m.redraw();
     },
     stopLoading: function() {
-      return this.loading(false);
+      this.loading(false);
+      return m.redraw();
     }
   };
 })();
