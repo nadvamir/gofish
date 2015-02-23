@@ -159,3 +159,68 @@ class DataPoint(models.Model):
     class Meta:
         app_label = 'charts'
 
+# a data point for endgame statistics
+class EndGame(models.Model):
+    # players username
+    username  = models.TextField()
+    # game number for this player
+    gameNum   = models.IntegerField()
+    # game level index
+    level     = models.IntegerField()
+    # details for the cues
+    cueDetail = models.IntegerField()
+    # line update 
+    line      = models.IntegerField()
+    # move cost for the player
+    moveCost  = models.IntegerField()
+    # fishing cost for the player
+    fishCost  = models.IntegerField()
+    # how many stars have been earned
+    stars     = models.IntegerField()
+    # how much money did the player earned
+    earnedM   = models.IntegerField()
+    # how much money was it possible to earn
+    maxM      = models.IntegerField()
+    # how much money would optimum bring
+    optimalM  = models.IntegerField()
+    # how much money would local optimum bring
+    locOptM   = models.IntegerField()
+
+    def __unicode__(self):
+        'endgame'
+
+    #############################################################
+    # creators
+    #############################################################
+    # take a line from log and store it in the database
+    @staticmethod
+    def insertFromLine(line):
+        # our data is space separated
+        line = line.split(' ')
+
+        # create a data point
+        point = EndGame(
+            username  = line[0],
+            gameNum   = int(line[1]),
+            level     = int(line[2]),
+            cueDetail = int(line[3]),
+            line      = int(line[4]),
+            moveCost  = int(line[5]),
+            fishCost  = int(line[6]),
+            stars     = int(line[7]),
+            earnedM   = int(line[8]),
+            maxM      = int(line[9]),
+            optimalM  = int(line[10]),
+            locOptM   = int(line[11]))
+
+        # store it
+        point.save()
+
+    #############################################################
+    # Django boilerplate
+    #############################################################
+    # this has to be included to make Django realise
+    # that this model belongs to the app
+    class Meta:
+        app_label = 'charts'
+
