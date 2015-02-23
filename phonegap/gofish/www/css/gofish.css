@@ -60,6 +60,12 @@
   	transform: translateY(-50%);
 }
 
+#loadingBanner {
+	width: 100%;
+	text-align: center;
+	background-color: rgba(122, 137, 234, 0.5);
+}
+
 /* Splash Screen */
 
 #titleSign {

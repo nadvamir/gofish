@@ -40,11 +40,20 @@ goFish.controller("hubController", ["$scope", "$timeout", "GameService", functio
 		$scope.menus = true;
 	});
 
+	$scope.$on("showLoadingBanner", function() {
+		$scope.showLoading = true;
+	});
+
+	$scope.$on("hideLoadingBanner", function() {
+		$scope.showLoading = false;
+	});
+
 	// Initialisation
 	$scope.splash = false;
 	$scope.menus = false;
 	$scope.playing = false;
 	$scope.showResults = false;
+	$scope.showLoading = false;
 	// Use timeout as occasionally $scope.$on in certain directives wouldn't be given enough time to setup
 	$timeout(function() {$scope.updateState();}, 100);
 	

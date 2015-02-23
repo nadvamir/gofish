@@ -34,6 +34,7 @@
         <script type="text/javascript" src="js/directives/hud.js"></script>
         <script type="text/javascript" src="js/directives/level.js"></script>
         <script type="text/javascript" src="js/directives/levelSelect.js"></script>
+        <script type="text/javascript" src="js/directives/loadingBanner.js"></script>
         <script type="text/javascript" src="js/directives/menus.js"></script>
         <script type="text/javascript" src="js/directives/results.js"></script>
         <script type="text/javascript" src="js/directives/shop.js"></script>
@@ -49,6 +50,8 @@
         <game ng-show="playing"></game>
 
         <results ng-show="showResults"></results>
+
+        <loading-banner ng-show="showLoading" message="'loading...'"></loading-banner>
 
     </body>
 </html>
