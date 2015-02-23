@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 import json
 import logging
 import time
+from fractions import gcd
 
 from player import Player
 from gofish.engine.yieldmerger import YieldMerger
@@ -112,6 +113,10 @@ class Game(models.Model):
         self.player.money += earned
         self.player.savePlayer()
 
+        # log endgame performance
+        # overall statistics
+        self.logEndGame(earned, rating)
+
         self.delete()
         return earned
 
@@ -190,7 +195,8 @@ class Game(models.Model):
         # setup some variables
         player = self.player
         fish = gamedef.getFishForLevel(self.level['index'])
-        yieldMerger = YieldMerger(480/5)
+        maxDepth = gamedef.TOTAL_TIME / gamedef.FISHING_COST
+        yieldMerger = YieldMerger(maxDepth)
         depth = self.level['map'][0][pos]
 
         # add yields for every fish
@@ -199,6 +205,35 @@ class Game(models.Model):
 
         # get the combined yield
         self.level['yields'][pos] = yieldMerger.merge()
+
+    #############################################################
+    # regular logging with helpers
+    #############################################################
+    # a method to log users performance
+    def logPerformance(self, endGame = False):
+        logger = logging.getLogger('gofish')
+
+        levelInfo   = str(self)
+        pos         = self.level['position']
+        timeSpent   = self.level['timeInLoc'][pos]
+        optimalTime = self.getOptimalTime(pos)
+        localOptT   = self.getOptimalTime(pos, local=True)
+        moneyEarned = str(int(self.getMoneyEarnedIn(pos, timeSpent)))
+        optimalM    = str(int(self.getMoneyEarnedIn(pos, optimalTime)))
+        localOptM   = str(int(self.getMoneyEarnedIn(pos, localOptT)))
+        endGame     = '1' if endGame else '0'
+        moveCost    = str(self.player.getMoveCost())
+        fishCost    = '5'
+        createdAt   = str(int(round(time.time())))
+
+        msg = [
+            levelInfo, moveCost, fishCost, endGame,
+            str(timeSpent), str(optimalTime), str(localOptT),
+            moneyEarned, optimalM, localOptM,
+            createdAt
+        ]
+
+        logger.info(' '.join(msg))
 
     # returns optimal time to spend in the given location
     def getOptimalTime(self, pos, local = False):
@@ -234,31 +269,99 @@ class Game(models.Model):
                 earned += fish[i]['value']
         return earned
 
-    # a method to log users performance
-    def logPerformance(self, endGame = False):
-        logger = logging.getLogger('gofish')
+    #############################################################
+    # endgame logging with helpers
+    #############################################################
+    # a method to log at endgame
+    # tries to evaluate earned vs maximum earned in the game
+    def logEndGame(self, earned, stars):
+        logger = logging.getLogger('endgame')
 
-        levelInfo   = str(self)
-        pos         = self.level['position']
-        timeSpent   = self.level['timeInLoc'][pos]
-        optimalTime = self.getOptimalTime(pos)
-        localOptT   = self.getOptimalTime(pos, local=True)
-        moneyEarned = str(int(self.getMoneyEarnedIn(pos, timeSpent)))
-        optimalM    = str(int(self.getMoneyEarnedIn(pos, optimalTime)))
-        localOptM   = str(int(self.getMoneyEarnedIn(pos, localOptT)))
-        endGame     = '1' if endGame else '0'
-        moveCost    = str(self.player.getMoveCost())
-        fishCost    = '5'
-        createdAt   = str(int(round(time.time())))
+        gameNr    = self.player.numGames
+        player    = self.player.user.username
+        cueDetail = self.player.getCueDetail()
+        moveCost  = self.player.getMoveCost()
+        fishCost  = gamedef.FISHING_COST
+        maxEarn   = int(self.getMaxEarnings(fishCost, moveCost))
+        optEarn   = self.getOptEarnings(fishCost, moveCost)
+        lOptEarn  = self.getLOptEarnings(fishCost, moveCost)
 
         msg = [
-            levelInfo, moveCost, fishCost, endGame,
-            str(timeSpent), str(optimalTime), str(localOptT),
-            moneyEarned, optimalM, localOptM,
-            createdAt
+            player, str(gameNr), str(cueDetail),
+            str(moveCost), str(fishCost),
+            str(stars), str(int(earned)),
+            str(maxEarn), str(optEarn), str(lOptEarn)
         ]
 
         logger.info(' '.join(msg))
+
+    # load all the yields in the game
+    def createAllYields(self):
+        for pos in range(len(self.level['yields'])):
+            self.ensureYieldsExist(pos)
+
+    # a method that returns maximum possible earnings
+    def getMaxEarnings(self, fishCost, moveCost):
+        # load all the yields
+        self.createAllYields()
+        y = self.level['yields']
+        # maximum depth of movement (num moves)
+        maxDepth = gamedef.TOTAL_TIME / fishCost
+
+        # array of best values
+        values = [[0 for i in range(maxDepth + 1)] for j in range(len(y))]
+
+        # and now let's calculate benefits
+        for pos in range(len(y)):
+            # first element for every yield will stay 0,
+            # as it means we did not fish there
+            for i in range(len(y[pos])):
+                val = y[pos][i]['value'] if None != y[pos][i] else 0
+                values[pos][i+1] = values[pos][i] + val
+
+        # perform a O(n*t*k^2) algorithm :(
+        d = gcd(gamedef.TOTAL_TIME, gcd(moveCost, fishCost))
+        time = gamedef.TOTAL_TIME / d
+        fishC = fishCost / d
+        moveC = moveCost / d
+        val, moves = opt(values, time, fishC, moveC)
+        return val
+
+    # a method that returns earnings based on optimal strategy
+    def getOptEarnings(self, fishCost, moveCost):
+        time = gamedef.TOTAL_TIME + moveCost
+        money = 0
+
+        for pos in range(len(self.level['yields'])):
+            time -= moveCost
+            if time <= 0:
+                return money
+
+            optimalTime = self.getOptimalTime(pos)
+            if optimalTime * fishCost > time:
+                optimalTime = time / fishCost
+            money += int(self.getMoneyEarnedIn(pos, optimalTime))
+            time -= optimalTime * fishCost
+
+        return money
+
+    # a method that returns earnings from loc. optimal strategy
+    def getLOptEarnings(self, fishCost, moveCost):
+        time = gamedef.TOTAL_TIME + moveCost
+        money = 0
+
+        for pos in range(len(self.level['yields'])):
+            time -= moveCost
+            if time <= 0:
+                return money
+
+            optimalTime = self.getOptimalTime(pos, local=True)
+            if optimalTime * fishCost > time:
+                optimalTime = time / fishCost
+            money += int(self.getMoneyEarnedIn(pos, optimalTime))
+            time -= optimalTime * fishCost
+
+        return money
 
     #############################################################
     # actions
@@ -414,4 +517,46 @@ def getPreferedDepth(fishName):
         if fishName == v['name']:
             return v['habitat']
     return -1
+
+# returns an array copy with updated index
+def insert(choices, pos, val):
+    a = choices[:]
+    a[pos] = val
+    return a
+
+# calculates cost of choices, + value
+def costAndValue(choices, values, fishC, moveC):
+    fished = False
+    time = 0
+    value = 0
+    for i in xrange(len(choices)-1, -1, -1):
+        if 0 != choices[i]:
+            fished = True
+            time += moveC + choices[i] * fishC
+            value += values[i][choices[i]]
+        elif fished:
+            time += moveC
+    # we have added 1 too many moving cost
+    time -= moveC
+    return time, value
+
+# find maximum attainable value
+def opt(values, time, fishC, moveC):
+    # 'weights', times in our case
+    w = [(0, [0 for j in range(len(values))]) for i in range(time+1)]
+
+    for pos in range(len(values)):
+        for i in range(len(values[pos])):
+            for j in range(len(w)):
+                # optimisation: non-increasing values will never
+                # be optimal
+                if values[pos][i] == values[pos][i-1]:
+                    continue
+                choices = insert(w[j][1], pos, i)
+                t, v = costAndValue(choices, values, fishC, moveC)
+                if t <= time:
+                    if w[t][0] < v:
+                        w[t] = (v, choices)
+
+    return w[time]
 

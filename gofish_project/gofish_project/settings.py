@@ -169,6 +169,13 @@ LOGGING = {
             'maxBytes': 1024*1024*150, # 150MB
             'backupCount': 10,
         },
+        'endlogfile': {
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_PATH, 'end.log'),
+            'maxBytes': 1024*1024*150, # 150MB
+            'backupCount': 10,
+        },
     },
     'loggers': {
         'django.request': {
@@ -178,6 +185,10 @@ LOGGING = {
         },
         'gofish': {
             'handlers': ['applogfile',],
+            'level': 'DEBUG',
+        },
+        'endgame': {
+            'handlers': ['endlogfile',],
             'level': 'DEBUG',
         },
     }

@@ -2,6 +2,7 @@ import maps
 
 # here we have a GAME definition object, already priced
 TOTAL_TIME = 480
+FISHING_COST = 5
 GAME = {
     'fish': {
         'shoe': {
