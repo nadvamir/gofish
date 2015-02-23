@@ -179,10 +179,11 @@ class Game(models.Model):
         return fish
 
     # create yields if they are not present
-    def ensureYieldsExist(self, pos):
+    def ensureYieldsExist(self, pos, save=True):
         if None == self.level['yields'][pos]:
             self.setYieldFor(pos)
-            self.saveGame()
+            if save:
+                self.saveGame()
 
     # recalculate all the yields for this game
     def recalcYields(self):
@@ -305,7 +306,7 @@ class Game(models.Model):
     # load all the yields in the game
     def createAllYields(self):
         for pos in range(len(self.level['yields'])):
-            self.ensureYieldsExist(pos)
+            self.ensureYieldsExist(pos, save=False)
 
     # a method that returns maximum possible earnings
     def getMaxEarnings(self, fishCost, moveCost):
@@ -314,6 +315,14 @@ class Game(models.Model):
         y = self.level['yields']
         # maximum depth of movement (num moves)
         maxDepth = gamedef.TOTAL_TIME / fishCost
+        # optimisation: use less memory by lowering time
+        d = gcd(gamedef.TOTAL_TIME, gcd(moveCost, fishCost))
+        t = gamedef.TOTAL_TIME / d
+        fishC = fishCost / d
+        moveC = moveCost / d
+        # this gcd thing is a bit pretentious, since the rest
+        # of the code assumes fishC is 1. gcd should better
+        # be fishCost...
 
         # array of best values
         values = [[0 for i in range(maxDepth + 1)] for j in range(len(y))]
@@ -322,16 +331,14 @@ class Game(models.Model):
         for pos in range(len(y)):
             # first element for every yield will stay 0,
             # as it means we did not fish there
-            for i in range(len(y[pos])):
+            nfish = len(y[pos]) - pos * moveC
+            nfish = 0 if nfish < 0 else nfish
+            for i in range(nfish):
                 val = y[pos][i]['value'] if None != y[pos][i] else 0
                 values[pos][i+1] = values[pos][i] + val
 
         # perform a O(n*t*k^2) algorithm :(
-        d = gcd(gamedef.TOTAL_TIME, gcd(moveCost, fishCost))
-        time = gamedef.TOTAL_TIME / d
-        fishC = fishCost / d
-        moveC = moveCost / d
-        val, moves = opt(values, time, fishC, moveC)
+        val, moves = opt(values, t, fishC, moveC)
         return val
 
     # a method that returns earnings based on optimal strategy
@@ -552,18 +559,31 @@ def opt(values, time, fishC, moveC):
     # 'weights', times in our case
     w = [(0, [0 for j in range(len(values))]) for i in range(time+1)]
 
+    # for all positions
     for pos in range(len(values)):
-        for i in range(len(values[pos])):
+        # optimisation: don't look at fish that are unchacheable
+        nfish = len(values[pos]) - pos * moveC
+        nfish = 0 if nfish < 0 else nfish
+        # for all overal earnings in the posision
+        for i in range(nfish):
+            # for all possible points in time
             for j in range(len(w)):
                 # optimisation: non-increasing values will never
                 # be optimal
                 if values[pos][i] == values[pos][i-1]:
                     continue
+                # optimisation: skip most of 0 value w's
+                if j > 0 and 0 == w[j][0]:
+                    continue
+                # try to make this move from that point in time
                 choices = insert(w[j][1], pos, i)
                 t, v = costAndValue(choices, values, fishC, moveC)
                 if t <= time:
+                    # store the maximum value so far for that time
                     if w[t][0] < v:
                         w[t] = (v, choices)
 
+    # the maximum is at the latest time only if fishC is 1...
+    # otherwise would have to loop backwards
     return w[time]
 
