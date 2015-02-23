@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.http import HttpResponseRedirect
 
 from django.contrib import admin
 admin.autodiscover()
@@ -10,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^gofish/', include('gofish.urls')),
     url(r'^charts/', include('charts.urls')),
     url(r'^convert/', include('lazysignup.urls')),
+    url(r'^$', lambda r: HttpResponseRedirect('gofish/')),
 )
 
 if settings.DEBUG:
