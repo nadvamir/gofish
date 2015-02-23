@@ -219,6 +219,9 @@ game.vm = (function() {
     },
     act: function(action) {
       var actions, common, fish, move, urls;
+      if (game.vm.game.valCaught() === '?') {
+        return false;
+      }
       urls = {
         fish: '/action/catchall/1',
         left: '/action/move/left',

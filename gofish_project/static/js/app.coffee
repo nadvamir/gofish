@@ -192,6 +192,10 @@ game.vm = do ->
             @game = new game.Game(r.game)
 
     act: (action) ->
+        # don't act during animation
+        if game.vm.game.valCaught() == '?'
+            return false
+
         urls =
             fish  : '/action/catchall/1'
             left  : '/action/move/left'
