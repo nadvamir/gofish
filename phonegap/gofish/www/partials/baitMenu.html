@@ -3,14 +3,14 @@
 	<div id="baitMenuFG" class="centred-image centred-v">
 
 		<div id="baitList" class="scrollable">
-			<h3 class="centred-v" ng-hide="player.modifiers">
+			<h3 class="centred-v" ng-hide="ownsBait()">
 				You don't own any bait.
 				<br/>
 				<br/>
 				Head to the shop after fishing to stock up.
 			</h3>
 
-			<div ng-show="player.modifiers" ng-repeat="(bait, equipped) in player.modifiers" ng-attr-id="{{'listItem-'+bait}}" class="list-item" ng-class="{equipped: equipped}" ng-click="select(bait)">
+			<div ng-show="ownsBait()" ng-repeat="(bait, equipped) in player.modifiers" ng-attr-id="{{'listItem-'+bait}}" class="list-item" ng-class="{equipped: equipped}" ng-click="select(bait)">
 				<div class="left centred-v title">
 					<h3>{{bait}}</h3>
 				</div>
@@ -22,7 +22,7 @@
 			<div class="left button centred-v" ng-click="cancel()">
 				<img class="centred-image shop-item-icon" src="./img/cross.png"></img>
 			</div>
-			<div class="right button centred-v" ng-click="confirm()">
+			<div ng-show="ownsBait()" class="right button centred-v" ng-click="confirm()">
 				<img class="centred-image shop-item-icon" src="./img/tick.gif"></img>
 			</div>
 		</div>

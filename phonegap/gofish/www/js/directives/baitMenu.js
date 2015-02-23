@@ -28,6 +28,14 @@ goFish.directive("baitMenu", [function(){
 				$scope.selected = bait;
 			}
 
+			$scope.ownsBait = function() {
+			    for(var prop in $scope.player.modifiers) {
+			        if($scope.player.modifiers.hasOwnProperty(prop))
+			            return true;
+			    }
+			    return false;
+			}
+
 			$scope.selected = "";
 
 		},

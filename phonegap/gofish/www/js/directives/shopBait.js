@@ -24,6 +24,7 @@ goFish.directive("shopBait", [function(){
 				}
 				else if (!$scope.owned) {
 					GameService.buyBait($scope.name);
+					$scope.owned = true;
 				}
 			};
 
