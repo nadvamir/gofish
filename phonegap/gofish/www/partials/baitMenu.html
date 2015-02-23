@@ -10,7 +10,7 @@
 				Head to the shop after fishing to stock up.
 			</h3>
 
-			<div ng-show="player.modifiers" ng-repeat="(bait, equipped) in player.modifiers" class="list-item">
+			<div ng-show="player.modifiers" ng-repeat="(bait, equipped) in player.modifiers" ng-attr-id="{{'listItem-'+bait}}" class="list-item" ng-class="{equipped: equipped}" ng-click="select(bait)">
 				<div class="left centred-v title">
 					<h3>{{bait}}</h3>
 				</div>
@@ -20,10 +20,10 @@
 
 		<div class="actionBar">
 			<div class="left button centred-v" ng-click="cancel()">
-				CANCEL
+				<img class="centred-image shop-item-icon" src="./img/cross.png"></img>
 			</div>
 			<div class="right button centred-v" ng-click="confirm()">
-				CONFIRM
+				<img class="centred-image shop-item-icon" src="./img/tick.gif"></img>
 			</div>
 		</div>
 	</div>

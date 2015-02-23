@@ -151,6 +151,7 @@ bait-menu {
 .actionbar {
 	height: 20%;
 	width: 100%;
+	padding: 0 0 2.5% 0;
 }
 
 .button {
@@ -162,11 +163,21 @@ bait-menu {
 .list-item {
 	height: 30%;
 	width: 100%;
-	padding: 5% 2.5% 5% 2.5%;
+	padding: 12px 6px 12px 6px;
 }
 
 .title {
 	width: 60%;
+}
+
+.equipped {
+	border: 3px solid green;
+	padding: 9px 3px 9px 3px;
+}
+
+.selected {
+	border: 3px solid blue;
+	padding: 9px 3px 9px 3px;
 }
 
 /* GAME */

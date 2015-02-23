@@ -166,6 +166,25 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				error(function() {
 					return errorMessage();
 				})
+		},
+		changeBait: function(name) {
+			$http.get(API_URL+"choose/"+name+"/").
+				success(function(data) {
+					if(data.error) {
+						alert(data.error);
+						return {};
+					}
+					else {
+						console.log("BAIT CHANGED");
+						console.dir(data);
+						updateGame();
+						// game.player = data ???
+						// $rootScope.broadcast("baitChanged");
+					};
+				}).
+				error(function() {
+					return errorMessage();
+				})
 		}
 	}
 

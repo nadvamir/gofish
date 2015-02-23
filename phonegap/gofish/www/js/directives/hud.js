@@ -56,6 +56,10 @@ goFish.directive("hud", [function(){
 				$scope.updateHUD();
 			});
 
+			$scope.$on("baitUpdated", function() {
+				$scope.player = GameService.getGame().player;
+			});
+
 			$scope.$on("hideBaitMenu", function() {
 				$scope.baitVisible = false;
 			});
