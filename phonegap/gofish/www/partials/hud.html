@@ -3,7 +3,7 @@
 		<div class="hud-money">
 			£{{money}}
 		</div>
-		<img class="bait-icon" src="./img/placeholderbait.jpg"></img>
+		<img class="bait-icon" ng-click="showBaitMenu()" src="./img/placeholderbait.jpg"></img>
 	</span>
 	<span class="left hud-left">
 		<div class="progress">
@@ -15,4 +15,7 @@
 			<p>Minimap</p>
 		</div>
 	</span>
+
 </div>
+
+<bait-menu class="top forward" ng-show="baitVisible"></bait-menu>

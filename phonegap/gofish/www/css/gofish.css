@@ -52,6 +52,14 @@
     margin-right: auto;
 }
 
+.centred-v {
+	position: relative;
+  	top: 50%;
+  	-webkit-transform: translateY(-50%);
+  	-ms-transform: translateY(-50%);
+  	transform: translateY(-50%);
+}
+
 /* Splash Screen */
 
 #titleSign {
@@ -110,6 +118,40 @@
 	width: 65%;
 	margin: 0 0 0 0;
 	border-radius: 0;
+}
+
+/* BAIT MENU */
+
+bait-menu {
+	height: 100%;
+	width: 100%;
+}
+
+#baitMenuBG {
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+#baitMenuFG {
+	height: 80%;
+	width: 80%;
+	background-color: rgba(255, 255, 255, 1);
+}
+
+#baitList {
+	height: 80%;
+	width: 100%;
+}
+
+.actionbar {
+	height: 20%;
+	width: 100%;
+}
+
+.button {
+	width: 40%;
+	text-align: center;
 }
 
 /* GAME */

@@ -31,10 +31,15 @@ goFish.directive("hud", [function(){
 				$scope.totalTime = 480;
 				$scope.timeSpent = 0;
 				$scope.money = 0;
+				$scope.baitVisible = false;
 			}
 
 			$scope.getTimePercentage = function() {
 				return ($scope.timeSpent/$scope.totalTime*100);
+			}
+
+			$scope.showBaitMenu = function() {
+				$scope.baitVisible = true;
 			}
 
 			// Initialisation
@@ -47,6 +52,10 @@ goFish.directive("hud", [function(){
 
 			$scope.$on("levelUpdated", function() {
 				$scope.updateHUD();
+			});
+
+			$scope.$on("hideBaitMenu", function() {
+				$scope.baitVisible = false;
 			});
 
 			// Ensure a clean HUD on next level
