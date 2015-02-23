@@ -3,6 +3,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import user_passes_test
 import json
+import time
 
 from models import DataPoint
 from optimise import *
@@ -27,12 +28,15 @@ def index(request):
 @user_passes_test(lambda u: u.is_superuser)
 def parseLog(request):
     numEntries = 0
+    logCopy = 'logs-perf/gofish-' + str(time.time()) + '.log'
     # parse the log file
     with open('gofish.log', 'r') as f:
-        for line in f:
-            if line != '\n':
-                DataPoint.insertFromLine(line)
-                numEntries += 1
+        with open(logCopy, 'w') as fw:
+            for line in f:
+                if line != '\n':
+                    DataPoint.insertFromLine(line)
+                    numEntries += 1
+                    fw.write(line)
 
     # flush the log file
     with open('gofish.log', 'w') as f:
