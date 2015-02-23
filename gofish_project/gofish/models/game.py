@@ -277,8 +277,14 @@ class Game(models.Model):
     def logEndGame(self, earned, stars):
         logger = logging.getLogger('endgame')
 
+        # line
+        lineLvl = 0 if 'lines' not in self.player.updates \
+                else gamedef.getIndex(self.player.updates['lines'], 'lines') + 1 
+
+        # rest
         gameNr    = self.player.numGames
         player    = self.player.user.username
+        lvl       = self.level['index']
         cueDetail = self.player.getCueDetail()
         moveCost  = self.player.getMoveCost()
         fishCost  = gamedef.FISHING_COST
@@ -287,7 +293,8 @@ class Game(models.Model):
         lOptEarn  = self.getLOptEarnings(fishCost, moveCost)
 
         msg = [
-            player, str(gameNr), str(cueDetail),
+            player, str(gameNr), str(lvl),
+            str(cueDetail), str(lineLvl),
             str(moveCost), str(fishCost),
             str(stars), str(int(earned)),
             str(maxEarn), str(optEarn), str(lOptEarn)
