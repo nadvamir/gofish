@@ -7,6 +7,8 @@ goFish.directive("hud", [function(){
 		controller: function($scope, GameService) {
 
 			$scope.updateHUD = function() {
+				$scope.player = GameService.getGame().player;
+
 				var currentLevel = GameService.getCurrentLevel();
 				if (currentLevel.level) {
 					if (currentLevel.level.time) {
@@ -27,7 +29,7 @@ goFish.directive("hud", [function(){
 			};
 
 			$scope.reset = function() {	
-				$scope.player = {};
+				$scope.player = GameService.getGame().player;
 				$scope.totalTime = 480;
 				$scope.timeSpent = 0;
 				$scope.money = 0;

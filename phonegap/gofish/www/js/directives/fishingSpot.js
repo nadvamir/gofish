@@ -26,7 +26,6 @@ goFish.directive("fishingSpot", [function(){
 					// Check left and right depths to draw some depth cues for left and right
 					// Draw depth cues one depth lower than can fish
 					$scope.cueDepth = (depth + 1);
-					console.log("cueDepth: "+$scope.cueDepth);
 					// Left
 					if ($scope.position == 0 || $scope.map[$scope.position - 1] < depth) {
 						$scope.leftDepthCue = "up";

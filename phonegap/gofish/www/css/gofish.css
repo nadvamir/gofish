@@ -144,6 +144,10 @@ bait-menu {
 	width: 100%;
 }
 
+#baitList h3 {
+	text-align: center;
+}
+
 .actionbar {
 	height: 20%;
 	width: 100%;
@@ -152,6 +156,17 @@ bait-menu {
 .button {
 	width: 40%;
 	text-align: center;
+	margin: 0 5% 0 5%;
+}
+
+.list-item {
+	height: 30%;
+	width: 100%;
+	padding: 5% 2.5% 5% 2.5%;
+}
+
+.title {
+	width: 60%;
 }
 
 /* GAME */

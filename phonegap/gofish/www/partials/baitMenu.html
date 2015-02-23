@@ -1,8 +1,21 @@
-<div id="baitMenuBG">
+<div id="baitMenuBG" class="top">
 
 	<div id="baitMenuFG" class="centred-image centred-v">
 
-		<div id="baitList">
+		<div id="baitList" class="scrollable">
+			<h3 class="centred-v" ng-hide="player.modifiers">
+				You don't own any bait.
+				<br/>
+				<br/>
+				Head to the shop after fishing to stock up.
+			</h3>
+
+			<div ng-show="player.modifiers" ng-repeat="(bait, equipped) in player.modifiers" class="list-item">
+				<div class="left centred-v title">
+					<h3>{{bait}}</h3>
+				</div>
+				<img class="right shop-item-icon" src="./img/placeholderbait.jpg"></img>
+			</div>
 		</div>
 
 		<div class="actionBar">

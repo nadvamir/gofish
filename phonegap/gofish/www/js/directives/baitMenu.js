@@ -3,7 +3,9 @@ goFish.directive("baitMenu", [function(){
 	return {
 		restrict: "E",
 		templateUrl: "./partials/baitMenu.html",
-		scope: {},
+		scope: {
+			player: "="
+		},
 		controller: function($rootScope, $scope, GameService) {
 
 			$scope.confirm = function() {
@@ -12,6 +14,7 @@ goFish.directive("baitMenu", [function(){
 			}
 
 			$scope.cancel = function() {
+				console.dir($scope.player);
 				$rootScope.$broadcast("hideBaitMenu");
 			}
 
