@@ -37,7 +37,7 @@ class Achievement(models.Model):
     def getTop(name, N=1):
         return Achievement.objects\
                 .filter(name=name)\
-                .order_by('value')[:N]
+                .order_by('-value')[:N]
 
     # serialisation
     def toDict(self):
