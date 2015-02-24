@@ -177,6 +177,7 @@ GAME = {
             },
         },
         'cost': 0,
+        'maxDepth': 4,
         'timesToPlay': 4,
         'mean': 33.0,
         'std': 3.5,
@@ -213,6 +214,7 @@ GAME = {
             },
         },
         'cost': 120,
+        'maxDepth': 6,
         'timesToPlay': 5,
         'mean': 128.0,
         'std': 14.0,
@@ -250,6 +252,7 @@ GAME = {
             },
         },
         'cost': 650,
+        'maxDepth': 9,
         'timesToPlay': 6,
         'mean': 325.0,
         'std': 50.0,
@@ -286,6 +289,7 @@ GAME = {
             },
         },
         'cost': 1750,
+        'maxDepth': 9,
         'timesToPlay': 7,
         'mean': 3260.0,
         'std': 300.0,
@@ -314,6 +318,7 @@ GAME = {
             },
         },
         'cost': 22500,
+        'maxDepth': 9,
         'timesToPlay': 8,
         'mean': 2650.0,
         'std': 87.0,
@@ -336,7 +341,7 @@ def getLevel(level):
     lvl['index'] = level
     lvl['time'] = 0
     lvl['totalTime'] = TOTAL_TIME
-    lvl['map'] = maps.generate(maxDepth=10, width=20)
+    lvl['map'] = maps.generate(maxDepth=(lvl['maxDepth'] + 1), width=20)
     lvl['position'] = 0
 
     # time spent in each location
