@@ -1,1 +1,1 @@
-var goFish = angular.module('goFish', []);
+var goFish = angular.module('goFish', ['ngAnimate']);

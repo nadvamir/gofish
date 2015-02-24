@@ -54,6 +54,11 @@ goFish.directive("fishingSpot", [function(){
 				$('#cueDepth').css('background-image', "url('./img/levels/"+$scope.level+"/"+$scope.cueDepth+".png')");
 			}
 
+			$scope.fish = function() {
+				GameService.fish();
+				$scope.showHint = false;
+			};
+
 			// Listen for level updates
 			$scope.$on("levelStarted", function() {
 				$scope.updateFishingSpot();
@@ -67,6 +72,7 @@ goFish.directive("fishingSpot", [function(){
 			$scope.$on("levelEnded", function() {
 				// On starting next level, initial cueDepth must be calculated
 				delete $scope.cueDepth;
+				$scope.showHint = true;
 			});
 
 
@@ -77,6 +83,7 @@ goFish.directive("fishingSpot", [function(){
 			$scope.currentDepth = [];
 			$scope.leftDepthCue = null;
 			$scope.rightDepthCue = null;
+			$scope.showHint = true;
 		},
 		controllerAs: "fishingSpotCtrl"
 	};

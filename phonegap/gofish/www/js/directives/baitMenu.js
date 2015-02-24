@@ -29,7 +29,7 @@ goFish.directive("baitMenu", [function(){
 			}
 
 			$scope.ownsBait = function() {
-				if (!$scope.player.modifiers) return false;
+				if (!$scope.player || !$scope.player.modifiers) return false;
 			    for(var prop in $scope.player.modifiers) {
 			        if($scope.player.modifiers.hasOwnProperty(prop))
 			            return true;

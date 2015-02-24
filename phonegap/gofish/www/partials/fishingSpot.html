@@ -1,4 +1,4 @@
-<div class="fishing-spot">
+<div class="fishing-spot full">
 	<div ng-repeat="depth in currentDepth">
 	<fishing-spot-depth level="level" depth="depth">
 	</fishing-spot-depth>
@@ -7,4 +7,10 @@
 	<div ng-if="cueDepth" id ="cueDepth" class="fishing-spot-depth" ng-click="fish()" ng-style="{'background-image':'url(./img/levels/{{level}}/{{cueDepth}}.png)'}">
 		<img class="depth-cue" ng-src="./img/depth_cues/{{leftDepthCue}}_{{rightDepthCue}}.png">
 	</div>
+
+	<div ng-show="showHint" id="fishHint" class="forward anim-fade" ng-click="fish()">
+		<h3>Tap the water to fish</h3>
+		<img class="bait-icon centred-image" src="./img/icons/fish_hint.png">
+	</div>
+
 </div>

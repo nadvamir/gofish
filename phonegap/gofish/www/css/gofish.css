@@ -66,6 +66,17 @@
 	background-color: rgba(122, 137, 234, 0.5);
 }
 
+/* Animation */
+
+.anim-fade {
+  -webkit-transition:all linear 0.5s;
+  transition:all linear 0.5s;
+}
+
+.anim-fade.ng-hide {
+  opacity:0;
+}
+
 /* Splash Screen */
 
 #titleSign {
@@ -215,6 +226,23 @@ bait-menu {
 	width: 100%;
 	height: 100%;
 }
+
+#fishHint {
+	position: fixed;
+	top: 40%;
+	left: 25%;
+	width: 50%;
+}
+
+#fishHint h3 {
+	text-align: center;
+}
+
+#fishHint img {
+	width: 50%;
+}
+
+/* ANIMATION */
 
 /* MENUS */
 
