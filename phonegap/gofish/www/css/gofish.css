@@ -68,6 +68,20 @@
 
 /* Animation */
 
+@-webkit-keyframes pulse_animation {
+	0% { -webkit-transform: scale(1); }
+	50% { -webkit-transform: scale(1.2); }
+	100% { -webkit-transform: scale(1); }
+}
+
+.pulse {
+	-webkit-animation-name: 'pulse_animation';
+	-webkit-animation-duration: 2000ms;
+	-webkit-transform-origin:70% 70%;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+}
+
 .anim-fade {
   -webkit-transition:all linear 0.5s;
   transition:all linear 0.5s;
@@ -239,7 +253,7 @@ bait-menu {
 }
 
 #fishHint img {
-	width: 50%;
+	width: 25%;
 }
 
 /* ANIMATION */

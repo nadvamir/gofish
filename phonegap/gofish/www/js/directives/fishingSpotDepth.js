@@ -8,10 +8,6 @@ goFish.directive("fishingSpotDepth", [function(){
 			level: "="
 		},
 		controller: function($scope, GameService) {
-
-			$scope.fish = function() {
-				GameService.fish();
-			};
 			
 		},
 		controllerAs: "fishingSpotDepthCtrl"
