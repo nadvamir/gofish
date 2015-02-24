@@ -3,6 +3,7 @@ import maps
 # here we have a GAME definition object, already priced
 TOTAL_TIME = 480
 FISHING_COST = 5
+MOVE_COST = 60
 GAME = {
     'fish': {
         'shoe': {
@@ -83,15 +84,15 @@ GAME = {
         }],
         'boats': [{
             'name': 'Row Boat',
-            'time': -5,
+            'time': -20,
             'price': 1000,
         }, {
             'name': 'Motor Boat',
-            'time': -10,
+            'time': -40,
             'price': 3000,
         }, {
             'name': 'Speed Boat',
-            'time': -15,
+            'time': -50,
             'price': 7000,
         }],
         'cues': [{

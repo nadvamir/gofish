@@ -87,7 +87,7 @@ class Player(models.Model):
     #############################################################
     # returns movement cost of this player
     def getMoveCost(self):
-        cost = 30
+        cost = gamedef.MOVE_COST
         upds = gamedef.GAME['updates']
         for key in self.updates:
             for v in upds[key]:

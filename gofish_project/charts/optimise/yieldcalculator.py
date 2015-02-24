@@ -52,7 +52,7 @@ class YieldCalculator(object):
 
     # calculating optimal yield
     @staticmethod
-    def getOptYield(fish, lvlYield, movingCost=30.0):
+    def getOptYield(fish, lvlYield, movingCost=gamedef.MOVE_COST):
         # for now, static parameters:
         time = 480.0
         fishingCost = 5.0
