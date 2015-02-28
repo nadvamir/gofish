@@ -12,18 +12,24 @@ class YieldModel(object):
 
         # add variables for fish prices
         #self.problem.addVariable('shoe', range(1, 10))
-        self.problem.addVariable('shoe', range(1, 2))
+        self.problem.addVariable('shoe', [1])
         #self.problem.addVariable('bass', range(3, 20))
-        self.problem.addVariable('bass', range(3, 4))
+        #self.problem.addVariable('bass', [3, 14])
+        self.problem.addVariable('bass', [3])
         #self.problem.addVariable('brime', range(7, 30))
-        self.problem.addVariable('brime', range(26, 27))
+        #self.problem.addVariable('brime', [26, 29, 35])
+        self.problem.addVariable('brime', [29])
         #self.problem.addVariable('pike', range(17, 50))
-        self.problem.addVariable('pike', range(29, 30))
-        #self.problem.addVariable('cod', range(120, 200))
-        self.problem.addVariable('cod', range(144, 145))
-        self.problem.addVariable('carp', range(180, 181))
-        self.problem.addVariable('catfish', range(200, 201))
-        self.problem.addVariable('tuna', range(1000, 1001))
+        #self.problem.addVariable('pike', [30, 50, 70])
+        self.problem.addVariable('pike', [70])
+        #self.problem.addVariable('cod', range(120, 180))
+        #self.problem.addVariable('cod', [144, 180, 200])
+        self.problem.addVariable('cod', [200])
+        #self.problem.addVariable('carp', [200, 250, 290])
+        self.problem.addVariable('carp', [290])
+        #self.problem.addVariable('catfish', [210, 250, 300])
+        self.problem.addVariable('catfish', [300])
+        self.problem.addVariable('tuna', [1000])
 
         # add variables for level costs
         # (first one is free):
