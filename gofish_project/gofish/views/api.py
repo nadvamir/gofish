@@ -33,7 +33,7 @@ def end(request):
 
     if None != game:
         earned = game.deleteGame()
-        stars = player.getAchievement('moneyIn' + str(game.level))
+        stars = player.getAchievement('moneyIn' + str(game.level['index']))
         stars = stars.rating if None != stars else 0
         response = {
             'earned': earned,
