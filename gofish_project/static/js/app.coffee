@@ -167,6 +167,7 @@ class game.Player
 # game model
 class game.Game
     constructor: (g) ->
+        @level        = m.prop g.level
         @day       = m.prop g.day
         @name      = m.prop g.name
         @totalTime = m.prop g.totalTime
@@ -224,7 +225,8 @@ game.vm = do ->
                 g = game.vm.game
                 g.valCaught(g.valCaught() + fish.value)
                 f = new game.Fish(fish)
-                importance = 4 + Math.ceil(f.value() / 5)
+                divisor = g.level() == 0 and 1 or 5 * g.level()
+                importance = 3 + Math.ceil(f.value() / divisor)
                 importance = importance > 140 and 140 or importance
                 game.vm.addInfo(['You\'ve caught a ', caught.vm.getItemView.apply(f)], importance)
                 g.caught().push f

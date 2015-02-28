@@ -64,6 +64,7 @@ def v2game(request):
 
     caught = reduce(lambda a, f: a + f['value'], game.caught, 0)
     response = {'game' : {
+        'level'     : game.level['index'],
         'day'       : player.numGames,
         'name'      : game.level['name'],
         'totalTime' : game.level['totalTime'],

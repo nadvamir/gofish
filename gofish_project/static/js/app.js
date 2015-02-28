@@ -180,6 +180,7 @@ game.Player = (function() {
 game.Game = (function() {
   function Game(g) {
     var f, _i, _len, _ref;
+    this.level = m.prop(g.level);
     this.day = m.prop(g.day);
     this.name = m.prop(g.name);
     this.totalTime = m.prop(g.totalTime);
@@ -242,7 +243,7 @@ game.vm = (function() {
         return game.vm.info('');
       };
       fish = function(r) {
-        var f, g, importance;
+        var divisor, f, g, importance;
         if (0 === r.fishList.length) {
           return m.route('/end');
         }
@@ -252,7 +253,8 @@ game.vm = (function() {
           g = game.vm.game;
           g.valCaught(g.valCaught() + fish.value);
           f = new game.Fish(fish);
-          importance = 4 + Math.ceil(f.value() / 5);
+          divisor = g.level() === 0 && 1 || 5 * g.level();
+          importance = 3 + Math.ceil(f.value() / divisor);
           importance = importance > 140 && 140 || importance;
           game.vm.addInfo(['You\'ve caught a ', caught.vm.getItemView.apply(f)], importance);
           return g.caught().push(f);
