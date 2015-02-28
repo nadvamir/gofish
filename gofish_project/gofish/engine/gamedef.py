@@ -24,8 +24,8 @@ GAME = {
         },
         'brime': {
             'id': 'brime',
-            'name': 'Brime',
-            'value': 7,
+            'name': 'Bream',
+            'value': 29,
             'weight': 1.0,
             'length': 40,
             'habitat': 6,
@@ -33,7 +33,7 @@ GAME = {
         'pike': {
             'id': 'pike',
             'name': 'Pike',
-            'value': 17,
+            'value': 70,
             'weight': 1.5,
             'length': 50,
             'habitat': 3,
@@ -41,7 +41,7 @@ GAME = {
         'catfish': {
             'id': 'catfish',
             'name': 'Catfish',
-            'value': 200,
+            'value': 300,
             'weight': 10.0,
             'length': 100,
             'habitat': 9,
@@ -49,7 +49,7 @@ GAME = {
         'cod': {
             'id': 'cod',
             'name': 'Cod',
-            'value': 120,
+            'value': 200,
             'weight': 10.0,
             'length': 100,
             'habitat': 9,
@@ -64,8 +64,8 @@ GAME = {
         },
         'carp': {
             'id': 'carp',
-            'name': 'Carp',
-            'value': 100,
+            'name': 'Salmon',
+            'value': 290,
             'weight': 2.0,
             'length': 30,
             'habitat': 5,
@@ -76,47 +76,47 @@ GAME = {
         'lines': [{
             'name': 'Strong Line',
             'probability': 1.1,
-            'price': 500,
+            'price': 1000,
         }, {
             'name': 'Braided Line',
             'probability': 1.2,
-            'price': 1000,
+            'price': 2000,
         }],
         'boats': [{
             'name': 'Row Boat',
             'time': -20,
-            'price': 1000,
+            'price': 500,
         }, {
             'name': 'Motor Boat',
             'time': -40,
-            'price': 3000,
+            'price': 6000,
         }, {
             'name': 'Speed Boat',
             'time': -50,
-            'price': 7000,
+            'price': 24000,
         }],
         'cues': [{
             'name': 'A Map',
             'cueDetail': 1,
-            'price': 50,
+            'price': 30,
             'depth': 0,
             'accuracy': 0,
         }, {
             'name': 'Underwater Camera',
             'cueDetail': 2,
-            'price': 200,
+            'price': 350,
             'depth': 4,
             'accuracy': 50,
         }, {
             'name': 'Old Sonar',
             'cueDetail': 3,
-            'price': 4000,
+            'price': 1000,
             'depth': 7,
             'accuracy': 70,
         }, {
             'name': 'Modern Sonar',
             'cueDetail': 4,
-            'price': 10000,
+            'price': 6200,
             'depth': 10,
             'accuracy': 85,
         }, {
@@ -179,9 +179,9 @@ GAME = {
         },
         'cost': 0,
         'maxDepth': 4,
-        'timesToPlay': 4,
-        'mean': 33.0,
-        'std': 3.5,
+        'timesToPlay': 3,
+        'mean': 30.0,
+        'std': 2.5,
       }, {
         'name': 'Lake',
         'fish': {
@@ -214,11 +214,11 @@ GAME = {
                 },
             },
         },
-        'cost': 120,
+        'cost': 90,
         'maxDepth': 6,
-        'timesToPlay': 5,
-        'mean': 128.0,
-        'std': 14.0,
+        'timesToPlay': 4,
+        'mean': 350.0,
+        'std': 45.0,
       }, {
         'name': 'River',
         'fish': {
@@ -252,11 +252,11 @@ GAME = {
                 },
             },
         },
-        'cost': 650,
+        'cost': 1400,
         'maxDepth': 9,
-        'timesToPlay': 6,
-        'mean': 325.0,
-        'std': 50.0,
+        'timesToPlay': 5,
+        'mean': 500.0,
+        'std': 90.0,
       }, {
         'name': 'Sea',
         'fish': {
@@ -289,13 +289,13 @@ GAME = {
                 },
             },
         },
-        'cost': 1750,
+        'cost': 2500,
         'maxDepth': 9,
-        'timesToPlay': 7,
-        'mean': 3260.0,
-        'std': 300.0,
+        'timesToPlay': 6,
+        'mean': 6200.0,
+        'std': 470.0,
       }, {
-        'name': 'Carp Pond',
+        'name': 'Salmon Farm',
         'fish': {
             'carp': {
                 'probability': 0.7,
@@ -318,11 +318,11 @@ GAME = {
                 },
             },
         },
-        'cost': 22500,
+        'cost': 37200,
         'maxDepth': 9,
-        'timesToPlay': 8,
-        'mean': 2650.0,
-        'std': 87.0,
+        'timesToPlay': 7,
+        'mean': 7500.0,
+        'std': 300.0,
     }],
 }
 
