@@ -40,15 +40,19 @@ class YieldCalculator(object):
 
     # describe yields in terms of money
     def describeYields(self, fishVal):
-        toMoney = lambda l: map(lambda i: \
-                YieldCalculator.getOptYield(fishVal, i), l)
+        mc = [60, 60, 40, 20, 20]
+        lvl = [-1]
+        def incrLvl(): lvl[0] += 1; return lvl[0]
+        toMoney = lambda l, ind: map(lambda i: \
+                YieldCalculator.getOptYield(fishVal, i, \
+                                            mc[ind]), l)
 
         def describe(level):
             mean     = getMean(level)
             variance = getVariance(level, mean)
             return mean, sqrt(variance)
 
-        return map(lambda l: describe(toMoney(l)), self.yields)
+        return map(lambda l: describe(toMoney(l, incrLvl())), self.yields)
 
     # calculating optimal yield
     @staticmethod
