@@ -7,6 +7,7 @@ caught = {}
 # view-model
 caught.vm = do ->
     getItemView: -> [
+        m('div.fish-img', {class: @name()})
         m('span', @name())
         ', weight '
         @weight()

@@ -84,7 +84,10 @@ game.vm = do ->
                 divisor = g.level() == 0 and 1 or 5 * g.level()
                 importance = 3 + Math.ceil(f.value() / divisor)
                 importance = importance > 140 and 140 or importance
-                game.vm.addInfo(['You\'ve caught a ', caught.vm.getItemView.apply(f)], importance)
+                game.vm.addInfo([
+                    'You\'ve caught a ',
+                    caught.vm.getItemView.apply(f)
+                ], importance)
                 g.caught().push f
             else
                 game.vm.addInfo 'Nothing was caught', 2

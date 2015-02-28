@@ -172,6 +172,48 @@ nav a:hover {
     display: none;
 }
 
+div.fish-img {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    height: 26px;
+    width: 52px;
+    margin-right: 2px;
+}
+div.fish-img.Shoe {
+    background-image: url('/static/images/shoe.jpg');
+    /*width: 26;*/
+}
+div.fish-img.Cod {
+    background-image: url('/static/images/cod.jpg');
+    /*width: 26;*/
+}
+div.fish-img.Bream {
+    background-image: url('/static/images/bream.gif');
+    /*width: 43px;*/
+}
+div.fish-img.Bass {
+    background-image: url('/static/images/bass.gif');
+    /*width: 52px;*/
+}
+div.fish-img.Pike {
+    background-image: url('/static/images/pike.gif');
+    /*width: 28px;*/
+}
+div.fish-img.Salmon {
+    background-image: url('/static/images/salmon.gif');
+    /*width: 86px;*/
+}
+div.fish-img.Catfish {
+    background-image: url('/static/images/catfish.gif');
+    /*width: 33px;*/
+}
+div.fish-img.Tuna {
+    background-image: url('/static/images/tuna.gif');
+    /*width: 52px;*/
+}
+
 /* ----------------------------------------------------------- */
 #game-map {
     height: 440px;

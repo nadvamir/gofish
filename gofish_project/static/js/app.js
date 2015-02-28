@@ -375,7 +375,11 @@ caught = {};
 caught.vm = (function() {
   return {
     getItemView: function() {
-      return [m('span', this.name()), ', weight ', this.weight(), ' kg, value ', m('strong', this.value())];
+      return [
+        m('div.fish-img', {
+          "class": this.name()
+        }), m('span', this.name()), ', weight ', this.weight(), ' kg, value ', m('strong', this.value())
+      ];
     },
     compare: function(a, b) {
       return b.value() - a.value();
