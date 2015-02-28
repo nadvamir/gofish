@@ -2,6 +2,9 @@ import gofish.engine.gamedef as gamedef
 import gofish.models as models
 from math import sqrt
 
+# moving costs
+MOV_C = [60, 60, 40, 20, 20]
+
 # a simulator, that calculates average yields
 # for every game level
 class YieldCalculator(object):
@@ -40,12 +43,11 @@ class YieldCalculator(object):
 
     # describe yields in terms of money
     def describeYields(self, fishVal):
-        mc = [60, 60, 40, 20, 20]
         lvl = [-1]
         def incrLvl(): lvl[0] += 1; return lvl[0]
         toMoney = lambda l, ind: map(lambda i: \
                 YieldCalculator.getOptYield(fishVal, i, \
-                                            mc[ind]), l)
+                                            MOV_C[ind]), l)
 
         def describe(level):
             mean     = getMean(level)
