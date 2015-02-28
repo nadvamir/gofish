@@ -57,6 +57,8 @@ class YieldCalculator(object):
         return map(lambda l: describe(toMoney(l, incrLvl())), self.yields)
 
     # calculating optimal yield
+    # lvlYield has average fish values earned fishing up to
+    # this time
     @staticmethod
     def getOptYield(fish, lvlYield, movingCost=gamedef.MOVE_COST):
         # for now, static parameters:
@@ -66,9 +68,10 @@ class YieldCalculator(object):
         # optimal yield is that, which maximises
         # the overall yield of the game
         maxYield = 0.0
+        # for every time we fish in a location
         for i in range(len(lvlYield)):
             y = 0.0
-            # yield from one location
+            # yield from this location
             for f, n in lvlYield[i].iteritems():
                 y += fish[f] * n
             # yield overall from a game
