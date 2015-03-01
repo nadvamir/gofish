@@ -4,10 +4,14 @@
 # --------------------------------------------------------------
 # list component, produces a list when given an array of items
 list = {}
-list.view = (items, view) -> m('ul.list', [
-    items.map((item) ->
-        m('li', {key: item.id()}, [view.apply(item)]))
-])
+list.view = (items, view) ->
+    if items.length > 0
+        m('ul.list', [
+            items.map((item) ->
+                m('li', {key: item.id()}, [view.apply(item)]))
+        ])
+    else
+        m('ul.list', 'Nothing to show yet')
 
 # gets a top bar with a message and money from a player
 topBar = (text, money) -> m('div.top-bar', [

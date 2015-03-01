@@ -3,13 +3,17 @@ var caught, end, gTopBar, game, gameActions, gameMap, get, home, infoArea, link,
 list = {};
 
 list.view = function(items, view) {
-  return m('ul.list', [
-    items.map(function(item) {
-      return m('li', {
-        key: item.id()
-      }, [view.apply(item)]);
-    })
-  ]);
+  if (items.length > 0) {
+    return m('ul.list', [
+      items.map(function(item) {
+        return m('li', {
+          key: item.id()
+        }, [view.apply(item)]);
+      })
+    ]);
+  } else {
+    return m('ul.list', 'Nothing to show yet');
+  }
 };
 
 topBar = function(text, money) {
