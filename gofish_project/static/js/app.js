@@ -497,7 +497,9 @@ trophies.vm = (function() {
           _ref = r.userTrophies;
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             t = _ref[_i];
-            _this.userT.push(new game.Fish(t));
+            if (t.value > 0) {
+              _this.userT.push(new game.Fish(t));
+            }
           }
           _ref1 = r.gameTrophies;
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -747,16 +749,20 @@ trophies.item = function(userT, gameT) {
 
 trophies.listTrophies = function() {
   var i;
-  return m('.list', [
-    (function() {
-      var _i, _ref, _results;
-      _results = [];
-      for (i = _i = 0, _ref = this.userT.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
-        _results.push(trophies.item(this.userT[i], this.gameT[i]));
-      }
-      return _results;
-    }).call(this)
-  ]);
+  if (this.userT.length > 0) {
+    return m('.list', [
+      (function() {
+        var _i, _ref, _results;
+        _results = [];
+        for (i = _i = 0, _ref = this.userT.length; 0 <= _ref ? _i < _ref : _i > _ref; i = 0 <= _ref ? ++_i : --_i) {
+          _results.push(trophies.item(this.userT[i], this.gameT[i]));
+        }
+        return _results;
+      }).call(this)
+    ]);
+  } else {
+    return 'You have not caught any trophies yet';
+  }
 };
 
 trophies.view = function() {

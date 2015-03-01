@@ -442,7 +442,7 @@ trophies.vm = do ->
 
         get('/v2/trophies').then (r) =>
             for t in r.userTrophies
-                @userT.push new game.Fish t
+                @userT.push new game.Fish t if t.value > 0
             for t in r.gameTrophies
                 @gameT.push new game.Fish t
             @userT.sort (a, b) -> a.name() > b.name()
@@ -696,7 +696,10 @@ trophies.item = (userT, gameT) -> m('li', [
 
 # sub-view to list all trophies
 trophies.listTrophies = ->
-    m('.list', [trophies.item(@userT[i], @gameT[i]) for i in [0...@userT.length]])
+    if @userT.length > 0
+        m('.list', [trophies.item(@userT[i], @gameT[i]) for i in [0...@userT.length]])
+    else
+        'You have not caught any trophies yet'
 
 # view
 trophies.view = -> [

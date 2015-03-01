@@ -9,7 +9,10 @@ trophies.item = (userT, gameT) -> m('li', [
 
 # sub-view to list all trophies
 trophies.listTrophies = ->
-    m('.list', [trophies.item(@userT[i], @gameT[i]) for i in [0...@userT.length]])
+    if @userT.length > 0
+        m('.list', [trophies.item(@userT[i], @gameT[i]) for i in [0...@userT.length]])
+    else
+        'You have not caught any trophies yet'
 
 # view
 trophies.view = -> [
