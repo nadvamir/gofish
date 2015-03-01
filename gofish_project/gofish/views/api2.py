@@ -51,6 +51,8 @@ def v2player(request):
         'boat'  : getIndex(player, 'boats'),
         'line'  : getIndex(player, 'lines'),
         'cue'   : getIndex(player, 'cues'),
+        'lineN' : getName(player, 'lines'),
+        'cueN'  : getName(player, 'cues')
     }}
     return HttpResponse(json.dumps(response), content_type="application/json")
 
@@ -172,4 +174,8 @@ def v2shop(request):
 # get index for a player update
 def getIndex(player, update):
     return -1 if update not in player.updates else gamedef.getIndex(player.updates[update], update)
+
+# get the name of a player's update
+def getName(player, update):
+    return player.updates.get(update, '')
 

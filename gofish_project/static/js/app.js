@@ -181,6 +181,8 @@ game.Player = (function() {
     this.boat = m.prop(p.boat);
     this.line = m.prop(p.line);
     this.cue = m.prop(p.cue);
+    this.lineN = m.prop(p.lineN);
+    this.cueN = m.prop(p.cueN);
   }
 
   return Player;
@@ -645,10 +647,10 @@ infoArea.view = function() {
   return m('div#info-area', [
     game.vm.info(), m('div.right.fa', {
       "class": infoArea.cues[game.vm.player.cue() + 1],
-      title: 'Cue indicator'
+      title: game.vm.player.cueN()
     }), m('div.right.fa', {
       "class": infoArea.lines[game.vm.player.line() + 1],
-      title: 'Fishing line quality indicator'
+      title: game.vm.player.lineN()
     })
   ]);
 };

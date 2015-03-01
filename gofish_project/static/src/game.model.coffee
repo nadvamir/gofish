@@ -19,6 +19,8 @@ class game.Player
         @boat  = m.prop p.boat
         @line  = m.prop p.line
         @cue   = m.prop p.cue
+        @lineN = m.prop p.lineN
+        @cueN  = m.prop p.cueN
 
 # game model
 class game.Game
