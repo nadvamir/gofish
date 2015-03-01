@@ -488,9 +488,11 @@ caught.controller = ->
 class end.controller
     constructor: ->
         get('/end').then (r) =>
-            @earned = m.prop r.earned
-            @money  = m.prop r.money
-            @stars  = m.prop r.stars
+            @earned  = m.prop r.earned
+            @maximum = m.prop r.maximum
+            @avg     = m.prop r.avg
+            @money   = m.prop r.money
+            @stars   = m.prop r.stars
 
 
 # controller
@@ -626,19 +628,15 @@ end.view = (c) -> [
         m('li', [
             'Earned '
             m('strong', c.earned())
+            ' out of '
+            m('strong', c.maximum())
+            ' possible'
         ])
         m('li', [
             'Now you have '
             m('strong', c.money())
             ' coins'
         ])
-        (c.stars() > 0 and (
-            m('li', [
-                'Achieved '
-                m('strong', c.stars())
-                ' stars'
-            ])
-        ) or '')
     ])
 ]
 

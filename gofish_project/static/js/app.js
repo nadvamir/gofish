@@ -564,6 +564,8 @@ end.controller = (function() {
     get('/end').then((function(_this) {
       return function(r) {
         _this.earned = m.prop(r.earned);
+        _this.maximum = m.prop(r.maximum);
+        _this.avg = m.prop(r.avg);
         _this.money = m.prop(r.money);
         return _this.stars = m.prop(r.stars);
       };
@@ -716,7 +718,7 @@ caught.view = function() {
 };
 
 end.view = function(c) {
-  return [m('div.top-bar', ['This day is over!']), m('ul.list', [m('li', ['Earned ', m('strong', c.earned())]), m('li', ['Now you have ', m('strong', c.money()), ' coins']), c.stars() > 0 && (m('li', ['Achieved ', m('strong', c.stars()), ' stars'])) || ''])];
+  return [m('div.top-bar', ['This day is over!']), m('ul.list', [m('li', ['Earned ', m('strong', c.earned()), ' out of ', m('strong', c.maximum()), ' possible']), m('li', ['Now you have ', m('strong', c.money()), ' coins'])])];
 };
 
 shop.currentView = function(u) {

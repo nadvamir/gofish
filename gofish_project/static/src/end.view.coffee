@@ -7,19 +7,15 @@ end.view = (c) -> [
         m('li', [
             'Earned '
             m('strong', c.earned())
+            ' out of '
+            m('strong', c.maximum())
+            ' possible'
         ])
         m('li', [
             'Now you have '
             m('strong', c.money())
             ' coins'
         ])
-        (c.stars() > 0 and (
-            m('li', [
-                'Achieved '
-                m('strong', c.stars())
-                ' stars'
-            ])
-        ) or '')
     ])
 ]
 

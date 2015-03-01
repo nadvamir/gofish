@@ -32,11 +32,13 @@ def end(request):
     response = {'error': 'Game does not exist'}
 
     if None != game:
-        earned = game.deleteGame()
+        earned, maximum, avg = game.deleteGame()
         stars = player.getAchievement('moneyIn' + str(game.level['index']))
         stars = stars.rating if None != stars else 0
         response = {
             'earned': earned,
+            'maximum': maximum,
+            'avg': avg,
             # the game had a different player object
             # which were not linked.
             # at this point the database is updated

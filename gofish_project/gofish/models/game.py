@@ -115,10 +115,10 @@ class Game(models.Model):
 
         # log endgame performance
         # overall statistics
-        self.logEndGame(earned, rating)
+        maximum = self.logEndGame(earned, rating)
 
         self.delete()
-        return earned
+        return earned, maximum, self.level['mean']
 
     # a method to marshal fields
     def marshal(self):
@@ -147,9 +147,9 @@ class Game(models.Model):
     def __unicode__(self):
         return str(self.player) + ' ' + str(self.level['index'])
 
-    ##############################################################
+    #############################################################
     # external helpers
-    ##############################################################
+    #############################################################
     # returns cues for the current fishing position
     def getCues(self):
         pos = self.level['position']
@@ -302,6 +302,7 @@ class Game(models.Model):
         ]
 
         logger.info(' '.join(msg))
+        return maxEarn
 
     # load all the yields in the game
     def createAllYields(self):
