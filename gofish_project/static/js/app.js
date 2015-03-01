@@ -134,7 +134,13 @@ home.vm = (function() {
               }
               return _results;
             }).call(this)
-          ], m('.right', [m('strong', this.highS()), ' / ', m('strong', this.maxHighS())])
+          ], m('.right', [
+            m('strong', {
+              title: 'Your High Score'
+            }, this.highS()), ' / ', m('strong', {
+              title: 'High Score'
+            }, this.maxHighS())
+          ])
         ];
       } else if (this.active() && this.cost() <= game.vm.player.money()) {
         return [
@@ -724,7 +730,13 @@ shop.view = function() {
 };
 
 trophies.item = function(userT, gameT) {
-  return m('li', [caught.vm.getItemView.apply(userT), m('.right', ['/ ', m('strong', gameT.value())])]);
+  return m('li', [
+    caught.vm.getItemView.apply(userT), m('.right', [
+      '/ ', m('strong', {
+        title: 'High Score'
+      }, gameT.value())
+    ])
+  ]);
 };
 
 trophies.listTrophies = function() {

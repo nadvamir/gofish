@@ -117,9 +117,9 @@ home.vm = do ->
                 ['*' for star in [0...@stars()]]
                 # high score
                 m('.right', [
-                    m('strong', @highS())
+                    m('strong', {title: 'Your High Score'}, @highS())
                     ' / '
-                    m('strong', @maxHighS())
+                    m('strong', {title: 'High Score'}, @maxHighS())
                 ])
             ]
         # available to unlock
@@ -686,7 +686,7 @@ trophies.item = (userT, gameT) -> m('li', [
     caught.vm.getItemView.apply(userT)
     m('.right', [
         '/ '
-        m('strong', gameT.value())
+        m('strong', {title: 'High Score'}, gameT.value())
     ])
 ])
 

@@ -3,7 +3,7 @@ trophies.item = (userT, gameT) -> m('li', [
     caught.vm.getItemView.apply(userT)
     m('.right', [
         '/ '
-        m('strong', gameT.value())
+        m('strong', {title: 'High Score'}, gameT.value())
     ])
 ])
 
