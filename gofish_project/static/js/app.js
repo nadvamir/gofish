@@ -125,16 +125,20 @@ home.vm = (function() {
         return [
           m('a[href=#]', {
             onclick: link(home.vm.chooseLevel.bind(this))
-          }, this.name()), ', unlocked. ', [
-            (function() {
-              var _i, _ref, _results;
-              _results = [];
-              for (star = _i = 0, _ref = this.stars(); 0 <= _ref ? _i < _ref : _i > _ref; star = 0 <= _ref ? ++_i : --_i) {
-                _results.push('*');
-              }
-              return _results;
-            }).call(this)
-          ], m('.right', [
+          }, this.name()), ', unlocked. ', m('span', {
+            title: 'Your Performance'
+          }, [
+            [
+              (function() {
+                var _i, _ref, _results;
+                _results = [];
+                for (star = _i = 0, _ref = this.stars(); 0 <= _ref ? _i < _ref : _i > _ref; star = 0 <= _ref ? ++_i : --_i) {
+                  _results.push('*');
+                }
+                return _results;
+              }).call(this)
+            ]
+          ]), m('.right', [
             m('strong', {
               title: 'Your High Score'
             }, this.highS()), ' / ', m('strong', {

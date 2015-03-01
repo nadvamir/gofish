@@ -114,7 +114,9 @@ home.vm = do ->
                 m('a[href=#]', {onclick:
                     link home.vm.chooseLevel.bind(@)}, @name())
                 ', unlocked. '
-                ['*' for star in [0...@stars()]]
+                m('span', {title: 'Your Performance'}, [
+                    ['*' for star in [0...@stars()]]
+                ])
                 # high score
                 m('.right', [
                     m('strong', {title: 'Your High Score'}, @highS())
