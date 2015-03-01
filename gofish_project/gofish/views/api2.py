@@ -141,7 +141,7 @@ def v2shop(request):
         response['boats'].append({
             'name' : boat['name'],
             'cost' : boat['price'],
-            'perk' : 'It is ' + str(boat['time'] / (-5) * 16) + ' % faster!'
+            'perk' : 'It is ' + str(boat['time'] / (-5) * 16) + ' % faster than a raft!'
         })
 
     # build lines
@@ -163,7 +163,7 @@ def v2shop(request):
         response['cues'].append({
             'name' : cues[i]['name'],
             'cost' : cues[i]['price'],
-            'perk' : 'It tells you the fish under you with the accuracy of ' + str(cues[i]['accuracy']) + ' %'
+            'perk' : 'It tells you the fish under you with the accuracy of ' + str(cues[i]['accuracy']) + ' %. It can see up to ' + str(cues[i]['depth']) + ' tiles underwater'
         })
 
     return HttpResponse(json.dumps(response), content_type="application/json")
