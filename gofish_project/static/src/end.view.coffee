@@ -1,20 +1,20 @@
 # view
 end.view = (c) -> [
-    m('div.top-bar', [
+    m('div.top-bar.large', [
         'This day is over!'
     ])
     m('ul.list', [
         m('li', [
             'Earned '
             m('strong', c.earned())
-            ' out of '
+            ' coins out of '
             m('strong', c.maximum())
-            ' possible'
+            ' possible in this go.'
         ])
         m('li', [
             'Now you have '
             m('strong', c.money())
-            ' coins'
+            ' coins.'
         ])
     ])
 ]

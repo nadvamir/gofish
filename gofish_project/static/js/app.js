@@ -728,7 +728,7 @@ caught.view = function() {
 };
 
 end.view = function(c) {
-  return [m('div.top-bar', ['This day is over!']), m('ul.list', [m('li', ['Earned ', m('strong', c.earned()), ' out of ', m('strong', c.maximum()), ' possible']), m('li', ['Now you have ', m('strong', c.money()), ' coins'])])];
+  return [m('div.top-bar.large', ['This day is over!']), m('ul.list', [m('li', ['Earned ', m('strong', c.earned()), ' coins out of ', m('strong', c.maximum()), ' possible in this go.']), m('li', ['Now you have ', m('strong', c.money()), ' coins.'])])];
 };
 
 shop.currentView = function(u) {
