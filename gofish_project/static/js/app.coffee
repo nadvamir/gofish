@@ -445,10 +445,10 @@ trophies.vm = do ->
         @gameT = new trophies.Trophies()
 
         get('/v2/trophies').then (r) =>
-            for t in r.userTrophies
-                @userT.push new game.Fish t if t.value > 0
-            for t in r.gameTrophies
-                @gameT.push new game.Fish t
+            for t, i in r.userTrophies
+                if t.value > 0
+                    @userT.push new game.Fish t
+                    @gameT.push new game.Fish r.gameTrophies[i]
             @userT.sort (a, b) -> a.name() > b.name()
             @gameT.sort (a, b) -> a.name() > b.name()
 

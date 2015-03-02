@@ -497,18 +497,14 @@ trophies.vm = (function() {
       this.gameT = new trophies.Trophies();
       return get('/v2/trophies').then((function(_this) {
         return function(r) {
-          var t, _i, _j, _len, _len1, _ref, _ref1;
+          var i, t, _i, _len, _ref;
           _ref = r.userTrophies;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            t = _ref[_i];
+          for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            t = _ref[i];
             if (t.value > 0) {
               _this.userT.push(new game.Fish(t));
+              _this.gameT.push(new game.Fish(r.gameTrophies[i]));
             }
-          }
-          _ref1 = r.gameTrophies;
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            t = _ref1[_j];
-            _this.gameT.push(new game.Fish(t));
           }
           _this.userT.sort(function(a, b) {
             return a.name() > b.name();
