@@ -612,7 +612,7 @@ loading.view = function(ctrl) {
 };
 
 home.view = function() {
-  return [topBar('Choose a location:', game.vm.player.money()), list.view(home.vm.levels, home.vm.getItemView)];
+  return [topBar('Choose a location:', game.vm.player.money()), m('h2', ['Location', m('.right', 'High Score')]), list.view(home.vm.levels, home.vm.getItemView)];
 };
 
 game.view = function(ctrl) {
@@ -790,7 +790,7 @@ trophies.listTrophies = function() {
 };
 
 trophies.view = function() {
-  return [topBar('Trophies and records:', trophies.vm.player.money()), trophies.listTrophies.apply(trophies.vm)];
+  return [topBar('Trophies and records:', trophies.vm.player.money()), m('h2', ['Your trophy', m('.right', 'Global High Score')]), trophies.listTrophies.apply(trophies.vm)];
 };
 
 m.module(document.getElementById('nav'), nav);

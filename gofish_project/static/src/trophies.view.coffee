@@ -17,6 +17,10 @@ trophies.listTrophies = ->
 # view
 trophies.view = -> [
     topBar('Trophies and records:', trophies.vm.player.money())
+    m('h2', [
+        'Your trophy'
+        m('.right', 'Global High Score')
+    ])
     trophies.listTrophies.apply(trophies.vm)
 ]
 
