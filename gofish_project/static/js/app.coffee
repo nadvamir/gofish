@@ -655,7 +655,7 @@ shop.updateView = (u) ->
         m('div.shop-item', 'Nothing is better!')
     else if shop.vm.player.money() < u.cost()
         m('div.shop-item', [
-            'Update to '
+            'Upgrade to '
             m('span', u.name())
             ' for '
             m('strong', {title: 'Cost in coins'}, u.cost())

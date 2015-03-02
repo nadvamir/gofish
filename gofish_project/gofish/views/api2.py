@@ -170,11 +170,11 @@ def v2shop(request):
         response['cues'].append({
             'name' : cues[i]['name'],
             'cost' : cues[i]['price'],
-            'perk' : 'It tells you fish up to ' + \
+            'perk' : 'It shows fish up to ' + \
                     str(cues[i]['depth']) + \
-                    ' tiles below you with ' + \
+                    ' tiles below you with a ' + \
                     str(cues[i]['accuracy']) + \
-                    ' % chance of it being accurate'
+                    ' % accuracy'
         })
 
     return HttpResponse(json.dumps(response), content_type="application/json")
