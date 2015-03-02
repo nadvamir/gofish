@@ -375,18 +375,20 @@ gTopBar.vm = (function() {
 
 gameActions = {};
 
-gameActions.actions = m.prop([
-  {
-    action: 'left',
-    title: 'move left'
-  }, {
-    action: 'fish',
-    title: 'fish here'
-  }, {
-    action: 'right',
-    title: 'move right'
-  }
-]);
+gameActions.actions = function() {
+  return [
+    {
+      action: 'left',
+      title: game.vm.game.position() > 0 && 'move left' || ' return home'
+    }, {
+      action: 'fish',
+      title: 'fish here'
+    }, {
+      action: 'right',
+      title: 'move right'
+    }
+  ];
+};
 
 infoArea = {};
 
