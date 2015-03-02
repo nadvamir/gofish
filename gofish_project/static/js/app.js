@@ -732,7 +732,7 @@ end.view = function(c) {
 };
 
 shop.currentView = function(u) {
-  return m('div.shop-item', ['You have a ', m('span', u.name()), ': ', u.perk()]);
+  return m('div.shop-item', ['You have a ', m('span', u.name()), ': ', m.trust(u.perk())]);
 };
 
 shop.updateView = function(u) {
@@ -742,7 +742,7 @@ shop.updateView = function(u) {
     return m('div.shop-item', [
       'Upgrade to ', m('span', u.name()), ' for ', m('strong', {
         title: 'Cost in coins'
-      }, u.cost()), ': ', u.perk()
+      }, u.cost()), ': ', m.trust(u.perk())
     ]);
   } else {
     return m('div.shop-item', [
@@ -750,7 +750,7 @@ shop.updateView = function(u) {
         onclick: link(shop.vm.update.bind(u))
       }, u.name()), ' for ', m('strong', {
         title: 'Cost in coins'
-      }, u.cost()), ' coins: ', u.perk()
+      }, u.cost()), ' coins: ', m.trust(u.perk())
     ]);
   }
 };

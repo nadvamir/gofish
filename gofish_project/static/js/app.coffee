@@ -646,7 +646,7 @@ shop.currentView = (u) -> m('div.shop-item', [
     'You have a '
     m('span', u.name())
     ': '
-    u.perk()
+    m.trust u.perk()
 ])
 
 # a sub-view to display new level of update
@@ -660,7 +660,7 @@ shop.updateView = (u) ->
             ' for '
             m('strong', {title: 'Cost in coins'}, u.cost())
             ': '
-            u.perk()
+            m.trust u.perk()
         ])
     else
         m('div.shop-item', [
@@ -669,7 +669,7 @@ shop.updateView = (u) ->
             ' for '
             m('strong', {title: 'Cost in coins'}, u.cost())
             ' coins: '
-            u.perk()
+            m.trust u.perk()
         ])
 
 # view

@@ -143,10 +143,10 @@ def v2shop(request):
         response['boats'].append({
             'name' : boat['name'],
             'cost' : boat['price'],
-            'perk' : str(round(
+            'perk' : '<span>' + str(round(
                 (gamedef.MOVE_COST + boat['time']) \
                 / 1.0 / lastSpeed * 100)) + \
-                ' % faster than a ' + lastName
+                '%</span> faster than a ' + lastName
         })
         lastSpeed = gamedef.MOVE_COST + boat['time']
         lastName = boat['name']
@@ -156,7 +156,9 @@ def v2shop(request):
         response['lines'].append({
             'name' : line['name'],
             'cost' : line['price'],
-            'perk' : str(line['probability'] * 100 - 100) + ' % more fish!'
+            'perk' : '<span>' + \
+                    str(line['probability'] * 100 - 100) + \
+                    '%</span> more fish!'
         })
 
     # build cues
@@ -170,11 +172,11 @@ def v2shop(request):
         response['cues'].append({
             'name' : cues[i]['name'],
             'cost' : cues[i]['price'],
-            'perk' : 'It shows fish up to ' + \
+            'perk' : 'It shows fish up to <span>' + \
                     str(cues[i]['depth']) + \
-                    ' tiles below you with a ' + \
+                    '</span> tiles below you with a <span>' + \
                     str(cues[i]['accuracy']) + \
-                    ' % accuracy'
+                    '%</span> accuracy'
         })
 
     return HttpResponse(json.dumps(response), content_type="application/json")
