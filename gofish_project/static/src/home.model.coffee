@@ -58,14 +58,14 @@ home.vm = do ->
                 m('a[href=#]', {onclick:
                     link home.vm.chooseLevel.bind(@)}, @name())
                 ', cost '
-                m('strong', @cost())
+                m('strong', {title: 'Cost in coins'}, @cost())
             ]
         # not available to unlock
         else if @active()
             [
                 @name()
                 ', cost '
-                m('strong', @cost())
+                m('strong', {title: 'Cost in coins'}, @cost())
             ]
         # not yet playable
         else

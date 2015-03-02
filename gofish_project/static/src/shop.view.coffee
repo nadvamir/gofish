@@ -15,7 +15,7 @@ shop.updateView = (u) ->
             'Update to '
             m('span', u.name())
             ' for '
-            m('strong', u.cost())
+            m('strong', {title: 'Cost in coins'}, u.cost())
             ': '
             u.perk()
         ])
@@ -24,7 +24,7 @@ shop.updateView = (u) ->
             'Upgrade to '
             m('a[href=#]', {onclick: link shop.vm.update.bind u}, u.name())
             ' for '
-            m('strong', u.cost())
+            m('strong', {title: 'Cost in coins'}, u.cost())
             ' coins: '
             u.perk()
         ])

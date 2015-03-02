@@ -17,7 +17,7 @@ list.view = (items, view) ->
 topBar = (text, money) -> m('div.top-bar', [
     m('span.large', text)
     m('div.right.money-ind', [
-        m('span', money)
+        m('span', {title: 'Your money'}, money)
         ' coins'
     ])
 ])

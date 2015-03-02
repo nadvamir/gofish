@@ -17,7 +17,7 @@ list.view = (items, view) ->
 topBar = (text, money) -> m('div.top-bar', [
     m('span.large', text)
     m('div.right.money-ind', [
-        m('span', money)
+        m('span', {title: 'Your money'}, money)
         ' coins'
     ])
 ])
@@ -134,14 +134,14 @@ home.vm = do ->
                 m('a[href=#]', {onclick:
                     link home.vm.chooseLevel.bind(@)}, @name())
                 ', cost '
-                m('strong', @cost())
+                m('strong', {title: 'Cost in coins'}, @cost())
             ]
         # not available to unlock
         else if @active()
             [
                 @name()
                 ', cost '
-                m('strong', @cost())
+                m('strong', {title: 'Cost in coins'}, @cost())
             ]
         # not yet playable
         else
@@ -366,7 +366,7 @@ caught.vm = do ->
         ', weight '
         @weight()
         ' kg, value '
-        m('strong', @value())
+        m('strong', {title: 'Coins you\'ve earned'}, @value())
     ]
     compare: (a, b) ->
         b.value() - a.value()
@@ -658,7 +658,7 @@ shop.updateView = (u) ->
             'Update to '
             m('span', u.name())
             ' for '
-            m('strong', u.cost())
+            m('strong', {title: 'Cost in coins'}, u.cost())
             ': '
             u.perk()
         ])
@@ -667,7 +667,7 @@ shop.updateView = (u) ->
             'Upgrade to '
             m('a[href=#]', {onclick: link shop.vm.update.bind u}, u.name())
             ' for '
-            m('strong', u.cost())
+            m('strong', {title: 'Cost in coins'}, u.cost())
             ' coins: '
             u.perk()
         ])

@@ -17,7 +17,13 @@ list.view = function(items, view) {
 };
 
 topBar = function(text, money) {
-  return m('div.top-bar', [m('span.large', text), m('div.right.money-ind', [m('span', money), ' coins'])]);
+  return m('div.top-bar', [
+    m('span.large', text), m('div.right.money-ind', [
+      m('span', {
+        title: 'Your money'
+      }, money), ' coins'
+    ])
+  ]);
 };
 
 link = function(f) {
@@ -154,10 +160,16 @@ home.vm = (function() {
         return [
           m('a[href=#]', {
             onclick: link(home.vm.chooseLevel.bind(this))
-          }, this.name()), ', cost ', m('strong', this.cost())
+          }, this.name()), ', cost ', m('strong', {
+            title: 'Cost in coins'
+          }, this.cost())
         ];
       } else if (this.active()) {
-        return [this.name(), ', cost ', m('strong', this.cost())];
+        return [
+          this.name(), ', cost ', m('strong', {
+            title: 'Cost in coins'
+          }, this.cost())
+        ];
       } else {
         return this.name();
       }
@@ -394,7 +406,9 @@ caught.vm = (function() {
       return [
         m('div.fish-img', {
           "class": this.name()
-        }), m('span', this.name()), ', weight ', this.weight(), ' kg, value ', m('strong', this.value())
+        }), m('span', this.name()), ', weight ', this.weight(), ' kg, value ', m('strong', {
+          title: 'Coins you\'ve earned'
+        }, this.value())
       ];
     },
     compare: function(a, b) {
@@ -725,12 +739,18 @@ shop.updateView = function(u) {
   if (!u) {
     return m('div.shop-item', 'Nothing is better!');
   } else if (shop.vm.player.money() < u.cost()) {
-    return m('div.shop-item', ['Update to ', m('span', u.name()), ' for ', m('strong', u.cost()), ': ', u.perk()]);
+    return m('div.shop-item', [
+      'Update to ', m('span', u.name()), ' for ', m('strong', {
+        title: 'Cost in coins'
+      }, u.cost()), ': ', u.perk()
+    ]);
   } else {
     return m('div.shop-item', [
       'Upgrade to ', m('a[href=#]', {
         onclick: link(shop.vm.update.bind(u))
-      }, u.name()), ' for ', m('strong', u.cost()), ' coins: ', u.perk()
+      }, u.name()), ' for ', m('strong', {
+        title: 'Cost in coins'
+      }, u.cost()), ' coins: ', u.perk()
     ]);
   }
 };

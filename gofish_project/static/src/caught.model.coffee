@@ -12,7 +12,7 @@ caught.vm = do ->
         ', weight '
         @weight()
         ' kg, value '
-        m('strong', @value())
+        m('strong', {title: 'Coins you\'ve earned'}, @value())
     ]
     compare: (a, b) ->
         b.value() - a.value()
