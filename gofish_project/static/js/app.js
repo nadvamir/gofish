@@ -12,7 +12,7 @@ list.view = function(items, view) {
       })
     ]);
   } else {
-    return m('ul.list', 'Nothing to show yet');
+    return m('ul.list', [m('li', [m('span', 'Nothing to show yet')])]);
   }
 };
 

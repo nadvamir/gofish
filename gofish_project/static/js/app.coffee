@@ -11,7 +11,9 @@ list.view = (items, view) ->
                 m('li', {key: item.id()}, [view.apply(item)]))
         ])
     else
-        m('ul.list', 'Nothing to show yet')
+        m('ul.list', [m('li', [
+            m('span', 'Nothing to show yet')
+        ])])
 
 # gets a top bar with a message and money from a player
 topBar = (text, money) -> m('div.top-bar', [
