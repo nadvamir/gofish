@@ -182,11 +182,11 @@ div.fish-img {
     margin-right: 2px;
 }
 div.fish-img.Shoe {
-    background-image: url('/static/images/shoe.jpg');
+    background-image: url('/static/images/shoe.png');
     /*width: 26;*/
 }
 div.fish-img.Cod {
-    background-image: url('/static/images/cod.jpg');
+    background-image: url('/static/images/cod.png');
     /*width: 26;*/
 }
 div.fish-img.Bream {
