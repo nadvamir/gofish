@@ -137,12 +137,19 @@ def v2shop(request):
     })
 
     # build boats
+    lastSpeed = gamedef.MOVE_COST
+    lastName = 'Raft'
     for boat in gamedef.GAME['updates']['boats']:
         response['boats'].append({
             'name' : boat['name'],
             'cost' : boat['price'],
-            'perk' : 'It is ' + str(boat['time'] / (-5) * 16) + ' % faster than a raft!'
+            'perk' : str(round(
+                (gamedef.MOVE_COST + boat['time']) \
+                / 1.0 / lastSpeed * 100)) + \
+                ' % faster than a ' + lastName
         })
+        lastSpeed = gamedef.MOVE_COST + boat['time']
+        lastName = boat['name']
 
     # build lines
     for line in gamedef.GAME['updates']['lines']:
