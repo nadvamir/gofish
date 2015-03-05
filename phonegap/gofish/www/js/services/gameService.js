@@ -5,6 +5,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 	var game = {};
 	var currentLevel = {};
 	var results = {};
+	var caught = null;
 
 	var errorMessage = function() {
 		alert("Error getting response from server.");
@@ -111,10 +112,10 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 					else {
 		            	currentLevel.level.time = data.time;
 		            	currentLevel.cues = data.cues;
-		            	var fish = data.fishList[0];
-		            	if (fish) {
-			                currentLevel.caught.push(fish);
-			                currentLevel.money = (currentLevel.money + fish.value);
+		            	caught = data.fishList[0];
+		            	if (caught) {
+			                currentLevel.caught.push(caught);
+			                currentLevel.money = (currentLevel.money + caught.value);
 			            }
 						$rootScope.$broadcast("levelUpdated");
 					};
@@ -123,6 +124,9 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 					$rootScope.$broadcast("hideLoadingBanner");
 					return errorMessage();
 				})
+		},
+		getCaught: function() {
+			return caught;
 		},
 		endLevel: function() {
 			$rootScope.$broadcast("showLoadingBanner");
@@ -138,6 +142,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 		            	results["total"] = (data.money + data.earned);
 		            	results["caught"] = currentLevel.caught;
 		            	currentLevel = {};
+		            	caught = null;
 						$rootScope.$broadcast("levelEnded");
 					};
 				}).

@@ -6,7 +6,7 @@ goFish.directive("hud", [function(){
 		scope: {},
 		controller: function($scope, GameService) {
 
-			$scope.updateHUD = function() {
+			$scope.startupHUD = function() {
 				$scope.player = GameService.getGame().player;
 
 				var currentLevel = GameService.getCurrentLevel();
@@ -34,6 +34,8 @@ goFish.directive("hud", [function(){
 				$scope.timeSpent = 0;
 				$scope.money = 0;
 				$scope.baitVisible = false;
+				$scope.caught = null;
+				$scope.caughtMsg = "";
 			}
 
 			$scope.getTimePercentage = function() {
@@ -49,11 +51,14 @@ goFish.directive("hud", [function(){
 
 			// Listen for updates
 			$scope.$on("levelStarted", function() {
-				$scope.updateHUD();
+				$scope.startupHUD();
 			});
 
 			$scope.$on("levelUpdated", function() {
-				$scope.updateHUD();
+				$scope.startupHUD();
+				$scope.caught = GameService.getCaught();
+				console.dir($scope.caught);
+				$scope.caughtMsg = "Nothing's biting...";
 			});
 
 			$scope.$on("baitUpdated", function() {

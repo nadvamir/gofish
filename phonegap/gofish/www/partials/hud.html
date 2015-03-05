@@ -12,7 +12,14 @@
  			</div>
 		</div>
 	</span>
-
+	<div id="caughtInfo" class="centred-image">
+		<h3 ng-show="caught">
+			{{caught.weight}}kg {{caught.name}} +£{{caught.value}}
+		</h3>
+		<h3 ng-hide="caught || !caughtMsg">
+			{{caughtMsg}}
+		</h3>
+	</div>
 </div>
 
 <bait-menu class="top forward" ng-show="baitVisible" player="player"></bait-menu>

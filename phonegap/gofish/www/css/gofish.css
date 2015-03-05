@@ -21,6 +21,11 @@
 	display: inline;
 }
 
+.full {
+	height: 100%;
+	width: 100%;
+}
+
 .scrollable {
 	overflow: -moz-scrollbars-none;
 	overflow: auto;
@@ -103,6 +108,18 @@
 }
 
 /* HUD */
+
+#caughtInfo {
+	width: 80%;
+	margin-top: 30%;
+	background-color: rgba(122, 137, 234, 0.5);
+}
+
+#caughtInfo h3 {
+	text-align: center;
+	margin 0;
+	padding: 5px 0 5px 0;
+}
 
 .bait-icon {
 	width: 100%;
@@ -218,13 +235,18 @@ bait-menu {
 .level-screen {
 	height: 100%;
 	width: 100%;
+	background-size: 100% auto;
 	background-repeat: repeat;
+}
+
+#shift {
+	height: 80%;
+	width: 100%;
 }
 
 .above-water {
 	background-image: url(../img/placeholderpond.jpg);
 	background-size: 100% 100%;
-	padding-top: 45%;
 	height: 40%;
 }
 
