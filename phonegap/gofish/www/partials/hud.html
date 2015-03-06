@@ -6,11 +6,12 @@
 		<img class="bait-icon" ng-click="showBaitMenu()" src="./img/placeholderbait.jpg"></img>
 	</span>
 	<span class="left hud-left">
-		<div class="progress">
+		<div class="left progress">
 			<div class="progress-bar" role="progressbar" aria-valuenow="{{timeSpent}}" aria-valuemin="0" aria-valuemax="{{totalTime}}" ng-style="{width: (getTimePercentage() + '%')}" >
     			<span class="sr-only">{{getTimePercentage()}}% Complete</span>
  			</div>
 		</div>
+		<img id="progressIcon" class="left" src="./img/clock.png">
 	</span>
 	<div id="caughtInfo" class="centred-image">
 		<h3 ng-show="caught">

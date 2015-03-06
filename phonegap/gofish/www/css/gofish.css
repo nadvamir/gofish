@@ -170,6 +170,11 @@
 	border-radius: 0;
 }
 
+#progressIcon {
+	width: 10%;
+	margin-left: -10px;
+}
+
 /* BAIT MENU */
 
 bait-menu {
