@@ -5,7 +5,8 @@ goFish.directive("fishingSpotDepth", [function(){
 		templateUrl: "./partials/fishingSpotDepth.html",
 		scope: {
 			depth: "=",
-			level: "="
+			level: "=",
+			cues: "="
 		},
 		controller: function($scope, GameService) {
 			

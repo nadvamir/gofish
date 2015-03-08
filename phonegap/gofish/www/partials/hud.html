@@ -14,10 +14,7 @@
 		<img id="progressIcon" class="left" src="./img/clock.png">
 	</span>
 	<div id="caughtInfo" class="centred-image">
-		<h3 ng-show="caught">
-			{{caught.weight}}kg {{caught.name}} +£{{caught.value}}
-		</h3>
-		<h3 ng-hide="caught || !caughtMsg">
+		<h3 ng-show="caughtMsg">
 			{{caughtMsg}}
 		</h3>
 	</div>

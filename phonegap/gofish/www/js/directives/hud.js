@@ -57,8 +57,11 @@ goFish.directive("hud", [function(){
 			$scope.$on("levelUpdated", function() {
 				$scope.startupHUD();
 				$scope.caught = GameService.getCaught();
-				console.dir($scope.caught);
-				$scope.caughtMsg = "Nothing's biting...";
+				if ($scope.caught == null) {
+					$scope.caughtMsg = "Nothing's biting...";
+				} else {
+					$scope.caughtMsg = $scope.caught.weight+"kg "+$scope.caught.name+" +£"+$scope.caught.value;
+				}
 			});
 
 			$scope.$on("baitUpdated", function() {

@@ -19,6 +19,10 @@ goFish.directive("level", [function(){
 					GameService.updateGame();
 				}
 			};
+
+
+			// Remove spaces for css image selection
+			$scope.levelNoSpace = ($scope.levelData.name).replace(/\s/g, '');
 		},
 		controllerAs: "levelCtrl"
 	};

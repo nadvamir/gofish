@@ -6,6 +6,6 @@
 		<p ng-hide="next">We don't stock anything finer than what you have.</p>
 	</div>
 	<div class="right right-25">
-		<img class="right shop-item-icon" src="./img/placeholderbait.jpg"></img>
+		<img ng-if="nextNoSpace" class="right shop-item-icon" ng-src="./img/upgrades/{{nextNoSpace}}.png"></img>
 	</div>
 </div>

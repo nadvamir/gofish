@@ -38,7 +38,7 @@ goFish.directive("shopUpgrade", [function(){
 							}
 							// Else set next to appropriate upgrade
 							else {
-								$scope.next = $scope.all[i+1];
+								$scope.next = $scope.all[i+1];		
 							}
 						}
 					}
@@ -54,6 +54,9 @@ goFish.directive("shopUpgrade", [function(){
 				}
 				getCurrentUpgrade();
 				getNextUpgrade();
+				
+				// Remove spaces for css image selection
+				$scope.nextNoSpace = ($scope.next.name).replace(/\s/g, '');
 			}
 
 			$scope.buy = function() {
