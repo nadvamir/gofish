@@ -16,16 +16,9 @@ goFish.directive("fishingSpot", [function(){
 					// Remove spaces for css image selection
 					$scope.level = (currentLevel.level.name).replace(/\s/g, '');
 
-					// Generate an array to traverse with ng-repeat to draw depth levels
-					var depth = $scope.map[$scope.position];
-					$scope.currentDepth = [];
-					for (var i = 1; i <= depth; i++) {
-						$scope.currentDepth.push(i);
-					};
-
-					// Check left and right depths to draw some depth cues for left and right
 					// Draw depth cues one depth lower than can fish
-					$scope.cueDepth = (depth + 1);
+					$scope.cueDepth = ($scope.cues.length + 1);
+					// Check left and right depths to draw some depth cues for left and right
 					// Left
 					if ($scope.position == 0 || $scope.map[$scope.position - 1] < depth) {
 						$scope.leftDepthCue = "up";
@@ -80,7 +73,6 @@ goFish.directive("fishingSpot", [function(){
 			$scope.map = null;
 			$scope.position = 0;
 			$scope.cues = null;
-			$scope.currentDepth = [];
 			$scope.leftDepthCue = null;
 			$scope.rightDepthCue = null;
 			$scope.showHint = true;

@@ -1,11 +1,11 @@
 <div class="shop-item" ng-click="buy()">
 	<div class="left scrollable left-75">
-		<h3 ng-show="next"><a href ng-click="buy()">{{next.name}} (£{{next.price}})</a></h3>
-		<h3 ng-hide="next">SOLD OUT</h3>
+		<h3 ng-show="next">{{next.name}} (£{{next.price}})</h3>
+		<h3 ng-hide="next" class="centred-text">SOLD OUT</h3>
 		<p ng-show="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 		<p ng-hide="next">We don't stock anything finer than what you have.</p>
 	</div>
 	<div class="right right-25">
-		<img ng-if="nextNoSpace" class="right shop-item-icon" ng-src="./img/upgrades/{{nextNoSpace}}.png"></img>
+		<img ng-if="next && nextNoSpace" class="right shop-item-icon" ng-src="./img/upgrades/{{nextNoSpace}}.png"></img>
 	</div>
 </div>
