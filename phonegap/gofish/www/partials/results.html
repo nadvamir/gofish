@@ -1,10 +1,12 @@
-<h1>Results</h1>
-<h2>Money earned this trip: {{results.earned}}</h2>
-<h2>Total Money: {{results.total}}</h2>
-<h2>Fish Caught:</h2>
-<ul>
-	<li ng-repeat="fish in results.caught | orderBy:'-value'">
-		<p>{{fish.weight}}kg {{fish.name}} measuring {{fish.length}}cm [+{{fish.value}}]</p>
-	</li>
-</ul>
-<a href ng-click="exit()">Return</a>
+<div id="resultsScreen" class="full">
+	<h2 class="centred-text">Results</h2>
+	<h3>Money earned this trip: £{{results.earned}}</h3>
+	<h3>Total Money: £{{results.total}}</h3>
+	<h3>Fish Caught:</h3>
+	<div id="caughtList" class="centred-image scrollable">
+		<div class="caughtItem" ng-repeat="fish in results.caught | orderBy:'-value'">
+			<p>{{fish.weight}}kg {{fish.name}} measuring {{fish.length}}cm [+{{fish.value}}]</p>
+		</div>
+	</div>
+	<h3 class="centred-text"><a href ng-click="exit()">Return</a></h3>
+</div>

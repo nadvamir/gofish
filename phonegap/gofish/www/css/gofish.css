@@ -65,6 +65,10 @@
   	transform: translateY(-50%);
 }
 
+.centred-text {
+	text-align: center;
+}
+
 #loadingBanner {
 	width: 100%;
 	text-align: center;
@@ -295,7 +299,23 @@ bait-menu {
 	width: 25%;
 }
 
-/* ANIMATION */
+/* RESULTS */
+
+#resultsScreen {
+	background-image: url(../img/misc/background.png);
+	background-size: cover;
+	background-attachment: fixed;
+}
+
+#resultsScreen h2 {
+	margin-top: 0;
+	padding-top: 10%;
+}
+
+#caughtList {
+	height: 50%;
+	width: 80%;
+}
 
 /* MENUS */
 
