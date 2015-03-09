@@ -8,6 +8,7 @@ goFish.directive("hud", [function(){
 
 			$scope.startupHUD = function() {
 				$scope.player = GameService.getGame().player;
+				$scope.level = GameService.getCurrentLevel();
 
 				var currentLevel = GameService.getCurrentLevel();
 				if (currentLevel.level) {
@@ -45,6 +46,14 @@ goFish.directive("hud", [function(){
 			$scope.showBaitMenu = function() {
 				$scope.baitVisible = true;
 			}
+
+			$scope.moveLeft = function() {
+				GameService.move("left");
+			};
+
+			$scope.moveRight = function() {
+				GameService.move("right");
+			};
 
 			// Initialisation
 			$scope.reset();

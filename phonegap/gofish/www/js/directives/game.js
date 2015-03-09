@@ -8,17 +8,15 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 			// Functions
 			$scope.updateLevel = function() {
 				$scope.level = GameService.getCurrentLevel();
+				$scope.player = GameService.getGame().player;
+				if ($scope.player && $scope.player.updates && $scope.player.updates.boats) {
+					$scope.boat = (scope.player.updates.boats).replace(/\s/g, '');
+				} else {
+					$scope.boat = "DefaultBoat"
+				}
 				if ($scope.level && $scope.level.level) {
 					$scope.levelName = ($scope.level.level.name).replace(/\s/g, '');
 				}
-			};
-
-			$scope.moveLeft = function() {
-				GameService.move("left");
-			};
-
-			$scope.moveRight = function() {
-				GameService.move("right");
 			};
 
 			$scope.fish = function() {

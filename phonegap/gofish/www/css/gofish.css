@@ -151,16 +151,30 @@
 	width: 100%;
 }
 
+
+#arrowContainer {
+	position: fixed;
+	top: 30%;
+	height: 15%;
+	width: 100%;
+}
+
 .arrow {
-	width: 30%;
-	padding-left: 8%;
-	padding-right: 8%;
+	width: 20%;
 	opacity: 0.5;
 	filter: alpha(opacity=40);
 }
 
+.arrow.left {
+	padding-left: 8%;
+}
+
+.arrow.right {
+	padding-right: 8%;
+}
+
 .boat {
-	width: 40%;
+	height: 35%;
 }
 
 .hud {
@@ -270,8 +284,8 @@ bait-menu {
 	background-repeat: repeat;
 }
 
-#shift {
-	height: 80%;
+.shift {
+	height: 75%;
 	width: 100%;
 }
 

@@ -1,20 +1,18 @@
 <div class="level-screen">
-	<hud></hud>
 
 	<div class="above-water">
 
-		<div id="shift"> 
+		<div class="shift"> 
 		</div>
 
-		<img ng-hide="level.level.position === 0" ng-click="moveLeft()" class="left arrow" src="./img/icons/leftarrow.png">
-		<div ng-show="level.level.position === 0" style="height: 10%" class="left arrow"></div>
-		<img ng-hide="level.level.position === 19" ng-click="moveRight()" class="right arrow" src="./img/icons/rightarrow.png">
-		<div ng-show="level.level.position === 19" style="height: 10%" class="right arrow"></div>
-		<img class="centred-image boat" ng-click="fish()" src="./img/boat.png">
+		<img class="centred-image boat" ng-click="fish()" ng-src="./img/upgrades/{{boat}}.png">
 	</div>
 
 	<div class="water">
 		<fishing-spot></fishing-spot>
 	</div>
+
+	<!-- draw last so it is guaranteed to be on top of everything -->
+	<hud></hud>
 	
 </div>
