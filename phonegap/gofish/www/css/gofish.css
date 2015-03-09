@@ -69,12 +69,6 @@
 	text-align: center;
 }
 
-#loadingBanner {
-	width: 100%;
-	text-align: center;
-	background-color: rgba(122, 137, 234, 0.5);
-}
-
 /* Animation */
 
 @-webkit-keyframes pulse_animation {
@@ -98,6 +92,24 @@
 
 .anim-fade.ng-hide {
   opacity:0;
+}
+
+/* Loading */
+
+#loadingBanner {
+	width: 100%;
+	text-align: center;
+	background-color: rgba(122, 137, 234, 0.5);
+}
+
+#loadingScreen {
+	background-image: url(../img/misc/loadingbackground.png);
+	background-size: 100% 100%;
+}
+
+#loadingScreen h2{
+	margin: 0;
+	color: #82AD2C;
 }
 
 /* Splash Screen */

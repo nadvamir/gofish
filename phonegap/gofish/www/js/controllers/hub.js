@@ -22,6 +22,10 @@ goFish.controller("hubController", ["$scope", "$timeout", "GameService", functio
 		$scope.play();
 	});
 
+	$scope.$on("gameUpdated", function() {
+		$scope.initialLoading = false;
+	});
+
 	$scope.$on("levelStarted", function() {
 		$scope.playing = true;
 		$scope.menus = false;
@@ -49,11 +53,12 @@ goFish.controller("hubController", ["$scope", "$timeout", "GameService", functio
 	});
 
 	// Initialisation
-	$scope.splash = false;
+	$scope.splash = true;
 	$scope.menus = false;
 	$scope.playing = false;
 	$scope.showResults = false;
 	$scope.showLoading = false;
+	$scope.initialLoading = true;
 	// Use timeout as occasionally $scope.$on in certain directives wouldn't be given enough time to setup
 	$timeout(function() {$scope.updateState();}, 100);
 	

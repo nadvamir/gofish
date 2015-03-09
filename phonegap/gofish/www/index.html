@@ -36,6 +36,7 @@
         <script type="text/javascript" src="js/directives/level.js"></script>
         <script type="text/javascript" src="js/directives/levelSelect.js"></script>
         <script type="text/javascript" src="js/directives/loadingBanner.js"></script>
+        <script type="text/javascript" src="js/directives/loadingScreen.js"></script>
         <script type="text/javascript" src="js/directives/menus.js"></script>
         <script type="text/javascript" src="js/directives/results.js"></script>
         <script type="text/javascript" src="js/directives/shop.js"></script>
@@ -46,13 +47,15 @@
 
         <splash ng-show="splash"></splash>
 
-        <menus ng-show="menus"></menus>
+        <menus ng-show="menus && !initialLoading"></menus>
 
-        <game ng-show="playing"></game>
+        <game ng-show="playing && !initialLoading"></game>
 
         <results ng-show="showResults"></results>
 
         <loading-banner ng-show="showLoading" message="'loading...'"></loading-banner>
+
+        <loading-screen ng-show="!splash && initialLoading">
 
     </body>
 </html>
