@@ -19,11 +19,8 @@
 		</h3>
 	</div>
 </div>
-	<div id="arrowContainer" class="forward">
-		<img ng-hide="level.level.position === 0" ng-click="moveLeft()" class="left arrow centred-v" src="./img/icons/leftarrow.png">
-		<div ng-show="level.level.position === 0" style="height: 10%" class="left arrow"></div>
-		<img ng-hide="level.level.position === 19" ng-click="moveRight()" class="right arrow centred-v" src="./img/icons/rightarrow.png">
-		<div ng-show="level.level.position === 19" style="height: 10%" class="right arrow"></div>
-	</div>
+
+	<img ng-hide="level.level.position === 0" ng-click="moveLeft()" class="left arrow forward" src="./img/icons/leftarrow.png">
+	<img ng-hide="level.level.position === 19" ng-click="moveRight()" class="right arrow forward" src="./img/icons/rightarrow.png">
 
 <bait-menu class="top forward" ng-show="baitVisible" player="player"></bait-menu>
