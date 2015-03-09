@@ -20,17 +20,17 @@ goFish.directive("fishingSpot", [function(){
 					$scope.cueDepth = ($scope.cues.length + 1);
 					// Check left and right depths to draw some depth cues for left and right
 					// Left
-					if ($scope.position == 0 || $scope.map[$scope.position - 1] < depth) {
+					if ($scope.position == 0 || $scope.map[$scope.position - 1] < $scope.cues.length) {
 						$scope.leftDepthCue = "up";
-					} else if ($scope.map[$scope.position - 1] > depth) {
+					} else if ($scope.map[$scope.position - 1] > $scope.cues.length) {
 						$scope.leftDepthCue = "down";
 					} else {
 						$scope.leftDepthCue = "level";
 					}
 					// Right
-					if ($scope.position == 19 || $scope.map[$scope.position + 1] < depth) {
+					if ($scope.position == 19 || $scope.map[$scope.position + 1] < $scope.cues.length) {
 						$scope.rightDepthCue = "up";
-					} else if ($scope.map[$scope.position + 1] > depth) {
+					} else if ($scope.map[$scope.position + 1] > $scope.cues.length) {
 						$scope.rightDepthCue = "down";
 					} else {
 						$scope.rightDepthCue = "level";
