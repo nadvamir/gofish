@@ -102,7 +102,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 		            	currentLevel.level.position = data.position;
 		            	currentLevel.level.time = data.time;
 		            	currentLevel.cues = data.cues;
-						$rootScope.$broadcast("levelUpdated");
+						$rootScope.$broadcast("moved");
 					};
 				}).
 				error(function() {

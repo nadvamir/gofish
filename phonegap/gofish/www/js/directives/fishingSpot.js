@@ -48,8 +48,10 @@ goFish.directive("fishingSpot", [function(){
 			}
 
 			$scope.fish = function() {
-				GameService.fish();
-				$scope.showHint = false;
+				if (!$scope.fishing) {
+					GameService.fish();
+					$scope.showHint = false;
+				}
 			};
 
 			// Listen for level updates
@@ -61,6 +63,12 @@ goFish.directive("fishingSpot", [function(){
 			});
 			$scope.$on("moved", function() {
 				$scope.redrawCueDepth();
+			});
+			$scope.$on("fishing", function() {
+				$scope.fishing = true;
+			});
+			$scope.$on("fishingEnded", function() {
+				$scope.fishing = false;
 			});
 			$scope.$on("levelEnded", function() {
 				// On starting next level, initial cueDepth must be calculated

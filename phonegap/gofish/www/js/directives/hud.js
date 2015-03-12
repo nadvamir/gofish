@@ -4,7 +4,7 @@ goFish.directive("hud", [function(){
 		restrict: "E",
 		templateUrl: "./partials/hud.html",
 		scope: {},
-		controller: function($scope, GameService) {
+		controller: function($rootScope, $scope, $timeout, GameService) {
 
 			$scope.startupHUD = function() {
 				$scope.player = GameService.getGame().player;
@@ -37,6 +37,7 @@ goFish.directive("hud", [function(){
 				$scope.baitVisible = false;
 				$scope.caught = null;
 				$scope.caughtMsg = "";
+				$scope.waitCount = 0;
 				$scope.moveSuccess = true;
 			}
 
@@ -45,15 +46,15 @@ goFish.directive("hud", [function(){
 			}
 
 			$scope.showBaitMenu = function() {
-				$scope.baitVisible = true;
+				if (!$scope.fishing) $scope.baitVisible = true;
 			}
 
 			$scope.moveLeft = function() {
-				GameService.move("left");
+				if (!$scope.fishing) GameService.move("left");
 			};
 
 			$scope.moveRight = function() {
-				GameService.move("right");
+				if (!$scope.fishing) GameService.move("right");
 			};
 
 			// Initialisation
@@ -66,12 +67,33 @@ goFish.directive("hud", [function(){
 
 			$scope.$on("levelUpdated", function() {
 				$scope.startupHUD();
+				$rootScope.$broadcast("fishing");
+				$scope.fishing = true;
 				$scope.caught = GameService.getCaught();
-				if ($scope.caught == null) {
-					$scope.caughtMsg = "Nothing's biting...";
+				$scope.caughtMsg = ".";
+				$timeout(handleCaughtMsg, 500);
+			});
+
+			var handleCaughtMsg = function () {
+				if ($scope.waitCount >= 2) {
+					if ($scope.caught == null) {
+						$scope.caughtMsg = "Nothing's biting...";
+					} else {
+						$scope.caughtMsg = $scope.caught.weight+"kg "+$scope.caught.name+" +£"+$scope.caught.value;
+					}
+					$scope.waitCount = 0;
+					$scope.fishing = false;
+					$rootScope.$broadcast("fishingEnded");
 				} else {
-					$scope.caughtMsg = $scope.caught.weight+"kg "+$scope.caught.name+" +£"+$scope.caught.value;
+					$scope.caughtMsg += " .";
+					$scope.waitCount += 1;
+					$timeout(handleCaughtMsg, 750);
 				}
+			}
+
+			$scope.$on("moved", function() {
+				$scope.startupHUD();
+				$scope.caughtMsg = "";
 			});
 
 			$scope.$on("moveFail", function() {
