@@ -37,6 +37,7 @@ goFish.directive("hud", [function(){
 				$scope.baitVisible = false;
 				$scope.caught = null;
 				$scope.caughtMsg = "";
+				$scope.moveSuccess = true;
 			}
 
 			$scope.getTimePercentage = function() {
@@ -71,6 +72,10 @@ goFish.directive("hud", [function(){
 				} else {
 					$scope.caughtMsg = $scope.caught.weight+"kg "+$scope.caught.name+" +£"+$scope.caught.value;
 				}
+			});
+
+			$scope.$on("moveFail", function() {
+				GameService.endLevel();
 			});
 
 			$scope.$on("baitUpdated", function() {

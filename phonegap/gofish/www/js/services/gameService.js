@@ -84,15 +84,13 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
 					if(data.error) {
-						alert(data.error);
-						return {};
+						$rootScope.$broadcast("moveFail");
 					}
 					else {
 		            	currentLevel.level.position = data.position;
 		            	currentLevel.level.time = data.time;
 		            	currentLevel.cues = data.cues;
 						$rootScope.$broadcast("levelUpdated");
-						$rootScope.$broadcast("moved");
 					};
 				}).
 				error(function() {
