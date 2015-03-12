@@ -29,6 +29,7 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 
 			// Initialisation
 			$scope.updateLevel();
+			$scope.showResults = false;
 
 			// Watch for level updates
 			$scope.$on("levelStarted", function() {
@@ -39,6 +40,9 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 			});
 			$scope.$on("levelUpdated", function() {
 				$scope.updateLevel();
+			});
+			$scope.$on("levelEnded", function() {
+				$scope.showResults = true;
 			});
 		},
 		controllerAs: "gameCtrl"
