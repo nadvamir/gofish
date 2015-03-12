@@ -6,6 +6,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 	var currentLevel = {};
 	var results = {};
 	var caught = null;
+	var loading = false;
 
 	var errorMessage = function() {
 		alert("Error getting response from server.");
@@ -57,10 +58,15 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 			return game;
 		},
 		startLevel: function(levelIndex) {
+			if (loading) {
+				return {};
+			}
+			loading = true;
 			$rootScope.$broadcast("showLoadingBanner");
 			$http.get(API_URL+"start/"+levelIndex+"/").
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					if(data.error) {
 						alert(data.error);
 						return {};
@@ -72,6 +78,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				}).
 				error(function() {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					return errorMessage();
 				})
 		},
@@ -79,10 +86,15 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 			return currentLevel;
 		},
 		move: function(direction) {
+			if (loading) {
+				return {};
+			}
+			loading = true;
 			$rootScope.$broadcast("showLoadingBanner");
 			$http.get(API_URL+"action/move/"+direction+"/").
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					if(data.error) {
 						$rootScope.$broadcast("moveFail");
 					}
@@ -95,14 +107,20 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				}).
 				error(function() {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					return errorMessage();
 				})
 		},
 		fish: function() {
+			if (loading) {
+				return {};
+			}
+			loading = true;
 			$rootScope.$broadcast("showLoadingBanner");
 			$http.get(API_URL+"action/catchall/1/").
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					if(data.error) {
 						alert(data.error);
 						return {};
@@ -120,6 +138,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				}).
 				error(function() {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					return errorMessage();
 				})
 		},
@@ -127,10 +146,15 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 			return caught;
 		},
 		endLevel: function() {
+			if (loading) {
+				return {};
+			}
+			loading = true;
 			$rootScope.$broadcast("showLoadingBanner");
 			$http.get(API_URL+"end/").
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					if(data.error) {
 						alert(data.error);
 						return {};
@@ -146,6 +170,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				}).
 				error(function() {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					return errorMessage();
 				})
 		},
@@ -153,10 +178,15 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 			return results;
 		},
 		buyUpgrade: function(category) {
+			if (loading) {
+				return {};
+			}
+			loading = true;
 			$rootScope.$broadcast("showLoadingBanner");
 			$http.get(API_URL+"update/"+category+"/").
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					if(data.error) {
 						alert(data.error);
 						return {};
@@ -167,14 +197,20 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				}).
 				error(function() {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					return errorMessage();
 				})
 		},
 		buyBait: function(name) {
+			if (loading) {
+				return {};
+			}
+			loading = true;
 			$rootScope.$broadcast("showLoadingBanner");
 			$http.get(API_URL+"buy/"+name+"/").
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					if(data.error) {
 						alert(data.error);
 						return {};
@@ -185,14 +221,20 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				}).
 				error(function() {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					return errorMessage();
 				})
 		},
 		changeBait: function(name) {
+			if (loading) {
+				return {};
+			}
+			loading = true;
 			$rootScope.$broadcast("showLoadingBanner");
 			$http.get(API_URL+"choose/"+name+"/").
 				success(function(data) {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					if(data.error) {
 						alert(data.error);
 						return {};
@@ -207,6 +249,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 				}).
 				error(function() {
 					$rootScope.$broadcast("hideLoadingBanner");
+					loading = false;
 					return errorMessage();
 				})
 		}
