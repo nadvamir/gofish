@@ -10,7 +10,7 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 				$scope.level = GameService.getCurrentLevel();
 				$scope.player = GameService.getGame().player;
 				if ($scope.player && $scope.player.updates && $scope.player.updates.boats) {
-					$scope.boat = (scope.player.updates.boats).replace(/\s/g, '');
+					$scope.boat = ($scope.player.updates.boats).replace(/\s/g, '');
 				} else {
 					$scope.boat = "DefaultBoat"
 				}

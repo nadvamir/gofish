@@ -46,44 +46,54 @@ GAME = {
             'name': 'Strong Line',
             'probability': 1.1,
             'price': 500,
+            'description': 'Tired of seaweed breaking your line? Thought so.',
         }, {
             'name': 'Braided Line',
             'probability': 1.2,
             'price': 1000,
+            'description': 'One line to catch them all.',
         }],
         'boats': [{
             'name': 'Row Boat',
             'time': -5,
             'price': 1000,
+            'description': 'Better than that dinghy you\'ve been using.',
         }, {
             'name': 'Motor Boat',
             'time': -10,
             'price': 3000,
+            'description': 'For the enthusiast fisher, get around even quicker.',
         }, {
             'name': 'Speed Boat',
             'time': -15,
             'price': 7000,
+            'description': 'Catch fish fast, and maybe even a future mate.',
         }],
         'cues': [{
             'name': 'A Map',
             'cueDetail': 1,
             'price': 50,
+            'description': 'Everywhere look the same? This\'ll help.',
         }, {
             'name': 'Underwater Camera',
             'cueDetail': 2,
             'price': 200,
+            'description': 'It\'s easier to catch fish when you can see \'em.',
         }, {
             'name': 'Old Sonar',
             'cueDetail': 3,
             'price': 4000,
+            'description': 'See fish further than any camera.',
         }, {
             'name': 'Modern Sonar',
             'cueDetail': 4,
             'price': 10000,
+            'description': 'Your sonar is so last week.',
         }, {
             'name': 'A Mermaid',
             'cueDetail': 5,
             'price': 30000,
+            'description': 'Legally, you\'re hiring her, not buying. Got that?',
         }],
     },
 
@@ -92,17 +102,20 @@ GAME = {
             'bass': 1.2,
             'brime': 1.5,
             'price': 200,
+            'description': 'Original and best. Fish love that face.',
         },
         'spinner': {
             'pike': 1.3,
             'brime': 0.8,
             'price': 200,
+            'description': 'Some fish prefer this guy\'s movement.',
         },
         'vobbler': {
             'brime': 0.5,
             'pike': 1.4,
             'catfish': 1.2,
             'price': 2000,
+            'description': 'It looks like a little fish!',
         }
     },
 
@@ -129,6 +142,7 @@ GAME = {
             },
         },
         'cost': 10,
+        'description': 'At least it\'s close by. Apparently there are bass too.',
       }, {
         'name': 'Lake',
         'fish': {
@@ -162,6 +176,7 @@ GAME = {
             },
         },
         'cost': 100,
+        'description': 'Cleaner waters mean more fish.',
       }, {
         'name': 'River',
         'fish': {
@@ -196,6 +211,7 @@ GAME = {
             },
         },
         'cost': 1000,
+        'description': 'There are tales of big catches in this here lake...',
     }],
 }
 
