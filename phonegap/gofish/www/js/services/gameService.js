@@ -236,21 +236,25 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 					$rootScope.$broadcast("hideLoadingBanner");
 					loading = false;
 					if(data.error) {
+						console.log("???");
 						alert(data.error);
 						return {};
 					}
 					else {
-						console.log("BAIT CHANGED");
 						console.dir(data);
 						updateGame();
 						// game.player = data ???
-						// $rootScope.broadcast("baitChanged");
+						$rootScope.broadcast("baitChanged");
 					};
 				}).
 				error(function() {
+					// Known server error
+					// Calling this function WILL cause an error but will also change the bait
 					$rootScope.$broadcast("hideLoadingBanner");
 					loading = false;
-					return errorMessage();
+					updateGame();
+					// Ignore error message in this case
+					// return errorMessage();
 				})
 		}
 	}

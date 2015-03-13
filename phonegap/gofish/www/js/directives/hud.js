@@ -100,7 +100,7 @@ goFish.directive("hud", [function(){
 				GameService.endLevel();
 			});
 
-			$scope.$on("baitUpdated", function() {
+			$scope.$on("gameUpdated", function() {
 				$scope.player = GameService.getGame().player;
 			});
 

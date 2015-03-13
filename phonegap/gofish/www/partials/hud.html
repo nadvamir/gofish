@@ -20,7 +20,7 @@
 	</div>
 </div>
 
-	<img ng-hide="level.level.position === 0" ng-click="moveLeft()" class="left arrow forward" src="./img/icons/leftarrow.png">
-	<img ng-hide="level.level.position === 19" ng-click="moveRight()" class="right arrow forward" src="./img/icons/rightarrow.png">
+<img ng-hide="level.level.position === 0" ng-click="moveLeft()" class="left arrow forward" src="./img/icons/leftarrow.png">
+<img ng-hide="level.level.position === 19" ng-click="moveRight()" class="right arrow forward" src="./img/icons/rightarrow.png">
 
-<bait-menu class="top forward" ng-show="baitVisible" player="player"></bait-menu>
+<bait-menu ng-if="player" ng-show="baitVisible" class="top forward"></bait-menu>

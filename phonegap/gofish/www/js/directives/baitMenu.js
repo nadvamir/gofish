@@ -3,29 +3,28 @@ goFish.directive("baitMenu", [function(){
 	return {
 		restrict: "E",
 		templateUrl: "./partials/baitMenu.html",
-		scope: {
-			player: "="
-		},
+		scope: {},
 		controller: function($rootScope, $scope, GameService) {
 
-			$scope.confirm = function() {
-				GameService.changeBait($scope.selected);
+			$scope.exit = function() {
 				$rootScope.$broadcast("hideBaitMenu");
-				$(".list-item").removeClass("selected");
-				$scope.selected = "";
-			}
-
-			$scope.cancel = function() {
-				$rootScope.$broadcast("hideBaitMenu");
-				$(".list-item").removeClass("selected");
-				$scope.selected = "";
 			}
 
 			$scope.select = function(bait) {
-				console.log("selected");
-				$(".list-item").removeClass("selected");
-				$("#listItem-"+bait).addClass("selected");
-				$scope.selected = bait;
+				if (bait != $scope.equippedBait) {
+					GameService.changeBait(bait);
+				}
+				console.dir($scope.player);
+			}
+
+			$scope.getEquipped = function() {
+				for (var bait in $scope.player.modifiers) {
+					if ($scope.player.modifiers[bait] == true) {
+						console.log("FOUND EQUIPPED: "+bait);
+						return bait;
+					}
+				}
+				return null;
 			}
 
 			$scope.ownsBait = function() {
@@ -37,7 +36,28 @@ goFish.directive("baitMenu", [function(){
 			    return false;
 			}
 
-			$scope.selected = "";
+			var update = function() {
+				$scope.player = GameService.getGame().player;
+				$scope.selected = "";
+				if ($scope.player) {
+					$scope.equippedBait = $scope.getEquipped();
+				} else {
+					console.log("PLAYER DOESN'T EXIST");
+					$scope.equippedBait = null;
+				}
+				console.log("EQUIPPED: "+$scope.equippedBait);
+
+			};
+
+			// Initialisation
+
+			update();
+
+			// Watch for events
+
+			$scope.$on("gameUpdated", function() {
+				update();
+			});
 
 		},
 		controllerAs: "baitMenuCtrl"

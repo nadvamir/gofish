@@ -44,6 +44,9 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 			$scope.$on("levelEnded", function() {
 				$scope.showResults = true;
 			});
+			$scope.$on("exitResults", function() {
+				$scope.showResults = false;
+			});
 		},
 		controllerAs: "gameCtrl"
 	};
