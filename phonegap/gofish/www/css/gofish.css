@@ -211,6 +211,21 @@
 	margin-left: -10px;
 }
 
+#fishHint {
+	position: fixed;
+	top: 40%;
+	left: 25%;
+	width: 50%;
+}
+
+#fishHint h3 {
+	height: 24px;
+}
+
+#fishHint img {
+	width: 25%;
+}
+
 /* BAIT MENU */
 
 #baitMenuBG {
@@ -299,21 +314,6 @@
 .depth-cue {
 	width: 100%;
 	height: 100%;
-}
-
-#fishHint {
-	position: fixed;
-	top: 40%;
-	left: 25%;
-	width: 50%;
-}
-
-#fishHint h3 {
-	text-align: center;
-}
-
-#fishHint img {
-	width: 25%;
 }
 
 /* RESULTS */

@@ -20,7 +20,6 @@ goFish.directive("baitMenu", [function(){
 			$scope.getEquipped = function() {
 				for (var bait in $scope.player.modifiers) {
 					if ($scope.player.modifiers[bait] == true) {
-						console.log("FOUND EQUIPPED: "+bait);
 						return bait;
 					}
 				}
@@ -42,7 +41,6 @@ goFish.directive("baitMenu", [function(){
 				if ($scope.player) {
 					$scope.equippedBait = $scope.getEquipped();
 				} else {
-					console.log("PLAYER DOESN'T EXIST");
 					$scope.equippedBait = null;
 				}
 				console.log("EQUIPPED: "+$scope.equippedBait);

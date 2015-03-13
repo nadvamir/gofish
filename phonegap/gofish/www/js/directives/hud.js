@@ -8,6 +8,7 @@ goFish.directive("hud", [function(){
 
 			$scope.startupHUD = function() {
 				$scope.player = GameService.getGame().player;
+				$scope.equippedBait = $scope.getEquipped();
 				$scope.level = GameService.getCurrentLevel();
 
 				var currentLevel = GameService.getCurrentLevel();
@@ -39,6 +40,7 @@ goFish.directive("hud", [function(){
 				$scope.caughtMsg = "";
 				$scope.waitCount = 0;
 				$scope.moveSuccess = true;
+				$scope.showHint = true;
 			}
 
 			$scope.getTimePercentage = function() {
@@ -57,6 +59,19 @@ goFish.directive("hud", [function(){
 				if (!$scope.fishing) GameService.move("right");
 			};
 
+			$scope.fish = function() {
+				GameService.fish();
+			};
+
+			$scope.getEquipped = function() {
+				for (var bait in $scope.player.modifiers) {
+					if ($scope.player.modifiers[bait] == true) {
+						return bait;
+					}
+				}
+				return "default";
+			}
+
 			// Initialisation
 			$scope.reset();
 
@@ -66,6 +81,7 @@ goFish.directive("hud", [function(){
 			});
 
 			$scope.$on("levelUpdated", function() {
+				$scope.showHint = false;
 				$scope.startupHUD();
 				$rootScope.$broadcast("fishing");
 				$scope.fishing = true;
@@ -102,6 +118,7 @@ goFish.directive("hud", [function(){
 
 			$scope.$on("gameUpdated", function() {
 				$scope.player = GameService.getGame().player;
+				$scope.equippedBait = $scope.getEquipped();
 			});
 
 			$scope.$on("hideBaitMenu", function() {

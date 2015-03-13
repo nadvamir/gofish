@@ -62,6 +62,7 @@ goFish.directive("fishingSpot", [function(){
 				$scope.updateFishingSpot();
 			});
 			$scope.$on("moved", function() {
+				$scope.updateFishingSpot();
 				$scope.redrawCueDepth();
 			});
 			$scope.$on("fishing", function() {

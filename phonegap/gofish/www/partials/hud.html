@@ -3,7 +3,7 @@
 		<div class="hud-money">
 			£{{money}}
 		</div>
-		<img class="bait-icon" ng-click="showBaitMenu()" src="./img/placeholderbait.jpg"></img>
+		<img class="bait-icon" ng-click="showBaitMenu()" ng-src="./img/bait/{{equippedBait}}.png"></img>
 	</span>
 	<span class="left hud-left">
 		<div class="left progress">
@@ -19,6 +19,11 @@
 		</h3>
 	</div>
 </div>
+
+	<div id="fishHint" class="forward" ng-click="fish()">
+		<h3 class="centred-text"><p ng-show="showHint" class="anim-fade">Tap the water to fish</p></h3>
+		<img class="bait-icon centred-image pulse" ng-src="./img/bait/{{equippedBait}}_icon.png">
+	</div>
 
 <img ng-hide="level.level.position === 0" ng-click="moveLeft()" class="left arrow forward" src="./img/icons/leftarrow.png">
 <img ng-hide="level.level.position === 19" ng-click="moveRight()" class="right arrow forward" src="./img/icons/rightarrow.png">
