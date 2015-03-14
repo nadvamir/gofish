@@ -2,15 +2,19 @@
 
 	<div id="baitMenuFG" class="centred-image centred-v">
 
-		<div id="baitList" class="scrollable">
-			<h3 ng-hide="ownsBait()" class="centred-v centred-text">
-				You don't own any bait.
-				<br/>
-				<br/>
-				Head to the shop after fishing to stock up.
-			</h3>
+		<div id="baitList">
+			<div ng-hide="ownsBait()" class="large-sign centred-image">
+				<h3 class="centred-text centred-v">
+					You don't own any bait.
+					<br/>
+					<br/>
+					Head to the shop after fishing to stock up.
+				</h3>
+			</div>
 
-			<h3 ng-show="ownsBait()" class="centred-text">Choose your bait:</h3>
+			<div ng-show="ownsBait()" class="small-sign centred-image">
+				<h3 class="centred-text centred-v">Choose your bait:</h3>
+			</div>
 
 			<div ng-show="ownsBait()" class="centred-image bait-menu-item" ng-repeat="(bait, equipped) in player.modifiers" ng-attr-id="{{'listItem-'+bait}}" ng-click="select(bait)">
 				<div class="left centred-v title">
@@ -18,12 +22,7 @@
 				</div>
 				<img class="right centred-v" ng-src="{{(bait == equippedBait) ? './img/bait/equipped.png' : './img/bait/'+bait+'.png'}}"></img>
 			</div>
-		</div>
-
-		<div class="actionBar">
-			<div class="right button centred-v" ng-click="exit()">
-				<img class="centred-image shop-item-icon" src="./img/tick.gif"></img>
-			</div>
+			<img ng-click="exit()" class="right confirm-button" src="./img/misc/ticksign2.png"></img>
 		</div>
 	</div>
 

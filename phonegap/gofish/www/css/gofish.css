@@ -237,8 +237,6 @@
 #baitMenuFG {
 	height: 80%;
 	width: 80%;
-	background-image: url(../img/misc/sign.png);
-	background-size: 100% 100%;
 }
 
 #baitList {
@@ -246,13 +244,25 @@
 	width: 100%;
 }
 
-.bait-menu-item {
-	height: 25%;
+.small-sign {
+	background-image: url(../img/misc/smallsign.png);
+	background-size: 100% 100%;
+	width: 80%;
+	height: 15%;
+}
+
+.bait-menu-item, .large-sign{
 	width: 95%;
 	background-image: url(../img/misc/sign.png);
 	background-size: 100% 100%;
+	background-repeat: no-repeat;
 	margin-top: 15px;
 }
+
+.bait-menu-item {
+	height: 25%;
+}
+
 
 .bait-menu-item img {
 	width: 25%;
@@ -260,16 +270,13 @@
 	padding-right: 5px;
 }
 
-.actionbar {
-	height: 20%;
-	width: 100%;
-	padding: 0 0 2.5% 0;
+.large-sign {
+	height: 35%;
 }
 
-.button {
-	width: 40%;
-	text-align: center;
-	margin: 0 5% 0 5%;
+.confirm-button {
+	margin-top: 15px;
+	width: 30%;
 }
 
 .title {
