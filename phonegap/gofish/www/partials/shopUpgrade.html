@@ -2,7 +2,7 @@
 	<div class="left scrollable left-75">
 		<h3 ng-show="next" class="centred-text">{{next.name}} £{{next.price}}</h3>
 		<h3 ng-hide="next" class="centred-text">SOLD OUT</h3>
-		<p ng-show="next">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+		<p ng-show="next">{{next.description}}</p>
 		<p ng-hide="next">We don't stock anything finer than what you have.</p>
 	</div>
 	<div class="right right-25">
