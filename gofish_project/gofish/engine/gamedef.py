@@ -78,7 +78,7 @@ GAME = {
             'name': 'Underwater Camera',
             'cueDetail': 2,
             'price': 200,
-            'description': 'It\'s easier to catch fish when you can see \'em.',
+            'description': 'See what you\'re fishing for.',
         }, {
             'name': 'Old Sonar',
             'cueDetail': 3,
