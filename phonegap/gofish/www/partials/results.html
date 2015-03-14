@@ -1,6 +1,30 @@
-<div id="resultsScreen" class="full top forward">
-	<div id="resultsScreenInner" class="centred-v centred-image">
-		<h2 class="centred-text">Results</h2>
+<div id="resultsScreen" class="full top forward scrollable">
+	<div id="resultsScreenInner" class="centred-image">
+
+		<div class="results-spacer"></div>
+
+		<div class="small-sign centred-image">
+			<h3 class="centred-text centred-v">Today's Catch</h3>
+		</div>
+
+		<div class="large-sign centred-image caughtItem" ng-repeat="(name, totals) in parsed">
+			<div class="left centred-v title">
+				<h3 class="centred-text">{{name}}</h3>
+				<p>{{totals.weight | number:2}}kg {{fish.name}} [+{{totals.value}}]</p>
+				<p>Largest {{name}}: {{max[name].weight}}kg measuring {{max[name].length}}cm [+{{max[name].value}}]</p>
+			</div>
+			<img class="right centred-v" ng-src="./img/bait/equipped.png"></img>
+		</div>
+
+		<div ng-click="exit()" class="small-sign centred-image">
+			<h3 class="centred-text centred-v">Go Home</h3>
+		</div>
+
+		<div class="results-spacer"></div>
+
+<!--
+
+		
 		<h3>Money earned this trip: £{{results.earned}}</h3>
 		<h3>Today's catch:</h3>
 		<div id="caughtList" class="centred-image scrollable">
@@ -9,6 +33,7 @@
 				<p>Largest {{name}}: {{max[name].weight}}kg measuring {{max[name].length}}cm [+{{max[name].value}}]
 			</div>
 		</div>
-		<h3 class="centred-text"><a href ng-click="exit()">Go Home</a></h3>
+	-->
+
 	</div>
 </div>

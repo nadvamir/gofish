@@ -265,13 +265,14 @@
 
 
 .bait-menu-item img {
-	width: 25%;
+	width: 30%;
 	height:	auto;
 	padding-right: 5px;
 }
 
 .large-sign {
 	height: 35%;
+	padding: 15px;
 }
 
 .confirm-button {
@@ -332,17 +333,15 @@
 #resultsScreenInner {
 	height: 80%;
 	width: 80%;
-	background-color: rgba(152, 170, 245, 1);
 }
 
-#resultsScreenInner h2 {
-	margin-top: 0;
-	padding-top: 10%;
+.results-spacer {
+	width: 100%;
+	height: 5%;
 }
 
-#caughtList {
-	height: 50%;
-	width: 80%;
+.caughtItem img{
+	width: 30%;
 }
 
 /* MENUS */
