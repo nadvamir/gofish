@@ -8,6 +8,8 @@ goFish.directive("results", [function(){
 			// Functions
 			$scope.exit = function() {
 				$rootScope.$broadcast("exitResults");
+				$scope.parsed = {};
+				$scope.max = {};
 			};
 
 			var parseResults = function() {

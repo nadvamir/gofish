@@ -56,7 +56,9 @@ goFish.directive("shopUpgrade", [function(){
 				getNextUpgrade();
 				
 				// Remove spaces for css image selection
-				$scope.nextNoSpace = ($scope.next.name).replace(/\s/g, '');
+				if($scope.next) {
+					$scope.nextNoSpace = ($scope.next.name).replace(/\s/g, '');	
+				}
 			}
 
 			$scope.buy = function() {

@@ -14,7 +14,6 @@ goFish.directive("baitMenu", [function(){
 				if (bait != $scope.equippedBait) {
 					GameService.changeBait(bait);
 				}
-				console.dir($scope.player);
 			}
 
 			$scope.getEquipped = function() {
@@ -28,8 +27,8 @@ goFish.directive("baitMenu", [function(){
 
 			$scope.ownsBait = function() {
 				if (!$scope.player || !$scope.player.modifiers) return false;
-			    for(var prop in $scope.player.modifiers) {
-			        if($scope.player.modifiers.hasOwnProperty(prop))
+			    for (var prop in $scope.player.modifiers) {
+			        if ($scope.player.modifiers.hasOwnProperty(prop))
 			            return true;
 			    }
 			    return false;
@@ -42,9 +41,7 @@ goFish.directive("baitMenu", [function(){
 					$scope.equippedBait = $scope.getEquipped();
 				} else {
 					$scope.equippedBait = null;
-				}
-				console.log("EQUIPPED: "+$scope.equippedBait);
-
+				};
 			};
 
 			// Initialisation

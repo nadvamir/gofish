@@ -1,12 +1,16 @@
 <div class="container allow-for-nav shop-screen">
 
-	<h2>Upgrades</h2>
+	<div class="small-sign" style="height: 7%;">
+		<h2 class="centred-text centred-v">Upgrades</h2>
+	</div>
 	<div ng-repeat="(category, items) in game.updates">
 		<shop-upgrade category="category"
 					 items="items">
 		</shop-upgrade>
 	</div>
-	<h2>Bait</h2>
+	<div class="small-sign" style="height: 7%;">
+		<h2 class="centred-text centred-v">Bait</h2>
+	</div>
 	<div ng-repeat="(name, bait) in game.modifiers">
 		<shop-bait name="name" bait="bait"></shop-bait>
 	</div>

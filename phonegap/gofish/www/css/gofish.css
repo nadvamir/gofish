@@ -69,6 +69,25 @@
 	text-align: center;
 }
 
+h1, h2, h3 {
+	font-family: "Rockwell", Rockwell;
+}
+
+p {
+
+	font-family: "Rockwell";
+}
+
+@font-face {
+	font-family: RockwellExtraBold;
+    src: url(../fonts/rockwell-extra-bold.ttf);
+}
+
+@font-face {
+	font-family: Rockwell;
+    src: url(../fonts/rockwell.ttf);
+}
+
 /* Animation */
 
 @-webkit-keyframes pulse_animation {
@@ -377,6 +396,11 @@
 	left: 80%;
 	padding-left: 2%;
 	background-color: yellow;
+	font-family: "Rockwell Extra Bold", RockwellExtraBold;
+}
+
+.menu-money, .hud-money {
+	font-family: "Rockwell Extra Bold", RockwellExtraBold;
 }
 
 /* LEVEL SELECT */
