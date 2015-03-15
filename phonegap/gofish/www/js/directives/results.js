@@ -25,7 +25,7 @@ goFish.directive("results", [function(){
 						}
 					} else {
 						$scope.parsed[caught.name] = {"weight":caught.weight, "value":caught.value};
-						$scope.max[caught.name] = {"weight":caught.weight, "value":caught.value};
+						$scope.max[caught.name] = {"weight":caught.weight, "value":caught.value, "length":caught.length};
 					}
 				};
 			};
