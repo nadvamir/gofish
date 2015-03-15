@@ -165,6 +165,7 @@ goFish.factory("GameService", ["$http", "$rootScope", function($http, $rootScope
 		            	results["caught"] = currentLevel.caught;
 		            	currentLevel = {};
 		            	caught = null;
+		       			updateGame();
 						$rootScope.$broadcast("levelEnded");
 					};
 				}).
