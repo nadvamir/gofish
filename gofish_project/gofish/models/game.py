@@ -245,20 +245,18 @@ class Game(models.Model):
     def getOptimalTime(self, pos, local = False):
         self.ensureYieldsExist(pos)
 
-        maxVal = 0.0
-        bestTime = 0
-        val = 0.0
-        time = 1
-        fishingCost = 5
+        maxVal = 0.0; val = 0.0
+        bestTime = 0; time = 1
+        fCost = gamedef.FISHING_COST
         travelCost = self.player.getMoveCost() if pos > 0 else 0
 
         for fish in self.level['yields'][pos]:
             if None != fish:
                 val += fish['value']
-            if val / (time * fishingCost + travelCost) > maxVal:
-                maxVal = val / (time * fishingCost + travelCost)
+            if val / (time * fCost + travelCost) > maxVal:
+                maxVal = val / (time * fCost + travelCost)
                 bestTime = time
-            elif val / (time*fishingCost + travelCost) < maxVal\
+            elif val / (time*fCost + travelCost) < maxVal\
                     and True == local:
                 # local optima found
                 return bestTime
