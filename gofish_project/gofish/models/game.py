@@ -420,16 +420,16 @@ class Game(models.Model):
             # skip times when no fish were caught
             while (timeInSpot < len(spotYield)
                 and spotYield[timeInSpot] == None):
-                    time += stepCost
+                    time += fCost
                     timeInSpot += 1
 
-            if time + stepCost > totalTime or timeInSpot == len(spotYield):
+            if time + fCost > totalTime or timeInSpot == len(spotYield):
                 break
 
             if '1' == succeeded:
                 caught.append(spotYield[timeInSpot])
 
-            time += stepCost
+            time += fCost
             timeInSpot += 1
 
         self._save_game(caught, time, timeInSpot)
