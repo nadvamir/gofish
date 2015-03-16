@@ -185,6 +185,11 @@ class Game(models.Model):
             if save:
                 self.saveGame()
 
+    # load all the yields in the game
+    def createAllYields(self):
+        for pos in range(len(self.level['yields'])):
+            self.ensureYieldsExist(pos, save=False)
+
     # recalculate all the yields for this game
     def recalcYields(self):
         for pos in range(len(self.level['yields'])):
@@ -240,20 +245,18 @@ class Game(models.Model):
     def getOptimalTime(self, pos, local = False):
         self.ensureYieldsExist(pos)
 
-        maxVal = 0.0
-        bestTime = 0
-        val = 0.0
-        time = 1
-        fishingCost = 5
+        maxVal = 0.0; val = 0.0
+        bestTime = 0; time = 1
+        fCost = gamedef.FISHING_COST
         travelCost = self.player.getMoveCost() if pos > 0 else 0
 
         for fish in self.level['yields'][pos]:
             if None != fish:
                 val += fish['value']
-            if val / (time * fishingCost + travelCost) > maxVal:
-                maxVal = val / (time * fishingCost + travelCost)
+            if val / (time * fCost + travelCost) > maxVal:
+                maxVal = val / (time * fCost + travelCost)
                 bestTime = time
-            elif val / (time*fishingCost + travelCost) < maxVal\
+            elif val / (time*fCost + travelCost) < maxVal\
                     and True == local:
                 # local optima found
                 return bestTime
@@ -291,7 +294,7 @@ class Game(models.Model):
         fishCost  = gamedef.FISHING_COST
         maxEarn   = int(self.getMaxEarnings(fishCost, moveCost))
         optEarn   = self.getOptEarnings(fishCost, moveCost)
-        lOptEarn  = self.getLOptEarnings(fishCost, moveCost)
+        lOptEarn  = self.getOptEarnings(fishCost, moveCost, local=True)
 
         msg = [
             player, str(gameNr), str(lvl),
@@ -303,11 +306,6 @@ class Game(models.Model):
 
         logger.info(' '.join(msg))
         return maxEarn
-
-    # load all the yields in the game
-    def createAllYields(self):
-        for pos in range(len(self.level['yields'])):
-            self.ensureYieldsExist(pos, save=False)
 
     # a method that returns maximum possible earnings
     def getMaxEarnings(self, fishCost, moveCost):
@@ -343,7 +341,7 @@ class Game(models.Model):
         return val
 
     # a method that returns earnings based on optimal strategy
-    def getOptEarnings(self, fishCost, moveCost):
+    def getOptEarnings(self, fishCost, moveCost, local=False):
         time = gamedef.TOTAL_TIME + moveCost
         money = 0
 
@@ -352,25 +350,7 @@ class Game(models.Model):
             if time <= 0:
                 return money
 
-            optimalTime = self.getOptimalTime(pos)
-            if optimalTime * fishCost > time:
-                optimalTime = time / fishCost
-            money += int(self.getMoneyEarnedIn(pos, optimalTime))
-            time -= optimalTime * fishCost
-
-        return money
-
-    # a method that returns earnings from loc. optimal strategy
-    def getLOptEarnings(self, fishCost, moveCost):
-        time = gamedef.TOTAL_TIME + moveCost
-        money = 0
-
-        for pos in range(len(self.level['yields'])):
-            time -= moveCost
-            if time <= 0:
-                return money
-
-            optimalTime = self.getOptimalTime(pos, local=True)
+            optimalTime = self.getOptimalTime(pos, local)
             if optimalTime * fishCost > time:
                 optimalTime = time / fishCost
             money += int(self.getMoneyEarnedIn(pos, optimalTime))
@@ -410,60 +390,47 @@ class Game(models.Model):
             'time': self.level['time'],
         }
 
-    # a method to fish
-    # it only really returns what you can catch in N steps
-    # from the current point, you need to call catch action
-    # to actually advance timer
-    def fish(self, steps):
-        pos = self.level['position']
-        self.ensureYieldsExist(pos)
+    # this method returns what you can catch in N times
+    # from the current point
+    def inspect(self, times):
+        pos, spotYield, timeInSpot = self._common_init()
 
-        spotYield = self.level['yields'][pos]
-        spotTime = self.level['timeInLoc'][pos]
-        maxSteps = len(spotYield) - spotTime
-        if steps > maxSteps:
-            steps = maxSteps
+        times = min(times, len(spotYield) - timeInSpot)
 
-        stepCost = self.level['totalTime'] / len(spotYield)
-        expectedEndTime = steps * stepCost + self.level['time'] 
+        expectedEndTime = times * gamedef.FISHING_COST + self.level['time'] 
         if expectedEndTime > self.level['totalTime']:
             return None
 
         return {
-            'fishList': spotYield[spotTime:spotTime + steps]
+            'fishList': spotYield[timeInSpot:timeInSpot + times]
         }
 
     # a method to actually catch the next N fish
-    def catch(self, fishList):
-        pos = self.level['position']
-        self.ensureYieldsExist(pos)
-
-        spotYield = self.level['yields'][pos]
-        spotTime = self.level['timeInLoc'][pos]
-        time = self.level['time']
-        totalTime = self.level['totalTime']
-        stepCost = totalTime / len(spotYield)
+    # skipping the times when there is nothing to catch
+    # useful for games where a player waits
+    # for fish to be caught
+    def catchNoNil(self, fishList):
+        pos, spotYield, timeInSpot = self._common_init()
+        time, totalTime, fCost = self._common_catch_init()
 
         caught = []
         for succeeded in fishList:
-            while (spotTime < len(spotYield)
-                and spotYield[spotTime] == None):
-                    time += stepCost
-                    spotTime += 1
+            # skip times when no fish were caught
+            while (timeInSpot < len(spotYield)
+                and spotYield[timeInSpot] == None):
+                    time += fCost
+                    timeInSpot += 1
 
-            if time + stepCost > totalTime or spotTime == len(spotYield):
+            if time + fCost > totalTime or timeInSpot == len(spotYield):
                 break
 
             if '1' == succeeded:
-                caught.append(spotYield[spotTime])
+                caught.append(spotYield[timeInSpot])
 
-            time += stepCost
-            spotTime += 1
+            time += fCost
+            timeInSpot += 1
 
-        self.caught += caught
-        self.level['time'] = time
-        self.level['timeInLoc'][pos] = spotTime
-        self.saveGame()
+        self._save_game(caught, time, timeInSpot)
 
         return {
             'fishList': caught,
@@ -472,41 +439,59 @@ class Game(models.Model):
         }
 
     # a method to actually catch the next N fish or nothings
+    # fishList is an array of '1' and '0' telling
+    # if we managed to forage the given yield
     def catchAll(self, fishList):
-        pos = self.level['position']
-        self.ensureYieldsExist(pos)
+        pos, spotYield, timeInSpot = self._common_init()
+        time, totalTime, fCost = self._common_catch_init()
 
-        spotYield = self.level['yields'][pos]
-        spotTime = self.level['timeInLoc'][pos]
-        time = self.level['time']
-        totalTime = self.level['totalTime']
-        stepCost = totalTime / len(spotYield)
-
-        caught = []
+        caught = [] # caught does not have Nones
         response = []
         for succeeded in fishList:
-            if time + stepCost > totalTime or spotTime == len(spotYield):
+            if time + fCost > totalTime or timeInSpot == len(spotYield):
                 break
 
-            if '1' == succeeded and None != spotYield[spotTime]:
-                caught.append(spotYield[spotTime])
-                response.append(spotYield[spotTime])
+            if '1' == succeeded and None != spotYield[timeInSpot]:
+                self.caught.append(spotYield[timeInSpot])
+                response.append(spotYield[timeInSpot])
             else:
                 response.append(None)
 
-            time += stepCost
-            spotTime += 1
+            time += fCost
+            timeInSpot += 1
 
-        self.caught += caught
-        self.level['time'] = time
-        self.level['timeInLoc'][pos] = spotTime
-        self.saveGame()
+        self._save_game(caught, time, timeInSpot)
 
         return {
             'fishList': response,
             'cues': self.getCues(),
             'time': time
         }
+
+    # a helper method to get common variables
+    def _common_init(self):
+        pos = self.level['position']
+        self.ensureYieldsExist(pos)
+
+        spotYield = self.level['yields'][pos]
+        timeInSpot = self.level['timeInLoc'][pos]
+
+        return pos, spotYield, timeInSpot
+
+    # a helper method to get variables common across catch calls
+    def _common_catch_init(self):
+        time = self.level['time']
+        totalTime = self.level['totalTime']
+        fCost = gamedef.FISHING_COST
+
+        return time, totalTime, fCost
+
+    # a helper method to save common endstate
+    def _save_game(self, caught, time, timeInSpot)
+        self.caught += caught
+        self.level['time'] = time
+        self.level['timeInLoc'][self.level['position']] = timeInSpot
+        self.saveGame()
 
     ##############################################################
     # Django boilerplate

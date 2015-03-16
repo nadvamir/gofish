@@ -100,7 +100,7 @@ def optimise(request):
     context = RequestContext(request)
 
     # 1. Monte Carlo simulation
-    yc = YieldCalculator(100)
+    yc = YieldSimulation(100)
     # 2. Build a cp model from resulting yields
     yields = yc.getYields()
     model = YieldModel(yields)

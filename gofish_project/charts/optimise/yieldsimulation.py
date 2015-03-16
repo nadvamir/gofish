@@ -7,7 +7,7 @@ MOV_C = [60, 60, 40, 20, 20]
 
 # a simulator, that calculates average yields
 # for every game level
-class YieldCalculator(object):
+class YieldSimulation(object):
     ############################################################
     # Public API
     ############################################################
@@ -63,7 +63,7 @@ class YieldCalculator(object):
     def getOptYield(fish, lvlYield, movingCost=gamedef.MOVE_COST):
         # for now, static parameters:
         time = 480.0
-        fishingCost = 5.0
+        fishingCost = gamedef.FISHING_COST
 
         # optimal yield is that, which maximises
         # the overall yield of the game
@@ -129,7 +129,7 @@ def toYield(l):
 
 # get initial yield for the level
 def getInitY(level):
-    nTimes = gamedef.TOTAL_TIME / 5 # 5 is fishing time
+    nTimes = gamedef.TOTAL_TIME / gamedef.FISHING_COST
     y = [toYield(gamedef.getFishForLevel(level['index'])) \
             for i in range(nTimes)]
     return nTimes, y

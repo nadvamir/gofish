@@ -1,2 +1,2 @@
-from yieldcalculator import YieldCalculator
+from yieldsimulation import YieldSimulation
 from yieldmodel import YieldModel
