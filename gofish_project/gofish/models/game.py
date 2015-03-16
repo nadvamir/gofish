@@ -392,11 +392,9 @@ class Game(models.Model):
             'time': self.level['time'],
         }
 
-    # a method to fish
-    # it only really returns what you can catch in N times
-    # from the current point, you need to call catch action
-    # to actually advance timer
-    def fish(self, times):
+    # this method returns what you can catch in N times
+    # from the current point
+    def inspect(self, times):
         pos, spotYield, timeInSpot = self._common_init()
 
         times = min(times, len(spotYield) - timeInSpot)
@@ -413,7 +411,7 @@ class Game(models.Model):
     # skipping the times when there is nothing to catch
     # useful for games where a player waits
     # for fish to be caught
-    def catch(self, fishList):
+    def catchNoNil(self, fishList):
         pos, spotYield, timeInSpot = self._common_init()
         time, totalTime, fCost = self._common_catch_init()
 

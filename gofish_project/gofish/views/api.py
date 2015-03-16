@@ -62,10 +62,10 @@ def action(request, action, par):
     resp = None
     if action == 'move':
         resp = game.move(par)
-    elif action == 'fish':
-        resp = game.fish(int(par))
-    elif action == 'catch':
-        resp = game.catch(par.split(','))
+    elif action == 'inspect':
+        resp = game.inspect(int(par))
+    elif action == 'catchnonil':
+        resp = game.catchNoNil(par.split(','))
     elif action == 'catchall':
         resp = game.catchAll(par.split(','))
     if None != resp:
