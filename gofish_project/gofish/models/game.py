@@ -185,6 +185,11 @@ class Game(models.Model):
             if save:
                 self.saveGame()
 
+    # load all the yields in the game
+    def createAllYields(self):
+        for pos in range(len(self.level['yields'])):
+            self.ensureYieldsExist(pos, save=False)
+
     # recalculate all the yields for this game
     def recalcYields(self):
         for pos in range(len(self.level['yields'])):
@@ -303,11 +308,6 @@ class Game(models.Model):
 
         logger.info(' '.join(msg))
         return maxEarn
-
-    # load all the yields in the game
-    def createAllYields(self):
-        for pos in range(len(self.level['yields'])):
-            self.ensureYieldsExist(pos, save=False)
 
     # a method that returns maximum possible earnings
     def getMaxEarnings(self, fishCost, moveCost):
