@@ -20,11 +20,11 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 			};
 
 			$scope.fish = function() {
-				GameService.fish();
+				if (!$scope.fishing) GameService.fish();
 			};
 
 			$scope.end = function() {
-				GameService.endLevel();
+				if (!$scope.fishing) GameService.endLevel();
 			};
 
 			// Initialisation
@@ -40,12 +40,16 @@ goFish.directive("game", ["$rootScope", function($rootScope){
 			});
 			$scope.$on("levelUpdated", function() {
 				$scope.updateLevel();
+				$scope.fishing = true;
 			});
 			$scope.$on("levelEnded", function() {
 				$scope.showResults = true;
 			});
 			$scope.$on("exitResults", function() {
 				$scope.showResults = false;
+			});
+			$scope.$on("fishingEnded", function() {
+				$scope.fishing = false;
 			});
 		},
 		controllerAs: "gameCtrl"
