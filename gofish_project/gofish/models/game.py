@@ -291,7 +291,7 @@ class Game(models.Model):
         fishCost  = gamedef.FISHING_COST
         maxEarn   = int(self.getMaxEarnings(fishCost, moveCost))
         optEarn   = self.getOptEarnings(fishCost, moveCost)
-        lOptEarn  = self.getLOptEarnings(fishCost, moveCost)
+        lOptEarn  = self.getOptEarnings(fishCost, moveCost, local=True)
 
         msg = [
             player, str(gameNr), str(lvl),
@@ -343,7 +343,7 @@ class Game(models.Model):
         return val
 
     # a method that returns earnings based on optimal strategy
-    def getOptEarnings(self, fishCost, moveCost):
+    def getOptEarnings(self, fishCost, moveCost, local=False):
         time = gamedef.TOTAL_TIME + moveCost
         money = 0
 
@@ -352,25 +352,7 @@ class Game(models.Model):
             if time <= 0:
                 return money
 
-            optimalTime = self.getOptimalTime(pos)
-            if optimalTime * fishCost > time:
-                optimalTime = time / fishCost
-            money += int(self.getMoneyEarnedIn(pos, optimalTime))
-            time -= optimalTime * fishCost
-
-        return money
-
-    # a method that returns earnings from loc. optimal strategy
-    def getLOptEarnings(self, fishCost, moveCost):
-        time = gamedef.TOTAL_TIME + moveCost
-        money = 0
-
-        for pos in range(len(self.level['yields'])):
-            time -= moveCost
-            if time <= 0:
-                return money
-
-            optimalTime = self.getOptimalTime(pos, local=True)
+            optimalTime = self.getOptimalTime(pos, local)
             if optimalTime * fishCost > time:
                 optimalTime = time / fishCost
             money += int(self.getMoneyEarnedIn(pos, optimalTime))
