@@ -7,7 +7,7 @@ MOV_C = [60, 60, 40, 20, 20]
 
 # a simulator, that calculates average yields
 # for every game level
-class YieldCalculator(object):
+class YieldSimulation(object):
     ############################################################
     # Public API
     ############################################################

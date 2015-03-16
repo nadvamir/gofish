@@ -1,7 +1,7 @@
 from constraint import *
 import gofish.engine.gamedef as gamedef
-from yieldcalculator import YieldCalculator
-from yieldcalculator import MOV_C
+from yieldsimulation import YieldSimulation
+from yieldsimulation import MOV_C
 
 class YieldModel(object):
     def __init__(self, yields):
