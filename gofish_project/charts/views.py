@@ -93,6 +93,31 @@ def dataAggregated(request):
     return render_to_response('charts/data_aggregated.html', context_dict, context)
 
 #################################################################
+# Endgame analytics
+#################################################################
+@user_passes_test(lambda u: u.is_superuser)
+def parseEndLog(request):
+    numEntries = 0
+    logCopy = 'logs-end/end-' + str(time.time()) + '.log'
+    # parse the log file
+    with open('end.log', 'r') as f:
+        with open(logCopy, 'w') as fw:
+            for line in f:
+                if line != '\n':
+                    EndGame.insertFromLine(line)
+                    numEntries += 1
+                    fw.write(line)
+
+    # flush the log file
+    with open('end.log', 'w') as f:
+        pass
+
+    # report on the number of processed lines
+    context = RequestContext(request)
+    context_dict = {'numEntries': numEntries}
+    return render_to_response('charts/log_parsed.html', context_dict, context)
+
+#################################################################
 # Optimisation of the Game
 #################################################################
 @user_passes_test(lambda u: u.is_superuser)
