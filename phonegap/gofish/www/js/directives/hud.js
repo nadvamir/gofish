@@ -63,6 +63,10 @@ goFish.directive("hud", [function(){
 				GameService.fish();
 			};
 
+			$scope.endLevel = function() {
+				GameService.endLevel();
+			};
+
 			$scope.getEquipped = function() {
 				for (var bait in $scope.player.modifiers) {
 					if ($scope.player.modifiers[bait] == true) {
