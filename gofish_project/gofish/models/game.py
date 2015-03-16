@@ -487,7 +487,7 @@ class Game(models.Model):
         return time, totalTime, fCost
 
     # a helper method to save common endstate
-    def _save_game(self, caught, time, timeInSpot)
+    def _save_game(self, caught, time, timeInSpot):
         self.caught += caught
         self.level['time'] = time
         self.level['timeInLoc'][self.level['position']] = timeInSpot
