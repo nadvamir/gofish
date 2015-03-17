@@ -13,6 +13,8 @@ urlpatterns = patterns('',
         url(r'^data_by_user/$', views.dataByUser),
         # visualiser of aggregated data
         url(r'^data_aggregated/$', views.dataAggregated),
+        # visualiser of endgame data
+        url(r'^data_endgame/$', views.dataEndgame),
 
         # calculates reward for fish and cost of levels
         url(r'^optimise/$', views.optimise),

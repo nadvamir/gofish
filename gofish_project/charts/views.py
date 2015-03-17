@@ -117,6 +117,27 @@ def parseEndLog(request):
     context_dict = {'numEntries': numEntries}
     return render_to_response('charts/log_parsed.html', context_dict, context)
 
+@user_passes_test(lambda u: u.is_superuser)
+def dataEndgame(request):
+    context = RequestContext(request)
+    context_dict = {
+        'choices': {
+            'groups': {
+                'level'     : 'Level of Game',
+                'boatLevel' : 'Level of Boats',
+                'cueDetail' : 'Detail of Cues',
+                'lineLevel' : 'Level of Lines',
+            },
+            'choices': {
+                'earned'    : 'Money Earned',
+                'diffMax'   : 'Diff from Max Possible',
+                'diffOpt'   : 'Diff from Opt Strategy',
+                'diffLOpt'  : 'Diff from Local Opt Strategy',
+            }
+        }
+    }
+    return render_to_response('charts/data_endgame.html', context_dict, context)
+
 #################################################################
 # Optimisation of the Game
 #################################################################

@@ -36,6 +36,19 @@ function drawBoxData(request) {
     });
 }
 
+// sends request for endgame data
+function drawBarData(request) {
+    $.getJSON('/charts/api/get_end_data/', request, function(data) {
+        console.log(data);
+        if (!data.error) {
+            data = transformEndData(data.data);
+            drawBarChart(data);
+        } else {
+            alert(data.error);
+        }
+    });
+}
+
 // transforms bar chart data
 function transformBarData(data) {
     return data.map(function(el) { return [el.x, el.id__count]; });
@@ -60,4 +73,9 @@ function transformBoxData(data) {
     }
     console.log(data);
     return data;
+}
+
+// transforms endgame bar chart data
+function transformEndData(data) {
+    return data.map(function(el) { return [el.x, el.id__count]; });
 }
