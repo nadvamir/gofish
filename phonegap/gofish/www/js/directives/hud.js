@@ -64,7 +64,15 @@ goFish.directive("hud", [function(){
 			};
 
 			$scope.endLevel = function() {
-				if (!$scope.fishing) GameService.endLevel();
+				if (!$scope.fishing) {
+					$rootScope.$broadcast("exitDialog");
+					GameService.endLevel();
+				}
+			};
+
+			$scope.showHomeDialog = function() {
+				$scope.confirmHome = true;
+				console.log("SUP? "+$scope.confirmHome);
 			};
 
 			$scope.getEquipped = function() {
@@ -74,7 +82,7 @@ goFish.directive("hud", [function(){
 					}
 				}
 				return "default";
-			}
+			};
 
 			// Initialisation
 			$scope.reset();
@@ -127,6 +135,10 @@ goFish.directive("hud", [function(){
 
 			$scope.$on("hideBaitMenu", function() {
 				$scope.baitVisible = false;
+			});
+
+			$scope.$on("exitDialog", function() {
+				$scope.confirmHome = false;
 			});
 
 			// Ensure a clean HUD on next level

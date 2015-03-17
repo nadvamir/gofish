@@ -12,7 +12,7 @@
  			</div>
 		</div>
 		<img id="progressIcon" class="left" src="./img/clock.png">
-		<img id="homeIcon" ng-click="endLevel()" src="./img/misc/home.png">
+		<img id="homeIcon" ng-click="showHomeDialog()" src="./img/misc/home.png">
 	</span>
 	<div id="caughtInfo" class="centred-image">
 		<h3 ng-show="caughtMsg">
@@ -30,3 +30,5 @@
 <img ng-hide="level.level.position === 19" ng-click="moveRight()" class="right arrow forward" src="./img/icons/rightarrow.png">
 
 <bait-menu ng-if="player" ng-show="baitVisible" class="top forward"></bait-menu>
+
+<confirm-dialog ng-show="confirmHome" class="top forward full" confirm="endLevel()" message="'Are you sure you want to go home? There could still be fish out there.'"></confirm-dialog>

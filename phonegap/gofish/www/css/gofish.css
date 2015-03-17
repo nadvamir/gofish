@@ -69,6 +69,23 @@
 	text-align: center;
 }
 
+.confirm-outer {
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.confirm-inner {
+	width: 80%;
+}
+
+.confirm-sign {
+	width: 100%;
+	height: 30%;
+	background-image: url(../img/misc/sign.png);
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	margin-top: 15px;
+}
+
 h1, h2, h3 {
 	font-family: "Rockwell", Rockwell;
 }
