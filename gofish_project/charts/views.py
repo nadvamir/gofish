@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 import json
 import time
 
-from models import DataPoint
+from models import DataPoint, EndGame
 from optimise import *
 
 #################################################################
@@ -124,15 +124,15 @@ def dataEndgame(request):
         'choices': {
             'groups': {
                 'level'     : 'Level of Game',
-                'boatLevel' : 'Level of Boats',
+                'moveCost ' : 'Moving Cost',
                 'cueDetail' : 'Detail of Cues',
-                'lineLevel' : 'Level of Lines',
+                'line'      : 'Level of Lines',
             },
             'choices': {
                 'earned'    : 'Money Earned',
-                'diffMax'   : 'Diff from Max Possible',
-                'diffOpt'   : 'Diff from Opt Strategy',
-                'diffLOpt'  : 'Diff from Local Opt Strategy',
+                'diffMax'   : '% of Max Possible Earnings',
+                'diffOpt'   : '% of Opt Strategy Earnings',
+                'diffLOpt'  : '% Local Opt Strategy Earnings',
             }
         }
     }
@@ -192,5 +192,27 @@ def getBoxData(request):
         y = request.GET.get('y', None))
 
     response = {'data': [el for el in qs]}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+# data for aggregated endgame bar charts
+@user_passes_test(lambda u: u.is_superuser)
+def getEndData(request):
+    qs, x = EndGame.queryBarData(
+        x = request.GET.get('x', None),
+        y = request.GET.get('y', None))
+
+    # we need x to decypher response
+    response = {'data': qs, 'x': x}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+# data for aggregated endgame box charts
+@user_passes_test(lambda u: u.is_superuser)
+def getEndBoxData(request):
+    qs, x = EndGame.queryBoxData(
+        x = request.GET.get('x', None),
+        y = request.GET.get('y', None))
+
+    # we need x to decypher response
+    response = {'data': qs, 'x': x}
     return HttpResponse(json.dumps(response), content_type="application/json")
 

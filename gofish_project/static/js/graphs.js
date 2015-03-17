@@ -28,33 +28,35 @@ function drawChart(params, result, divId) {
 }
 
 // bar chart
-function drawBarChart(result, divId) {
+function drawBarChart(result, divId, type) {
     divId = divId || 'chart-div';
+    type = type || 'number';
     
     // Create the data table.
     var data = new google.visualization.DataTable();
-    data.addColumn('number', 'x');
+    data.addColumn(type, 'x');
     data.addColumn('number', '#');
     data.addRows(result);
     
     var chart = new google.visualization.ColumnChart(document.getElementById(divId));
-    chart.draw(data, {});
+    chart.draw(data, {legend: 'none', 'height': 500});
 }
 
 // box chart
-function drawBoxChart(result, divId) {
+function drawBoxChart(result, divId, type) {
     divId = divId || 'chart-div';
+    type = type || 'number';
     
     // Create the data table.
     var data = new google.visualization.DataTable();
     console.log(result);
-    data.addColumn('number', 'x');
-    data.addColumn('number', 'min');
-    data.addColumn('number', '1st-q');
-    data.addColumn('number', '3rd-q');
-    data.addColumn('number', 'max');
+    data.addColumn(type, 'x');
+    data.addColumn('number');
+    data.addColumn('number');
+    data.addColumn('number');
+    data.addColumn('number');
     data.addRows(result);
     
     var chart = new google.visualization.CandlestickChart(document.getElementById(divId));
-    chart.draw(data, {legend: 'none'});
+    chart.draw(data, {legend: 'none', 'height': 500});
 }

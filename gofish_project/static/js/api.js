@@ -37,12 +37,25 @@ function drawBoxData(request) {
 }
 
 // sends request for endgame data
-function drawBarData(request) {
+function drawEndData(request) {
     $.getJSON('/charts/api/get_end_data/', request, function(data) {
         console.log(data);
         if (!data.error) {
-            data = transformEndData(data.data);
-            drawBarChart(data);
+            data = transformEndData(data.data, data.x);
+            drawBarChart(data, 'chart-div', 'string');
+        } else {
+            alert(data.error);
+        }
+    });
+}
+
+// sends request for endgame box data
+function drawEndBoxData(request) {
+    $.getJSON('/charts/api/get_end_box_data/', request, function(data) {
+        console.log(data);
+        if (!data.error) {
+            data = transformEndBoxData(data.data, data.x);
+            drawBoxChart(data, 'chart-div2', 'string');
         } else {
             alert(data.error);
         }
@@ -75,7 +88,42 @@ function transformBoxData(data) {
     return data;
 }
 
-// transforms endgame bar chart data
-function transformEndData(data) {
-    return data.map(function(el) { return [el.x, el.id__count]; });
+function boxLabel(el, x) {
+    var l = '';
+    for (var i = 0; i < x.length; ++i) {
+        l += x[i] + ': ' +  el[i+1] + ', '
+    }
+    return l;
 }
+
+// transforms endgame bar chart data
+function transformEndData(data, x) {
+    x = x.split(',')
+    return data.map(function(el) {
+        return [boxLabel(el, x), el[0]];
+    });
+}
+
+// transforms endgame box chart data
+function transformEndBoxData(data, x) {
+    var hash = {};
+    x = x.split(',');
+    data.forEach(function(el) { 
+        l = boxLabel(el, x);
+        if (!!hash[l]) {
+            hash[l].push(el[0]);
+        } else {
+            hash[l] = [el[0]];
+        }
+    });
+
+    var data = [];
+    for (var k in hash) {
+        var vals = hash[k];
+        vals.sort(function(a, b) { return a - b; });
+        data.push([k, vals[0], vals[Math.floor(vals.length / 4)], vals[Math.floor(vals.length / 4) * 3], vals[vals.length-1]]);
+    }
+    console.log(data);
+    return data;
+}
+

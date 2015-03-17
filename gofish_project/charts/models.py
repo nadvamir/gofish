@@ -1,6 +1,8 @@
-from django.db import models
+from django.db import models, connection
 from django.db.models import Count
+from django.db.models import Avg
 from copy import copy
+import re
 
 # a data point for charting
 class DataPoint(models.Model):
@@ -136,7 +138,6 @@ class DataPoint(models.Model):
                 .extra(select = {'y': yExpr[y], 'x': x})\
                 .values('x', 'y')\
                 .order_by(x)
-        return []
 
     # return overall info about our data
     @staticmethod
@@ -215,6 +216,39 @@ class EndGame(models.Model):
 
         # store it
         point.save()
+
+    #############################################################
+    # accessors
+    #############################################################
+    @staticmethod
+    def queryBarData(x, y):
+        yExpr = {
+            'earned'      : 'avg(earnedM)',
+            'diffMax'     : 'avg(earnedM*100/maxM)',
+            'diffOpt'     : 'avg(earnedM*100/optimalM)',
+            'diffLOpt'    : 'avg(earnedM*100/locOptM)',
+        }
+        x = re.sub(r'[^a-zA-Z,]', '', x)
+        x = 'level' if '' == x else x
+        y = 'earned' if y not in yExpr else y
+
+        q = 'SELECT ' + yExpr[y] + ' as y, ' + x + ' FROM charts_endgame GROUP BY ' + x + ' ORDER BY y'
+        return connection.cursor().execute(q).fetchall(), x
+
+    @staticmethod
+    def queryBoxData(x, y):
+        yExpr = {
+            'earned'      : '(earnedM)',
+            'diffMax'     : '(earnedM*100/maxM)',
+            'diffOpt'     : '(earnedM*100/optimalM)',
+            'diffLOpt'    : '(earnedM*100/locOptM)',
+        }
+        x = re.sub(r'[^a-zA-Z,]', '', x)
+        x = 'level' if '' == x else x
+        y = 'earned' if y not in yExpr else y
+
+        q = 'SELECT ' + yExpr[y] + ' as y, ' + x + ' FROM charts_endgame ORDER BY y'
+        return connection.cursor().execute(q).fetchall(), x
 
     #############################################################
     # Django boilerplate

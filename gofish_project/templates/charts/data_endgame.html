@@ -30,17 +30,27 @@ function getSelected(selector) {
 function getGroups(selector) {
     groups = [];
     $(selector).find('input[type=checkbox]').each(function() {
-        if ($(this).is(':checked')) groups.push($(this).attr('id'));
+        if ($(this).is(':checked')) groups.push($(this).attr('value'));
     });
     return groups;
 }
 
 function drawTheBarChart() {
-    groups = getGroups('#groups');
+    groups = getGroups('#barX');
     if (groups.length > 0) {
         return drawEndData({
-            choices: getSelected('#choices'),
-            groups: groups.join()
+            x: groups.join(),
+            y: getSelected('#barY'),
+        });
+    }
+}
+
+function drawTheBoxChart() {
+    groups = getGroups('#boxX');
+    if (groups.length > 0) {
+        return drawEndBoxData({
+            x: groups.join(),
+            y: getSelected('#boxY'),
         });
     }
 }
@@ -51,21 +61,19 @@ function drawTheBarChart() {
     <header><h1>Endgame data explorer</h1></header>
     
     <section>
-        <h2>Select the data to show:</h2>
+        <h2>Select the data to show (bar chart):</h2>
         <p>
-            <label for="choices">Show data for</label>
-            <select id="choices">
+            <label for="barY">Show data for</label>
+            <select id="barY">
                 {% for key, val in choices.choices.items %}
                     <option value="{{key}}">{{val}}</option>
                 {% endfor %}
             </select>
             <p>Group by:</p>
-            <div id="groups">
+            <div id="barX">
                 {% for key, val in choices.groups.items %}
-                <p>
                     <input type="checkbox" value="{{key}}" id="{{key}}" />
                     <label for="{{key}}">{{val}}</label>
-                </p>
                 {% endfor %}
             </div>
         </p>
@@ -73,5 +81,29 @@ function drawTheBarChart() {
             <button onclick="drawTheBarChart()">Draw Chart</button>
         </p>
         <div id="chart-div"></div>
+    </section>
+
+    <section>
+        <h2>Select the data to show (box plot):</h2>
+        <p>
+            <label for="boxY">Show data for</label>
+            <select id="boxY">
+                {% for key, val in choices.choices.items %}
+                    <option value="{{key}}">{{val}}</option>
+                {% endfor %}
+            </select>
+            <p>Group by:</p>
+            <div id="boxX">
+                {% for key, val in choices.groups.items %}
+                    <input type="checkbox" value="{{key}}" id="{{key}}2" />
+                    <label for="{{key}}2">{{val}}</label>
+                {% endfor %}
+            </div>
+        </p>
+        <p>
+            <button onclick="drawTheBoxChart()">Draw Chart</button>
+        </p>
+        <div id="chart-div2"></div>
+    </section>
 </body>
 </html>
