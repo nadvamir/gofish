@@ -113,12 +113,63 @@ p {
 	100% { -webkit-transform: scale(1); }
 }
 
+@-webkit-keyframes arrow_left {
+	0% { left: 0; }
+	50% { left: -2%; }
+	100% { left: 0; }
+}
+
+@-webkit-keyframes arrow_right {
+	0% { left: 70%; }
+	50% { left: 72%; }
+	100% { left: 70%; }
+}
+
+@-webkit-keyframes boat_bob {
+	0% {
+		-ms-transform: rotate(2deg); /* IE 9 */
+    	-webkit-transform: rotate(2deg); /* Chrome, Safari, Opera */
+    	transform: rotate(2deg);
+	}
+	50% {
+		-ms-transform: rotate(-2deg); /* IE 9 */
+    	-webkit-transform: rotate(-2deg); /* Chrome, Safari, Opera */
+    	transform: rotate(-2deg);
+	}
+	100% {
+		-ms-transform: rotate(2deg); /* IE 9 */
+    	-webkit-transform: rotate(2deg); /* Chrome, Safari, Opera */
+    	transform: rotate(2deg);
+	}
+}
+
 .pulse {
 	-webkit-animation-name: 'pulse_animation';
 	-webkit-animation-duration: 2000ms;
 	-webkit-transform-origin:70% 70%;
 	-webkit-animation-iteration-count: infinite;
 	-webkit-animation-timing-function: linear;
+}
+
+.arrow-bob-left {
+	-webkit-animation-name: 'arrow_left';
+	-webkit-animation-duration: 2000ms;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+}
+
+.arrow-bob-right {
+	-webkit-animation-name: 'arrow_right';
+	-webkit-animation-duration: 2000ms;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+}
+
+.boat-bob {
+	-webkit-animation-name: 'boat_bob';
+	-webkit-animation-duration: 4000ms;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: ease;
 }
 
 .anim-fade {
@@ -205,8 +256,8 @@ p {
 	margin-right: 7%;
 }
 
-.boat {
-	height: 75%;
+#boat {
+	width: 75%;
 }
 
 .hud {
