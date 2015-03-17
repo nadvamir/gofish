@@ -232,7 +232,7 @@ class EndGame(models.Model):
         x = 'level' if '' == x else x
         y = 'earned' if y not in yExpr else y
 
-        q = 'SELECT ' + yExpr[y] + ' as y, ' + x + ' FROM charts_endgame GROUP BY ' + x + ' ORDER BY y'
+        q = 'SELECT ' + yExpr[y] + ' as y, ' + x + ' FROM charts_endgame WHERE earnedM > 0 GROUP BY ' + x + ' ORDER BY y'
         return connection.cursor().execute(q).fetchall(), x
 
     @staticmethod
@@ -247,7 +247,7 @@ class EndGame(models.Model):
         x = 'level' if '' == x else x
         y = 'earned' if y not in yExpr else y
 
-        q = 'SELECT ' + yExpr[y] + ' as y, ' + x + ' FROM charts_endgame ORDER BY y'
+        q = 'SELECT ' + yExpr[y] + ' as y, ' + x + ' FROM charts_endgame WHERE earnedM > 0 ORDER BY y'
         return connection.cursor().execute(q).fetchall(), x
 
     #############################################################
