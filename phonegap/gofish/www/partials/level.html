@@ -7,3 +7,19 @@
 		<img class="right level-icon" ng-src="./img/levels/{{levelNoSpace}}/icon.png"></img>
 	</div>
 </div>
+
+<div ng-if="levelError" class="confirm-outer top full">
+	<div class="confirm-inner centred-image centred-v">
+
+		<div class="confirm-sign centred-image">
+			<div class="centred-v">
+				<h3 class="centred-text">You don't have enough money to fish here.</h3>
+			</div>
+		</div>
+
+		<div style="height: 20%;">
+			<img ng-click="close()" class="right confirm-button" src="./img/misc/xsign.png"></img>
+		</div>
+
+	</div>
+</div>
