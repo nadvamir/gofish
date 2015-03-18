@@ -224,8 +224,9 @@ p {
 
 #caughtInfo {
 	width: 80%;
+	height: 50%;
 	margin-top: 30%;
-	background-color: rgba(122, 137, 234, 0.5);
+	background-repeat: no-repeat;
 }
 
 #caughtInfo h3 {

@@ -46,7 +46,7 @@ GAME = {
             'name': 'Strong Line',
             'probability': 1.1,
             'price': 500,
-            'description': 'Tired of seaweed breaking your line? Thought so.',
+            'description': 'Sick of seeing every fish get away? This line will help.',
         }, {
             'name': 'Braided Line',
             'probability': 1.2,
@@ -57,7 +57,7 @@ GAME = {
             'name': 'Row Boat',
             'time': -5,
             'price': 1000,
-            'description': 'Better than that dinghy you\'ve been using.',
+            'description': 'Faster than that dinghy you\'ve been using.',
         }, {
             'name': 'Motor Boat',
             'time': -10,
@@ -67,13 +67,13 @@ GAME = {
             'name': 'Speed Boat',
             'time': -15,
             'price': 7000,
-            'description': 'Catch fish fast, and maybe even a future mate.',
+            'description': 'Get to fish fast, and get the ladies faster.',
         }],
         'cues': [{
             'name': 'A Map',
             'cueDetail': 1,
             'price': 50,
-            'description': 'Everywhere look the same? This\'ll help.',
+            'description': 'Let\'s you know how deep you are.',
         }, {
             'name': 'Underwater Camera',
             'cueDetail': 2,
