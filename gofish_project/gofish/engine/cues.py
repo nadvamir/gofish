@@ -80,7 +80,7 @@ class FishCue(DepthCue):
     def getSizeIndicator(self, weight):
         i = 0
         while i < len(sizeIndicators) \
-                and weight < sizeIndicators[i]:
+                and weight > sizeIndicators[i]:
             i += 1
         return i
 
