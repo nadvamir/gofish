@@ -1,4 +1,3 @@
-#from django.test import TestCase
 from unittest import TestCase
 from gofish.engine.yields import *
 
