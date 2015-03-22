@@ -393,7 +393,7 @@ class Game(models.Model):
     # this method returns what you can catch in N times
     # from the current point
     def inspect(self, times):
-        pos, spotYield, timeInSpot = self._common_init()
+        spotYield, timeInSpot = self._common_init()
 
         times = min(times, len(spotYield) - timeInSpot)
 
@@ -410,7 +410,7 @@ class Game(models.Model):
     # useful for games where a player waits
     # for fish to be caught
     def catchNoNil(self, fishList):
-        pos, spotYield, timeInSpot = self._common_init()
+        spotYield, timeInSpot = self._common_init()
         time, totalTime, fCost = self._common_catch_init()
 
         caught = []
@@ -442,7 +442,7 @@ class Game(models.Model):
     # fishList is an array of '1' and '0' telling
     # if we managed to forage the given yield
     def catchAll(self, fishList):
-        pos, spotYield, timeInSpot = self._common_init()
+        spotYield, timeInSpot = self._common_init()
         time, totalTime, fCost = self._common_catch_init()
 
         caught = [] # caught does not have Nones
@@ -476,7 +476,7 @@ class Game(models.Model):
         spotYield = self.level['yields'][pos]
         timeInSpot = self.level['timeInLoc'][pos]
 
-        return pos, spotYield, timeInSpot
+        return spotYield, timeInSpot
 
     # a helper method to get variables common across catch calls
     def _common_catch_init(self):
