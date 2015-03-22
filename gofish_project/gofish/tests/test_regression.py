@@ -74,6 +74,7 @@ class RegressionTest(TestCase):
         self.failToMove()
         self.failToCatch()
         self.endGame()
+
     #############################################################
     # usage scenarios helpers
     #############################################################
