@@ -1,5 +1,4 @@
 from unittest import TestCase
-from mock import Mock 
 from django.test import Client
 
 c = Client()
