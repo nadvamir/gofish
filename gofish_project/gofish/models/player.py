@@ -123,6 +123,8 @@ class Player(models.Model):
         for key in self.updates:
             for v in upds[key]:
                 if self.updates[key] == v['name'] and 'probability' in v:
+                    # FIXME: do I really want +10%
+                    # instead of 10% increase?
                     probability += v['probability'] - 1
 
         # then check if the bait has any effect
@@ -182,10 +184,6 @@ class Player(models.Model):
         self.modifiers[bait] = True
         self.savePlayer()
 
-        # recalculate yields if there are any
-        game = Game.initialise(self)
-        if None != game:
-            game.recalcYields()
         return True
 
     # tries to buy a given bait
