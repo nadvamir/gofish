@@ -452,7 +452,7 @@ class Game(models.Model):
                 break
 
             if '1' == succeeded and None != spotYield[timeInSpot]:
-                self.caught.append(spotYield[timeInSpot])
+                caught.append(spotYield[timeInSpot])
                 response.append(spotYield[timeInSpot])
             else:
                 response.append(None)
