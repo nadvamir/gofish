@@ -68,9 +68,9 @@ class YieldModel(object):
             for i in range(1000000):
                 s = it.next()
                 diff = 0.0
-                optY = YieldCalculator.getOptYield(s, self.yields[0], MOV_C[0])
+                optY = YieldSimulation.getOptYield(s, self.yields[0], MOV_C[0])
                 for l in range(1, nLvl):
-                    nOptY = YieldCalculator.getOptYield(s, self.yields[l], MOV_C[l])
+                    nOptY = YieldSimulation.getOptYield(s, self.yields[l], MOV_C[l])
                     diff += abs(nOptY/float(optY))
                     optY = nOptY
 
@@ -108,10 +108,10 @@ class YieldModel(object):
             }
 
             # getting the optimal yield for this level
-            optYield1 = YieldCalculator.getOptYield(fish,
+            optYield1 = YieldSimulation.getOptYield(fish,
                     self.yields[level], MOV_C[level])
             # getting the optimal yield for next level
-            optYield2 = YieldCalculator.getOptYield(fish,
+            optYield2 = YieldSimulation.getOptYield(fish,
                     self.yields[level+1], MOV_C[level+1])
 
             if a[0] % 100000 == 0:

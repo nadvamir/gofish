@@ -46,7 +46,7 @@ class YieldSimulation(object):
         lvl = [-1]
         def incrLvl(): lvl[0] += 1; return lvl[0]
         toMoney = lambda l, ind: map(lambda i: \
-                YieldCalculator.getOptYield(fishVal, i, \
+                YieldSimulation.getOptYield(fishVal, i, \
                                             MOV_C[ind]), l)
 
         def describe(level):
