@@ -156,6 +156,11 @@ def optimise(request):
     if context_dict['solution']:
         context_dict['stats'] = \
                 yc.describeYields(context_dict['solution'])
+        # 5. plot the earnings
+        yc.exportEarnings(context_dict['solution'])
+        # 6. export fish value distributions
+        YieldSimulation.exportDistributions(yields, context_dict['solution'])
+
 
     return render_to_response('charts/optimise.html', context_dict, context)
 
