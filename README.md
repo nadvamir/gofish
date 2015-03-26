@@ -480,11 +480,11 @@ The logging is done in `gofish/modules/game.py`. However, if you change the way 
 
 The optimisation of the game requires significant manual labor. After introducing new levels or fish in `gofish/engine/gamedef.py`, check if a constant `MOV_C` at the top of `charts/optimisation/yieldsimulation.py` reflects the desired moving cost for every level. The rest of the YieldSimulation should pick the changes from gamedef. Then, modify `charts/optimisation/yieldmodel.py` so that it contains the correct list of fish and the ranges of values for them. It is better to specify discrete values that you would yourself consider: if you specify large ranges, the optimisation process will be painstakingly slow.
 
-To run the optimisation, log in as an admin in [](http://localhost:8000/admin/), then go to [](http://localhost:8000/gofish/charts) and click on optimise. After a while, the module will print out to the screen the optimal values for the fish, as well as average earnings in each level. This data has to be manually written to `gofish/engine/gamedef.py`, and then you are done.
+To run the optimisation, log in as an admin in [http://localhost:8000/admin/](http://localhost:8000/admin/), then go to [http://localhost:8000/gofish/charts](http://localhost:8000/gofish/charts) and click on optimise. After a while, the module will print out to the screen the optimal values for the fish, as well as average earnings in each level. This data has to be manually written to `gofish/engine/gamedef.py`, and then you are done.
 
 ## Analysing data
 
-The game provides some internal tools to analyse the collected data. To view them, log in as an admin in [](http://localhost:8000/admin/) and then go to [](http://localhost:8000/gofish/charts).
+The game provides some internal tools to analyse the collected data. To view them, log in as an admin in [http://localhost:8000/admin/](http://localhost:8000/admin/) and then go to [http://localhost:8000/gofish/charts](http://localhost:8000/gofish/charts).
 
 The first step is to parse both logs, which can be done by choosing the appropriate link. The parsed logs will be written to a database and the files will be emptied; however, the copies of those logs will be stored in `logs-perf` and `logs-end` folders.
 
