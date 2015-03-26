@@ -12,7 +12,9 @@ The game engine interfaces with the world via a pseudo REST API:
 
 * `GET /gofish/api/v2/home/` -- Level list
 
-  Returns a list of levels that are in the game. Response:
+  Returns a list of levels that are in the game. 
+  
+  Success response:
   
   ```javascript
   {'levels': {
@@ -29,7 +31,9 @@ The game engine interfaces with the world via a pseudo REST API:
 
 * `GET /gofish/api/v2/player/` -- Player info
 
-  Details about player. Response:
+  Details about player. 
+  
+  Success response:
   
   ```javascript
  {'player': {
@@ -43,7 +47,9 @@ The game engine interfaces with the world via a pseudo REST API:
   ```
 * `GET /gofish/api/v2/shop/` -- Upgrades the player can buy
 
-  Returns a list of all upgrades in the game. The response is in the following format:
+  Returns a list of all upgrades in the game. 
+  
+  Success response:
   
   ```javascript
   {
@@ -53,7 +59,7 @@ The game engine interfaces with the world via a pseudo REST API:
   }
   ```
   
-  where :update is
+  where `:update` is
   
   ```javascript
     {
@@ -69,7 +75,9 @@ The game engine interfaces with the world via a pseudo REST API:
 
 * `GET /gofish/api/v2/trophies/` -- Trophies list
 
-  Returns both the trophies that player has, as well as the best trophies in the whole game. Response
+  Returns both the trophies that player has, as well as the best trophies in the whole game. 
+  
+  Success response:
   
   ```javascript
   {
@@ -77,7 +85,7 @@ The game engine interfaces with the world via a pseudo REST API:
     'gameTrophies': [:trophy]  // the list of the best trophies in the game
   }
   ```
-  Where :trophy is
+  Where `:trophy` is
   
   ```javascript
   {
@@ -91,7 +99,13 @@ The game engine interfaces with the world via a pseudo REST API:
 
   Returns the object for the game that the player is currently playing, or `404` if no games are played.
   
-  The success response:
+  Failure response:
+  
+  ```
+  404 NOT FOUND
+  ```
+  
+  Success response:
   
   ```javascript
   {'game' : {
@@ -109,21 +123,21 @@ The game engine interfaces with the world via a pseudo REST API:
   }}
   ```
   
-  Where :map is
+  Where `:map` is
   
   ```javascript
   [[int, int, int...]] // the array of depths of fishing spots
                        // 2D array is a legacy
   ```
   
-  and :cues are
+  and `:cues` are
   
   ```javascript
   [[:numberOfFish, :value]] // :numberOfFish -> int, -1 for not shown
                             // :value -> int, value indicator 0-4
   ```
   
-  and :fish is
+  and `:fish` is
   
   ```javascript
   {
@@ -218,7 +232,7 @@ The game engine interfaces with the world via a pseudo REST API:
 
 * `GET /gofish/api/action/inspect/:N/` -- List of potential catches
 
-  Get a list of stuff you'd catch if you fished in the current location :N times. 
+  Get a list of stuff you'd catch if you fished in the current location `:N` times. 
   Useful for developing own cues instead of relying on the cues the game provides,
   as well as for novelty game mechanics in conjunction with `GET /gofish/api/action/catchnonil/`.
   
