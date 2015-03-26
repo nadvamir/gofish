@@ -6,6 +6,45 @@ This is a project to test information foraging theory, disguised as a fishing ga
 
 [http://nadvamir.pythonanywhere.com/](http://nadvamir.pythonanywhere.com/)
 
+## Installation
+
+Pre-requisites:
+
+* git
+* pip
+* npm
+
+To install the application, clone the repository, create a virtual environment with python 2.7, and then run:
+
+```bash
+cd gofish/gofish_project
+pip install -r requirements.txt
+```
+
+The steps to run the game server are standard for Django:
+
+```bash
+python manage.py syncdb
+python manage.py runserver
+```
+
+The source for the sample client is written in CoffeeScript; however, the compiled version is provided. 
+To build the app.js from source, first install the dependencies:
+
+```bash
+npm install
+```
+
+...and then run grunt
+
+```bash
+grunt
+```
+
+This will compile the source to app.js. If you leave grunt running, it will perform this compilation in the background
+every time you change the source, thus you can develop in CoffeeScript and immediatelly test the
+changes in the browser.
+
 ## API reference
 
 The game engine interfaces with the world via a pseudo REST API:
