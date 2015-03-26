@@ -462,9 +462,25 @@ The game engine interfaces with the world via a pseudo REST API:
 
 * *Deprecated.* `GET /gofish/api/getupdates/` -- List of upgrades you can buy
 
-## Modifying the code
+## Modifying the game
+
+The entire game is defined in `gofish/engine/gamedef.py`. Change that file to introduce new fish, levels or upgrades.
+
+The only aspect that is not yet consolidated in gamedef is cue characteristics. They are defined at the top of `gofish/modules/game.py`.
+
+In order to introduce new types of yields, modify `gofish/engine/yields.py` and `gofish/engine/yieldmerger.py`.
+
+Everything to do with map generation is stored in `gofish/engine/maps.py`.
+
+New classes for cues can be introduced in `gofish/engine/cues.py`. 
+
+The logging is done in `gofish/modules/game.py`. However, if you change the way information is logged, don't forget to change the related classes in `charts/models.py`, unless you opt-out of using in-game analytics.
 
 ## Optimising the game
+
+The optimisation of the game requires significant manual labor. After introducing new levels or fish in `gofish/engine/gamedef.py`, check if a constant `MOV_C` at the top of `charts/optimisation/yieldsimulation.py` reflects the desired moving cost for every level. The rest of the YieldSimulation should pick the changes from gamedef. Then, modify `charts/optimisation/yieldmodel.py` so that it contains the correct list of fish and the ranges of values for them. It is better to specify discrete values that you would yourself consider: if you specify large ranges, the optimisation process will be painstakingly slow.
+
+To run the optimisation, log in as an admin in [](http://localhost:8000/admin/), then go to [](http://localhost:8000/gofish/charts) and click on optimise. After a while, the module will print out to the screen the optimal values for the fish, as well as average earnings in each level. This data has to be manually written to `gofish/engine/gamedef.py`, and then you are done.
 
 ## Analysing data
 
