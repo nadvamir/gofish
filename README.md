@@ -484,3 +484,30 @@ To run the optimisation, log in as an admin in [](http://localhost:8000/admin/),
 
 ## Analysing data
 
+The game provides some internal tools to analyse the collected data. To view them, log in as an admin in [](http://localhost:8000/admin/) and then go to [](http://localhost:8000/gofish/charts).
+
+The first step is to parse both logs, which can be done by choosing the appropriate link. The parsed logs will be written to a database and the files will be emptied; however, the copies of those logs will be stored in `logs-perf` and `logs-end` folders.
+
+There are three querying tools provided: querying individual user data, aggregated user data, and endgame data. The first two use data for decisions made on the spot; the last option analyses overall game earnings.
+
+These tools are crude and they do not provide the data in a way that is useful for statistics. To make use of SQL for aiding the analysis, open Django shell:
+
+```bash
+python manage.py shell
+```
+
+and run the queries using the connection module. For example, to see how many times each level was played, type:
+
+```python
+from django.db import connection
+cursor = connection.cursor()
+print cursor.execute("SELECT level, COUNT(*) FROM charts_endgame GROUP BY level").fetchall()
+```
+
+There are two tables: `charts_endgame` and `charts_datapoint`, and their schema can be deducted from `charts/models.py`
+
+To run serious statistics, import the logs to a spreadsheet program as if they were CSV files. There is also an option to export results of SQL queries to CSV. You could write a simple script utilising connection module, and run this script on a database through Django shell:
+
+```python
+import your_script
+```
