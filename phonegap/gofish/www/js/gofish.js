@@ -1,1 +1,0 @@
-var goFish = angular.module('goFish', []);
