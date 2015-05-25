@@ -56,6 +56,31 @@ class YieldSimulation(object):
 
         return map(lambda l: describe(toMoney(l, incrLvl())), self.yields)
 
+    # export simulation earnings distribution to file
+    def exportEarnings(self, fish):
+        with open('earnings.csv', 'w') as fw:
+            # for every level
+            for lvl in range(len(self.yields)):
+                earnings = [YieldSimulation.getOptYield(fish, y, MOV_C[lvl]) for y in self.yields[lvl]]
+                fw.write(','.join(map(lambda x: str(x), earnings)) + "\n")
+
+    # export fish distributions per level
+    @staticmethod
+    def exportDistributions(yields, fish):
+        # value in the location timespot
+        def val(t):
+            y = 0.0
+            for f, n in t.iteritems():
+                y += fish[f] * n
+            return y
+
+        with open('distributions.csv', 'w') as fw:
+            # for every level
+            for lvl in range(len(yields)):
+                value = [val(t) for t in yields[lvl]]
+                fw.write(','.join(map(lambda x: str(x), value)) + "\n")
+
+
     # calculating optimal yield
     # lvlYield has average fish values earned fishing up to
     # this time
